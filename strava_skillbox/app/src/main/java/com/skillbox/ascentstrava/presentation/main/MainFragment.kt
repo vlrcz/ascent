@@ -6,32 +6,25 @@ import androidx.fragment.app.Fragment
 import androidx.viewpager2.widget.ViewPager2
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.skillbox.ascentstrava.R
+import com.skillbox.ascentstrava.app.appComponent
 import com.skillbox.ascentstrava.databinding.FragmentMainBinding
 import com.skillbox.ascentstrava.presentation.onboarding.OnboardingAdapter
 import com.skillbox.ascentstrava.presentation.onboarding.OnboardingModel
+import com.skillbox.ascentstrava.storage.StorageViewModel
+import javax.inject.Inject
 
 class MainFragment : Fragment(R.layout.fragment_main) {
+
+    @Inject
+    lateinit var viewModel: StorageViewModel
 
     private val binding: FragmentMainBinding by viewBinding(FragmentMainBinding::bind)
     private var adapter: OnboardingAdapter? = null
 
-    private val models = listOf(
-        OnboardingModel(
-            R.drawable.humaaans,
-            R.string.welcome_to_ascent,
-            R.string.welcome_text
-        ),
-        OnboardingModel(
-            R.drawable.friends,
-            R.string.friends,
-            R.string.friends_text
-        ),
-        OnboardingModel(
-            R.drawable.activities,
-            R.string.activities,
-            R.string.activities_text
-        )
-    )
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        requireContext().appComponent.inject(this)
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -65,4 +58,22 @@ class MainFragment : Fragment(R.layout.fragment_main) {
         super.onDestroy()
         adapter = null
     }
+
+    private val models = listOf(
+        OnboardingModel(
+            R.drawable.humaaans,
+            R.string.welcome_to_ascent,
+            R.string.welcome_text
+        ),
+        OnboardingModel(
+            R.drawable.friends,
+            R.string.friends,
+            R.string.friends_text
+        ),
+        OnboardingModel(
+            R.drawable.activities,
+            R.string.activities,
+            R.string.activities_text
+        )
+    )
 }

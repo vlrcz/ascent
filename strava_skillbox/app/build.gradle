@@ -35,6 +35,9 @@ android {
     buildFeatures {
         viewBinding true
     }
+    kapt {
+        generateStubs = true
+    }
 }
 
 dependencies {
@@ -61,4 +64,22 @@ dependencies {
     //View pager
     implementation "androidx.viewpager2:viewpager2:1.0.0"
     implementation 'com.tbuonomo.andrui:viewpagerdotsindicator:4.1.2'
+
+    //ViewModel
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.3.1"
+    implementation "androidx.fragment:fragment-ktx:1.3.6"
+
+    //LiveData
+    implementation "androidx.lifecycle:lifecycle-livedata-ktx:2.3.1"
+    implementation "androidx.lifecycle:lifecycle-common-java8:2.3.1"
+    implementation "androidx.lifecycle:lifecycle-runtime-ktx:2.3.1"
+
+    def daggerVer = '2.38.1'
+
+    implementation "com.google.dagger:dagger:$daggerVer"
+    implementation "com.google.dagger:dagger-android-support:$daggerVer"
+    kapt "com.google.dagger:dagger-android-processor:$daggerVer"
+    kapt "com.google.dagger:dagger-compiler:$daggerVer"
+    annotationProcessor "com.google.dagger:dagger-compiler:$daggerVer"
+    annotationProcessor "com.google.dagger:dagger-android-processor:$daggerVer"
 }

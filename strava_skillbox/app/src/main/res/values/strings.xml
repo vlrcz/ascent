@@ -7,4 +7,5 @@
     <string name="friends_text">Fill in the activity and weight fields, and then share the information with your friends</string>
     <string name="activities">Activities</string>
     <string name="activities_text">Convenient weight and activity tracking system-fill out your profile and start living brightly</string>
+    <string name="profile_page">Profile</string>
 </resources>
