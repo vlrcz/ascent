@@ -1,6 +1,6 @@
-package com.skillbox.ascentstrava
+package com.skillbox.ascentstrava.presentation.main
 
 import androidx.appcompat.app.AppCompatActivity
-import android.os.Bundle
+import com.skillbox.ascentstrava.R
 
 class MainActivity : AppCompatActivity(R.layout.activity_main)
