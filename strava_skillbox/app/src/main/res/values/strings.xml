@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">Ascent Strava</string>
+    <string name="skip">Skip</string>
+    <string name="welcome_to_ascent">Welcome to Ascent</string>
+    <string name="welcome_text">Here you can monitor your weight and activities</string>
+    <string name="friends">Friends</string>
+    <string name="friends_text">Fill in the activity and weight fields, and then share the information with your friends</string>
+    <string name="activities">Activities</string>
+    <string name="activities_text">Convenient weight and activity tracking system-fill out your profile and start living brightly</string>
+</resources>
