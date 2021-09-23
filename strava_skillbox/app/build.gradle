@@ -78,8 +78,5 @@ dependencies {
 
     implementation "com.google.dagger:dagger:$daggerVer"
     implementation "com.google.dagger:dagger-android-support:$daggerVer"
-    kapt "com.google.dagger:dagger-android-processor:$daggerVer"
     kapt "com.google.dagger:dagger-compiler:$daggerVer"
-    annotationProcessor "com.google.dagger:dagger-compiler:$daggerVer"
-    annotationProcessor "com.google.dagger:dagger-android-processor:$daggerVer"
 }
