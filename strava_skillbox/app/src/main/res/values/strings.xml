@@ -8,4 +8,7 @@
     <string name="activities">Activities</string>
     <string name="activities_text">Convenient weight and activity tracking system-fill out your profile and start living brightly</string>
     <string name="profile_page">Profile</string>
+    <string name="share">Share</string>
+    <string name="okay_btn">Okay</string>
+    <string name="skip_btn">Skip</string>
 </resources>

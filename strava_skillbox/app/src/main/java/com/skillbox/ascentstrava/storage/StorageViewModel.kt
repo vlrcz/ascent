@@ -3,9 +3,10 @@ package com.skillbox.ascentstrava.storage
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.skillbox.ascentstrava.di.StorageRepository
+import timber.log.Timber
+import javax.inject.Inject
 
-class StorageViewModel(
+class StorageViewModel @Inject constructor(
     private val storageRepository: StorageRepository
 ) : ViewModel() {
 

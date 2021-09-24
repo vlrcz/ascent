@@ -4,10 +4,18 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
     app:startDestination="@id/mainFragment">
-
     <fragment
-        tools:layout="@layout/fragment_main"
         android:id="@+id/mainFragment"
+        tools:layout="@layout/fragment_main"
         android:name="com.skillbox.ascentstrava.presentation.main.MainFragment"
-        android:label="MainFragment" />
+        android:label="MainFragment" >
+        <action
+            android:id="@+id/action_mainFragment_to_onboardingFragment"
+            app:destination="@id/onboardingFragment" />
+    </fragment>
+    <fragment
+        tools:layout="@layout/fragment_onboarding"
+        android:id="@+id/onboardingFragment"
+        android:name="com.skillbox.ascentstrava.presentation.onboarding.OnboardingFragment"
+        android:label="OnboardingFragment" />
 </navigation>

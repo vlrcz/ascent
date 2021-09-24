@@ -32,9 +32,10 @@ class App : Application() {
 
     private fun initDagger(): AppComponent {
         return DaggerAppComponent.factory()
-            .create(this)
+            .create(this, this)
     }
 }
+
 val Context.appComponent: AppComponent
     get() = when (this) {
         is App -> appComponent

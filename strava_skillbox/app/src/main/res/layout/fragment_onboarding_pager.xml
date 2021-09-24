@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_begin="340dp" />
+
+    <ImageView
+        android:id="@+id/onboardingImageView"
+        android:layout_width="350dp"
+        android:layout_height="250dp"
+        android:layout_marginTop="30dp"
+        app:layout_constraintBottom_toTopOf="@id/headTextView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:src="@drawable/humaaans" />
+
+    <TextView
+        android:id="@+id/headTextView"
+        style="?attr/textAppearanceHeadline2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="50dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/onboardingImageView"
+        tools:text="@string/welcome_to_ascent" />
+
+    <TextView
+        android:id="@+id/bodyTextView"
+        style="?attr/textAppearanceBody2"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        app:layout_constraintEnd_toStartOf="@id/guideline1"
+        app:layout_constraintStart_toStartOf="@id/guideline3"
+        app:layout_constraintTop_toBottomOf="@+id/headTextView"
+        tools:text="@string/welcome_text" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_begin="60dp" />
+
+    <!--<ImageView
+        android:id="@+id/selectPointImageView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/unselectPointImageView1"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintHorizontal_chainStyle="packed"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/WelcomeToAscentInfoTextView"
+        app:srcCompat="@drawable/point_select" />
+
+    <ImageView
+        android:id="@+id/unselectPointImageView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        app:layout_constraintBottom_toBottomOf="@+id/selectPointImageView"
+        app:layout_constraintEnd_toStartOf="@+id/unselectPointImageView2"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/selectPointImageView"
+        app:layout_constraintTop_toTopOf="@+id/selectPointImageView"
+        app:srcCompat="@drawable/point_unselect" />
+
+    <ImageView
+        android:id="@+id/unselectPointImageView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="@+id/unselectPointImageView1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/unselectPointImageView1"
+        app:layout_constraintTop_toTopOf="@+id/unselectPointImageView1"
+        app:srcCompat="@drawable/point_unselect" />-->
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
