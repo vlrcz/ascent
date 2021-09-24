@@ -11,4 +11,6 @@
     <string name="share">Share</string>
     <string name="okay_btn">Okay</string>
     <string name="skip_btn">Skip</string>
+    <string name="continue_with_strava">Continue with Strava</string>
+    <string name="already_a_member">already a member</string>
 </resources>
