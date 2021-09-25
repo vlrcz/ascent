@@ -10,16 +10,24 @@ import com.skillbox.ascentstrava.R
 import com.skillbox.ascentstrava.app.appComponent
 import com.skillbox.ascentstrava.databinding.FragmentAuthBinding
 import com.skillbox.ascentstrava.di.ViewModelFactory
-import com.skillbox.ascentstrava.storage.StorageViewModel
+import com.skillbox.ascentstrava.presentation.auth.di.DaggerAuthComponent
+import javax.inject.Inject
+import javax.inject.Provider
 
 class AuthFragment : Fragment(R.layout.fragment_auth) {
 
+    @Inject
+    lateinit var viewModelProvider: Provider<AuthViewModel>
+
     private val binding: FragmentAuthBinding by viewBinding(FragmentAuthBinding::bind)
-    private val viewModel: AuthViewModel by viewModels { ViewModelFactory { requireContext().appComponent.authViewModel() } }
+    private val viewModel: AuthViewModel by viewModels { ViewModelFactory { viewModelProvider.get() } }
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        context.appComponent.inject(this)
+        DaggerAuthComponent
+            .factory()
+            .create(requireContext().appComponent)
+            .inject(this)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

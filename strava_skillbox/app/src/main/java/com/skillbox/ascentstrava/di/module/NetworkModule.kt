@@ -1,10 +1,12 @@
-package com.skillbox.ascentstrava.di
+package com.skillbox.ascentstrava.di.module
 
-import com.skillbox.ascentstrava.data.CustomHeaderInterceptor
+import com.skillbox.ascentstrava.data.AuthConfig
+import com.skillbox.ascentstrava.data.AuthInterceptor
 import com.skillbox.ascentstrava.data.StravaApi
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
+import dagger.multibindings.IntoSet
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -21,20 +23,19 @@ abstract class NetworkModule {
         @Provides
         @Singleton
         fun providesOkHttpClient(
-            @HeaderInterceptor
-            headerInterceptor: Interceptor,
-            @LoggingInterceptor
-            loggingInterceptor: Interceptor
+            interceptors: Set<Interceptor>
         ): OkHttpClient {
-            return OkHttpClient.Builder()
-                .addNetworkInterceptor(loggingInterceptor)
-                .addInterceptor(headerInterceptor)
+            val okHttpClient = OkHttpClient.Builder()
+            interceptors.forEach {
+                okHttpClient.addInterceptor(it)
+            }
+            return okHttpClient
                 .followRedirects(true)
                 .build()
         }
 
-        @LoggingInterceptor
         @Provides
+        @IntoSet
         fun provideLoggingInterceptor(): Interceptor {
             return HttpLoggingInterceptor()
                 .setLevel(HttpLoggingInterceptor.Level.BODY)
@@ -44,7 +45,7 @@ abstract class NetworkModule {
         @Singleton
         fun providesRetrofit(okHttpClient: OkHttpClient): Retrofit {
             return Retrofit.Builder()
-                .baseUrl("https://developers.strava.com")
+                .baseUrl(AuthConfig.BASE_URL)
                 .addConverterFactory(MoshiConverterFactory.create())
                 .client(okHttpClient)
                 .build()
@@ -57,17 +58,9 @@ abstract class NetworkModule {
         }
     }
 
-    @HeaderInterceptor
     @Binds
+    @IntoSet
     abstract fun providerHeaderInterceptor(
-        customHeaderInterceptor: CustomHeaderInterceptor
+        authInterceptor: AuthInterceptor
     ): Interceptor
 }
-
-@Qualifier
-@Retention(AnnotationRetention.BINARY)
-annotation class HeaderInterceptor
-
-@Qualifier
-@Retention(AnnotationRetention.BINARY)
-annotation class LoggingInterceptor

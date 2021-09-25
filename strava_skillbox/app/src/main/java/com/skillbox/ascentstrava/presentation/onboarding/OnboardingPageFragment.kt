@@ -7,11 +7,11 @@ import androidx.annotation.StringRes
 import androidx.fragment.app.Fragment
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.skillbox.ascentstrava.R
-import com.skillbox.ascentstrava.databinding.FragmentOnboardingPagerBinding
+import com.skillbox.ascentstrava.databinding.FragmentOnboardingPageBinding
 
-class OnboardingPagerFragment : Fragment(R.layout.fragment_onboarding_pager) {
+class OnboardingPageFragment : Fragment(R.layout.fragment_onboarding_page) {
 
-    private val binding: FragmentOnboardingPagerBinding by viewBinding(FragmentOnboardingPagerBinding::bind)
+    private val binding: FragmentOnboardingPageBinding by viewBinding(FragmentOnboardingPageBinding::bind)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -29,8 +29,8 @@ class OnboardingPagerFragment : Fragment(R.layout.fragment_onboarding_pager) {
             @DrawableRes drawableRes: Int,
             @StringRes headline2Res: Int,
             @StringRes bodyRes: Int
-        ): OnboardingPagerFragment {
-            return OnboardingPagerFragment().apply {
+        ): OnboardingPageFragment {
+            return OnboardingPageFragment().apply {
                 val args = Bundle()
                 arguments = args
                 args.putInt(KEY_IMAGE, drawableRes)

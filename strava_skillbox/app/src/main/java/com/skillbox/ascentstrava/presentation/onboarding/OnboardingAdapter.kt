@@ -14,7 +14,7 @@ class OnboardingAdapter(
 
     override fun createFragment(position: Int): Fragment {
         val model = models[position]
-        return OnboardingPagerFragment.newInstance(
+        return OnboardingPageFragment.newInstance(
             model.drawableRes,
             model.headline2Res,
             model.bodyRes

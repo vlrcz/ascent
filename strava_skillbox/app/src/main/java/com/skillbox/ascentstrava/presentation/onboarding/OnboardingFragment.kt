@@ -12,18 +12,26 @@ import com.skillbox.ascentstrava.R
 import com.skillbox.ascentstrava.app.appComponent
 import com.skillbox.ascentstrava.databinding.FragmentOnboardingBinding
 import com.skillbox.ascentstrava.di.ViewModelFactory
-import com.skillbox.ascentstrava.storage.StorageViewModel
+import com.skillbox.ascentstrava.presentation.onboarding.di.DaggerOnboardingComponent
+import javax.inject.Inject
+import javax.inject.Provider
 
 class OnboardingFragment : Fragment(R.layout.fragment_onboarding) {
 
-    private val viewModel: StorageViewModel by viewModels { ViewModelFactory { requireContext().appComponent.storageViewModel() } }
+    @Inject
+    lateinit var viewModelProvider: Provider<OnboardingViewModel>
+
+    private val viewModel: OnboardingViewModel by viewModels { ViewModelFactory { viewModelProvider.get() } }
 
     private val binding: FragmentOnboardingBinding by viewBinding(FragmentOnboardingBinding::bind)
     private var adapter: OnboardingAdapter? = null
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        context.appComponent.inject(this)
+        DaggerOnboardingComponent
+            .factory()
+            .create(context.appComponent)
+            .inject(this)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

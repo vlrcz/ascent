@@ -1,10 +1,15 @@
 package com.skillbox.ascentstrava.data
 
 import android.net.Uri
-import net.openid.appauth.*
 import javax.inject.Inject
+import net.openid.appauth.AuthorizationRequest
+import net.openid.appauth.AuthorizationService
+import net.openid.appauth.AuthorizationServiceConfiguration
+import net.openid.appauth.ClientAuthentication
+import net.openid.appauth.ClientSecretPost
+import net.openid.appauth.TokenRequest
 
-class AuthRepository @Inject constructor() {
+class AuthRepository @Inject constructor(private val authManager: AuthManager) {
 
     fun getAuthRequest(): AuthorizationRequest {
         val serviceConfiguration = AuthorizationServiceConfiguration(
@@ -34,7 +39,7 @@ class AuthRepository @Inject constructor() {
             when {
                 response != null -> {
                     val accessToken = response.accessToken.orEmpty()
-                    AuthToken.setToken(accessToken)
+                    authManager.setToken(accessToken)
                     onComplete()
                 }
                 else -> onError()

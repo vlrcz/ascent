@@ -1,13 +1,13 @@
-package com.skillbox.ascentstrava.storage
+package com.skillbox.ascentstrava.presentation.onboarding
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import timber.log.Timber
+import com.skillbox.ascentstrava.presentation.onboarding.data.OnboardingRepository
 import javax.inject.Inject
 
-class StorageViewModel @Inject constructor(
-    private val storageRepository: StorageRepository
+class OnboardingViewModel @Inject constructor(
+    private val onboardingRepository: OnboardingRepository
 ) : ViewModel() {
 
     private val isFirstTimeEntry = MutableLiveData<Boolean>()
