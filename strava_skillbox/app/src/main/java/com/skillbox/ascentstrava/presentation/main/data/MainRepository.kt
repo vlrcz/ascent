@@ -1,13 +1,9 @@
-package com.skillbox.ascentstrava.presentation.onboarding.data
+package com.skillbox.ascentstrava.presentation.main.data
 
-import android.content.Context
 import android.content.SharedPreferences
 import javax.inject.Inject
 
-class OnboardingRepository @Inject constructor(private val context: Context) {
-
-    @Inject
-    lateinit var sharedPrefs: SharedPreferences
+class MainRepository @Inject constructor(private val sharedPrefs: SharedPreferences) {
 
     fun addFlagAfterFirstEntry() {
         sharedPrefs.edit()

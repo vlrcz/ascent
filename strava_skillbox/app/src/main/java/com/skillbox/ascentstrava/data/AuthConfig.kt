@@ -12,6 +12,6 @@ object AuthConfig {
     const val CLIENT_SECRET = "b84830ac3f06531c0f2f8ce41a7670e6ad27f876"
     const val CALLBACK_URL = "ascent://ru.ascent.strava"
 
-    const val AUTHORIZATION = "Authorization"
+    const val AUTHORIZATION_HEADER = "Authorization"
     const val BASE_URL = "https://developers.strava.com"
 }

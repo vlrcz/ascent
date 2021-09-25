@@ -18,7 +18,7 @@ class App : Application() {
         Timber.plant(Timber.DebugTree())
         appComponent = initDagger()
 
-        if (BuildConfig.DEBUG) {
+        /*if (BuildConfig.DEBUG) {
             StrictMode.setThreadPolicy(
                 StrictMode.ThreadPolicy.Builder()
                     .detectDiskReads()
@@ -27,7 +27,7 @@ class App : Application() {
                     .penaltyDeath()
                     .build()
             )
-        }
+        }*/
     }
 
     private fun initDagger(): AppComponent {

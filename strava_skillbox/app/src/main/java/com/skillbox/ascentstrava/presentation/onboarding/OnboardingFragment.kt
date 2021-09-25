@@ -1,38 +1,18 @@
 package com.skillbox.ascentstrava.presentation.onboarding
 
-import android.content.Context
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.viewpager2.widget.ViewPager2
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.skillbox.ascentstrava.R
-import com.skillbox.ascentstrava.app.appComponent
 import com.skillbox.ascentstrava.databinding.FragmentOnboardingBinding
-import com.skillbox.ascentstrava.di.ViewModelFactory
-import com.skillbox.ascentstrava.presentation.onboarding.di.DaggerOnboardingComponent
-import javax.inject.Inject
-import javax.inject.Provider
 
 class OnboardingFragment : Fragment(R.layout.fragment_onboarding) {
 
-    @Inject
-    lateinit var viewModelProvider: Provider<OnboardingViewModel>
-
-    private val viewModel: OnboardingViewModel by viewModels { ViewModelFactory { viewModelProvider.get() } }
-
     private val binding: FragmentOnboardingBinding by viewBinding(FragmentOnboardingBinding::bind)
     private var adapter: OnboardingAdapter? = null
-
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        DaggerOnboardingComponent
-            .factory()
-            .create(context.appComponent)
-            .inject(this)
-    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

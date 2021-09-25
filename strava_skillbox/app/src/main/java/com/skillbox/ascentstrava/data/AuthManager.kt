@@ -8,7 +8,7 @@ class AuthManager @Inject constructor() {
 
     var accessToken: String? = null
 
-    fun setToken(accessToken: String) {
+    fun saveToken(accessToken: String) {
         this.accessToken = accessToken
     }
 }

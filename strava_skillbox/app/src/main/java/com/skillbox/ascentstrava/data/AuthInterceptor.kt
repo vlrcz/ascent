@@ -10,7 +10,7 @@ class AuthInterceptor @Inject constructor(private val authManager: AuthManager) 
         val accessToken = authManager.accessToken
         if (accessToken != null) {
             val modifiedRequest = originalRequest.newBuilder()
-                .addHeader(AuthConfig.AUTHORIZATION, "token $accessToken}")
+                .addHeader(AuthConfig.AUTHORIZATION_HEADER, "token $accessToken}")
                 .build()
             return chain.proceed(modifiedRequest)
         }
