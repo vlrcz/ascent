@@ -17,5 +17,18 @@
         tools:layout="@layout/fragment_onboarding"
         android:id="@+id/onboardingFragment"
         android:name="com.skillbox.ascentstrava.presentation.onboarding.OnboardingFragment"
-        android:label="OnboardingFragment" />
+        android:label="OnboardingFragment" >
+        <action
+            android:id="@+id/action_onboardingFragment_to_authFragment"
+            app:destination="@id/authFragment"
+            app:enterAnim="@android:anim/fade_in"
+            app:exitAnim="@android:anim/fade_out"
+            app:popEnterAnim="@android:anim/fade_in"
+            app:popExitAnim="@android:anim/fade_out" />
+    </fragment>
+    <fragment
+        tools:layout="@layout/fragment_auth"
+        android:id="@+id/authFragment"
+        android:name="com.skillbox.ascentstrava.presentation.auth.AuthFragment"
+        android:label="AuthFragment" />
 </navigation>
