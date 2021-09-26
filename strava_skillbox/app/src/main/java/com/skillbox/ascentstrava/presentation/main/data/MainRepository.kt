@@ -8,7 +8,7 @@ class MainRepository @Inject constructor(private val sharedPrefs: SharedPreferen
     fun addFlagAfterFirstEntry() {
         sharedPrefs.edit()
             .putBoolean(FIRST_ENTRY, true)
-            .commit()
+            .apply()
     }
 
     fun isFirstEntry(): Boolean {

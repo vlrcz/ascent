@@ -18,7 +18,6 @@ interface AppComponent {
     fun context(): Context
     fun authManager(): AuthManager
     fun sharedPrefs(): SharedPreferences
-    fun inject(mainFragment: MainFragment)
 
     @Component.Factory
     interface Factory {

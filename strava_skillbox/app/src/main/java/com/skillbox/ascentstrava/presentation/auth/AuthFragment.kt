@@ -26,7 +26,7 @@ class AuthFragment : Fragment(R.layout.fragment_auth) {
         super.onAttach(context)
         DaggerAuthComponent
             .factory()
-            .create(requireContext().appComponent)
+            .create(context.appComponent)
             .inject(this)
     }
 

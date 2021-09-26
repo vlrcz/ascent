@@ -13,22 +13,12 @@ class MainViewModel @Inject constructor(
     private val mainRepository: MainRepository
 ) : ViewModel() {
 
-    private val isFirstTimeEntry = MutableLiveData<Boolean>()
+    private val isFirstTimeEntry = MutableLiveData(mainRepository.isFirstEntry())
 
     val isFirstEntry: LiveData<Boolean>
         get() = isFirstTimeEntry
 
     fun addFlagAfterFirstEntry() {
-        viewModelScope.launch(Dispatchers.IO) {
-            mainRepository.addFlagAfterFirstEntry()
-        }
-    }
-
-    fun isFirstEntry() {
-        if (!mainRepository.isFirstEntry()) {
-            isFirstTimeEntry.postValue(false)
-        } else {
-            isFirstTimeEntry.postValue(true)
-        }
+        mainRepository.addFlagAfterFirstEntry()
     }
 }
