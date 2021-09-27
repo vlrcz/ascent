@@ -3,6 +3,7 @@ package com.skillbox.ascentstrava.di
 import android.app.Application
 import android.content.Context
 import android.content.SharedPreferences
+import com.skillbox.ascentstrava.app.App
 import com.skillbox.ascentstrava.data.AuthManager
 import com.skillbox.ascentstrava.di.module.NetworkModule
 import com.skillbox.ascentstrava.di.module.StorageModule
@@ -18,6 +19,7 @@ interface AppComponent {
     fun context(): Context
     fun authManager(): AuthManager
     fun sharedPrefs(): SharedPreferences
+    fun application(): Application
 
     @Component.Factory
     interface Factory {

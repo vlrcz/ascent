@@ -33,5 +33,18 @@
         tools:layout="@layout/fragment_auth"
         android:id="@+id/authFragment"
         android:name="com.skillbox.ascentstrava.presentation.auth.AuthFragment"
-        android:label="AuthFragment" />
+        android:label="AuthFragment" >
+        <action
+            android:id="@+id/action_authFragment_to_personFragment"
+            app:destination="@id/personFragment"
+            app:enterAnim="@android:anim/fade_in"
+            app:exitAnim="@android:anim/fade_out"
+            app:popEnterAnim="@android:anim/fade_in"
+            app:popExitAnim="@android:anim/fade_out" />
+    </fragment>
+    <fragment
+        tools:layout="@layout/fragment_person"
+        android:id="@+id/personFragment"
+        android:name="com.skillbox.ascentstrava.presentation.person.PersonFragment"
+        android:label="PersonFragment" />
 </navigation>

@@ -57,13 +57,23 @@
         android:id="@+id/alreadyMemberTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
         android:text="@string/already_a_member"
         android:textAllCaps="true"
         android:textSize="8sp"
-        android:layout_marginBottom="20dp"
         app:layout_constraintBottom_toTopOf="@id/authBtn"
         app:layout_constraintEnd_toStartOf="@+id/lineImageView2"
         app:layout_constraintStart_toEndOf="@+id/lineImageView1"
         tools:ignore="SmallSp" />
+
+    <ProgressBar
+        android:id="@+id/authProgress"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:theme="@style/ProgressBarStyle"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

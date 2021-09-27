@@ -13,4 +13,5 @@
     <string name="skip_btn">Skip</string>
     <string name="continue_with_strava">Continue with Strava</string>
     <string name="already_a_member">already a member</string>
+    <string name="auth_canceled">Аутентификация не выполнена</string>
 </resources>
