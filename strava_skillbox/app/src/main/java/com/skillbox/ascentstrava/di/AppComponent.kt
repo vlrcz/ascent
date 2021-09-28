@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.SharedPreferences
 import com.skillbox.ascentstrava.app.App
 import com.skillbox.ascentstrava.data.AuthManager
+import com.skillbox.ascentstrava.data.StravaApi
 import com.skillbox.ascentstrava.di.module.AuthModule
 import com.skillbox.ascentstrava.di.module.NetworkModule
 import com.skillbox.ascentstrava.di.module.StorageModule

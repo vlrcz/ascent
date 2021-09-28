@@ -2,7 +2,9 @@ package com.skillbox.ascentstrava.di.module
 
 import com.skillbox.ascentstrava.data.AuthConfig
 import com.skillbox.ascentstrava.data.AuthInterceptor
+import com.skillbox.ascentstrava.data.AuthManager
 import com.skillbox.ascentstrava.data.StravaApi
+import com.skillbox.ascentstrava.data.TokenAuthenticator
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
@@ -13,8 +15,8 @@ import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import retrofit2.create
-import javax.inject.Qualifier
 import javax.inject.Singleton
+import okhttp3.Authenticator
 
 @Module
 abstract class NetworkModule {
@@ -23,13 +25,15 @@ abstract class NetworkModule {
         @Provides
         @Singleton
         fun providesOkHttpClient(
-            interceptors: Set<Interceptor>
+            interceptors: Set<Interceptor>,
+            tokenAuthenticator: TokenAuthenticator
         ): OkHttpClient {
             val okHttpClient = OkHttpClient.Builder()
             interceptors.forEach {
                 okHttpClient.addInterceptor(it)
             }
             return okHttpClient
+                .authenticator(tokenAuthenticator)
                 .followRedirects(true)
                 .build()
         }
@@ -55,6 +59,15 @@ abstract class NetworkModule {
         @Singleton
         fun providesApi(retrofit: Retrofit): StravaApi {
             return retrofit.create()
+        }
+
+        @Provides
+        @Singleton
+        fun provideTokenAuthenticator(
+            stravaApi: StravaApi,
+            authManager: AuthManager
+        ): Authenticator {
+            return TokenAuthenticator(stravaApi, authManager)
         }
     }
 

@@ -7,8 +7,13 @@ import javax.inject.Singleton
 class AuthManager @Inject constructor() {
 
     var accessToken: String? = null
+    var refreshToken: String? = null
 
-    fun saveToken(accessToken: String) {
+    fun saveAccessToken(accessToken: String) {
         this.accessToken = accessToken
+    }
+
+    fun saveRefreshToken(refreshToken: String) {
+        this.refreshToken = refreshToken
     }
 }
