@@ -1,19 +1,34 @@
 package com.skillbox.ascentstrava.data
 
+import android.content.SharedPreferences
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class AuthManager @Inject constructor() {
-
-    var accessToken: String? = null
-    var refreshToken: String? = null
+class AuthManager @Inject constructor(private val sharedPrefs: SharedPreferences) {
 
     fun saveAccessToken(accessToken: String) {
-        this.accessToken = accessToken
+        sharedPrefs.edit()
+            .putString(ACCESS_TOKEN, accessToken)
+            .apply()
     }
 
     fun saveRefreshToken(refreshToken: String) {
-        this.refreshToken = refreshToken
+        sharedPrefs.edit()
+            .putString(REFRESH_TOKEN, refreshToken)
+            .apply()
+    }
+
+    fun receiveAccessToken(): String? {
+        return sharedPrefs.getString(ACCESS_TOKEN, null)
+    }
+
+    fun receiveRefreshToken(): String? {
+        return sharedPrefs.getString(REFRESH_TOKEN, null)
+    }
+
+    companion object {
+        private const val ACCESS_TOKEN = "Access Token"
+        private const val REFRESH_TOKEN = "Refresh Token"
     }
 }

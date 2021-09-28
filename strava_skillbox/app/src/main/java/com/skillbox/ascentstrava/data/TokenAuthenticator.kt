@@ -14,12 +14,12 @@ class TokenAuthenticator @Inject constructor(
 ) : Authenticator {
     override fun authenticate(route: Route?, response: Response): Request? {
         return runBlocking {
-            val refreshToken = authManager.refreshToken
+            val refreshToken = authManager.receiveRefreshToken()
             val tokenResponse = stravaApi.refreshAccessToken(refreshToken)
             tokenResponse.access_token?.let { authManager.saveAccessToken(it) }
             tokenResponse.refresh_token?.let { authManager.saveRefreshToken(it) }
             response.request.newBuilder()
-                .addHeader(AuthConfig.AUTHORIZATION_HEADER, "token ${authManager.accessToken}")
+                .addHeader(AuthConfig.AUTHORIZATION_HEADER, "token ${authManager.receiveAccessToken()}")
                 .build()
         }
     }
