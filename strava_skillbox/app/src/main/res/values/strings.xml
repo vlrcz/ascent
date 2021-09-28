@@ -15,4 +15,7 @@
     <string name="already_a_member">already a member</string>
     <string name="auth_canceled">Аутентификация не выполнена</string>
     <string name="call_canceled">Запрос не выполнен</string>
+    <string name="profile">Profile</string>
+    <string name="profile_disabled">Profile_disabled</string>
+    <string name="activities_menu">Activities</string>
 </resources>

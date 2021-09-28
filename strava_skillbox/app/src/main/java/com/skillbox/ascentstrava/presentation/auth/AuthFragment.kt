@@ -71,7 +71,7 @@ class AuthFragment : Fragment(R.layout.fragment_auth) {
             toast(it)
         }
         viewModel.authSuccessLiveData.observe(viewLifecycleOwner) {
-            findNavController().navigate(R.id.action_authFragment_to_personFragment)
+            findNavController().navigate(R.id.action_authFragment_to_containerFragment)
         }
     }
 
