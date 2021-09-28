@@ -1,11 +1,6 @@
 package com.skillbox.ascentstrava.presentation.auth
 
-import android.app.Application
 import android.content.Intent
-import androidx.browser.customtabs.CustomTabsIntent
-import androidx.browser.customtabs.CustomTabsIntent.COLOR_SCHEME_SYSTEM
-import androidx.browser.customtabs.CustomTabsIntent.ColorScheme
-import androidx.core.content.ContextCompat
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -19,10 +14,8 @@ import net.openid.appauth.TokenRequest
 
 class AuthViewModel @Inject constructor(
     private val authRepository: AuthRepository,
-    application: Application
+    private val authService: AuthorizationService
 ) : ViewModel() {
-
-    private val authService: AuthorizationService = AuthorizationService(application)
 
     private val openAuthPageLiveEvent = SingleLiveEvent<Intent>()
     private val toastLiveEvent = SingleLiveEvent<Int>()

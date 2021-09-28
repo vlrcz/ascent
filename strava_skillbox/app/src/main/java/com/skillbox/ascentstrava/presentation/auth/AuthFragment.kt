@@ -1,9 +1,11 @@
 package com.skillbox.ascentstrava.presentation.auth
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -25,6 +27,24 @@ class AuthFragment : Fragment(R.layout.fragment_auth) {
     @Inject
     lateinit var viewModelProvider: Provider<AuthViewModel>
 
+    private val activityResultLauncher =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == Activity.RESULT_OK) {
+                val tokenExchangeRequest = result.data?.let {
+                    AuthorizationResponse.fromIntent(it)
+                        ?.createTokenExchangeRequest()
+                }
+                val exception = AuthorizationException.fromIntent(result.data)
+                when {
+                    tokenExchangeRequest != null && exception == null ->
+                        viewModel.onAuthCodeReceived(tokenExchangeRequest)
+                    exception != null -> viewModel.onAuthCodeFailed(exception)
+                }
+            } else {
+                toast(R.string.call_canceled)
+            }
+        }
+
     private val binding: FragmentAuthBinding by viewBinding(FragmentAuthBinding::bind)
     private val viewModel: AuthViewModel by viewModels { ViewModelFactory { viewModelProvider.get() } }
 
@@ -41,26 +61,15 @@ class AuthFragment : Fragment(R.layout.fragment_auth) {
         bindViewModel()
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if (requestCode == AUTH_REQUEST_CODE && data != null) {
-            val tokenExchangeRequest = AuthorizationResponse.fromIntent(data)
-                ?.createTokenExchangeRequest()
-            val exception = AuthorizationException.fromIntent(data)
-            when {
-                tokenExchangeRequest != null && exception == null ->
-                    viewModel.onAuthCodeReceived(tokenExchangeRequest)
-                exception != null -> viewModel.onAuthCodeFailed(exception)
-            }
-        } else {
-            super.onActivityResult(requestCode, resultCode, data)
-        }
-    }
-
     private fun bindViewModel() {
         binding.authBtn.setOnClickListener { viewModel.openLoginPage() }
         viewModel.loadingLiveData.observe(viewLifecycleOwner, ::updateIsLoading)
-        viewModel.openAuthPageLiveData.observe(viewLifecycleOwner, ::openAuthPage)
-        viewModel.toastLiveData.observe(viewLifecycleOwner, ::toast)
+        viewModel.openAuthPageLiveData.observe(viewLifecycleOwner) { intent ->
+            openAuthPage(intent)
+        }
+        viewModel.toastLiveData.observe(viewLifecycleOwner) {
+            toast(it)
+        }
         viewModel.authSuccessLiveData.observe(viewLifecycleOwner) {
             findNavController().navigate(R.id.action_authFragment_to_personFragment)
         }
@@ -72,10 +81,6 @@ class AuthFragment : Fragment(R.layout.fragment_auth) {
     }
 
     private fun openAuthPage(intent: Intent) {
-        startActivityForResult(intent, AUTH_REQUEST_CODE)
-    }
-
-    companion object {
-        private const val AUTH_REQUEST_CODE = 1111
+        activityResultLauncher.launch(intent)
     }
 }
