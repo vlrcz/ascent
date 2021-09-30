@@ -3,11 +3,13 @@ package com.skillbox.ascentstrava.di.module
 import com.skillbox.ascentstrava.data.AuthConfig
 import com.skillbox.ascentstrava.data.AuthInterceptor
 import com.skillbox.ascentstrava.data.StravaApi
+import com.skillbox.ascentstrava.data.TokenAuthenticator
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import dagger.multibindings.IntoSet
 import javax.inject.Singleton
+import okhttp3.Authenticator
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -22,13 +24,15 @@ abstract class NetworkModule {
         @Provides
         @Singleton
         fun providesOkHttpClient(
-            interceptors: Set<@JvmSuppressWildcards Interceptor>
+            interceptors: Set<@JvmSuppressWildcards Interceptor>,
+            tokenAuthenticator: TokenAuthenticator
         ): OkHttpClient {
             val okHttpClient = OkHttpClient.Builder()
             interceptors.forEach {
                 okHttpClient.addInterceptor(it)
             }
             return okHttpClient
+                .authenticator(tokenAuthenticator)
                 .followRedirects(true)
                 .build()
         }
@@ -62,4 +66,10 @@ abstract class NetworkModule {
     abstract fun providerHeaderInterceptor(
         authInterceptor: AuthInterceptor
     ): Interceptor
+
+    @Binds
+    @Singleton
+    abstract fun provideTokenAuthenticator(
+        tokenAuthenticator: TokenAuthenticator
+    ): Authenticator
 }
