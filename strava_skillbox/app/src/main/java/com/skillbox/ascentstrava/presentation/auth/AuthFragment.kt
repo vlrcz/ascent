@@ -77,6 +77,9 @@ class AuthFragment : Fragment(R.layout.fragment_auth) {
 
     private fun updateIsLoading(isLoading: Boolean) {
         binding.authBtn.isVisible = !isLoading
+        binding.alreadyMemberTextView.isVisible = !isLoading
+        binding.lineImageView1.isVisible = !isLoading
+        binding.lineImageView2.isVisible = !isLoading
         binding.authProgress.isVisible = isLoading
     }
 

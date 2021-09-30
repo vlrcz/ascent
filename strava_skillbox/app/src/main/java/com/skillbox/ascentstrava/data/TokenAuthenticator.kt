@@ -8,19 +8,23 @@ import okhttp3.Response
 import okhttp3.Route
 
 
+/*
 class TokenAuthenticator @Inject constructor(
     private val stravaApi: StravaApi,
     private val authManager: AuthManager
 ) : Authenticator {
     override fun authenticate(route: Route?, response: Response): Request? {
+        val originalRequest = response.request
+        if (originalRequest.header("Authorization") != null) return null
+
         return runBlocking {
-            if (response.code == UNAUTHORIZED_CODE) {
+            if (authManager.receiveAccessToken()?.isEmpty() == true) {
                 val refreshToken = authManager.receiveRefreshToken()
                 val tokenResponse = stravaApi.refreshAccessToken(refreshToken)
                 tokenResponse.accessToken?.let { authManager.saveAccessToken(it) }
                 tokenResponse.refreshToken?.let { authManager.saveRefreshToken(it) }
-                response.request.newBuilder()
-                    .addHeader(
+                originalRequest.newBuilder()
+                    .header(
                         AuthConfig.AUTHORIZATION_HEADER,
                         "token ${authManager.receiveAccessToken()}"
                     )
@@ -32,4 +36,4 @@ class TokenAuthenticator @Inject constructor(
     companion object {
         private const val UNAUTHORIZED_CODE = 401
     }
-}
+}*/

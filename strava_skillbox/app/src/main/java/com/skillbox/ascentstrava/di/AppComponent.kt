@@ -3,13 +3,11 @@ package com.skillbox.ascentstrava.di
 import android.app.Application
 import android.content.Context
 import android.content.SharedPreferences
-import com.skillbox.ascentstrava.app.App
 import com.skillbox.ascentstrava.data.AuthManager
 import com.skillbox.ascentstrava.data.StravaApi
 import com.skillbox.ascentstrava.di.module.AuthModule
 import com.skillbox.ascentstrava.di.module.NetworkModule
 import com.skillbox.ascentstrava.di.module.StorageModule
-import com.skillbox.ascentstrava.presentation.main.MainFragment
 import dagger.BindsInstance
 import dagger.Component
 import javax.inject.Singleton
@@ -24,6 +22,7 @@ interface AppComponent {
     fun sharedPrefs(): SharedPreferences
     fun application(): Application
     fun authService(): AuthorizationService
+    fun stravaApi(): StravaApi
 
     @Component.Factory
     interface Factory {
