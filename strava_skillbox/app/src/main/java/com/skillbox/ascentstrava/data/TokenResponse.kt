@@ -1,6 +1,12 @@
 package com.skillbox.ascentstrava.data
 
+import com.squareup.moshi.Json
+import com.squareup.moshi.JsonClass
+
+@JsonClass(generateAdapter = true)
 data class TokenResponse(
-    val accessToken: String?,
-    val refreshToken: String?
+    @Json(name = "access_token")
+    val accessToken: String,
+    @Json(name = "refresh_token")
+    val refreshToken: String
 )

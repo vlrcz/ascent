@@ -9,6 +9,7 @@ import androidx.fragment.app.viewModels
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.skillbox.ascentstrava.R
 import com.skillbox.ascentstrava.app.appComponent
+import com.skillbox.ascentstrava.data.AuthManager
 import com.skillbox.ascentstrava.databinding.FragmentProfileBinding
 import com.skillbox.ascentstrava.di.ViewModelFactory
 import com.skillbox.ascentstrava.presentation.profile.di.DaggerProfileComponent
@@ -19,6 +20,10 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
 
     @Inject
     lateinit var viewModelProvider: Provider<ProfileViewModel>
+
+    @Inject
+    lateinit var authManager: AuthManager
+
     private val viewModel: ProfileViewModel by viewModels { ViewModelFactory { viewModelProvider.get() } }
 
     private val binding: FragmentProfileBinding by viewBinding(FragmentProfileBinding::bind)
@@ -35,6 +40,11 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewModel.getProfileInfo()
+
+        binding.testTextView.setOnClickListener {
+            authManager.brokeAccessToken()
+        }
+
         viewModel.athlete.observe(viewLifecycleOwner) {
             binding.testTextView.text = """
                 ${it.userName}

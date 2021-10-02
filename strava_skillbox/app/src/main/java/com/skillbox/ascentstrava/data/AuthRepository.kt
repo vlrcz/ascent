@@ -21,7 +21,7 @@ class AuthRepository @Inject constructor(private val authManager: AuthManager) {
 
         return AuthorizationRequest.Builder(
             serviceConfiguration,
-            AuthConfig.CLIENT_ID,
+            AuthConfig.CLIENT_ID.toString(),
             AuthConfig.RESPONSE_TYPE,
             redirectUri
         )

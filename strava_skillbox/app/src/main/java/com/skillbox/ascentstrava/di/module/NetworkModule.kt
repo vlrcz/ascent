@@ -3,7 +3,8 @@ package com.skillbox.ascentstrava.di.module
 import com.skillbox.ascentstrava.data.AuthConfig
 import com.skillbox.ascentstrava.data.AuthInterceptor
 import com.skillbox.ascentstrava.data.StravaApi
-import com.skillbox.ascentstrava.data.TokenAuthenticator
+import com.squareup.moshi.Moshi
+import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
@@ -24,15 +25,13 @@ abstract class NetworkModule {
         @Provides
         @Singleton
         fun providesOkHttpClient(
-            interceptors: Set<@JvmSuppressWildcards Interceptor>,
-            tokenAuthenticator: TokenAuthenticator
+            interceptors: Set<@JvmSuppressWildcards Interceptor>
         ): OkHttpClient {
             val okHttpClient = OkHttpClient.Builder()
             interceptors.forEach {
                 okHttpClient.addInterceptor(it)
             }
             return okHttpClient
-                .authenticator(tokenAuthenticator)
                 .followRedirects(true)
                 .build()
         }
@@ -59,6 +58,14 @@ abstract class NetworkModule {
         fun providesApi(retrofit: Retrofit): StravaApi {
             return retrofit.create()
         }
+
+        @Provides
+        @Singleton
+        fun provideMoshi(): Moshi {
+            return Moshi.Builder()
+                .add(KotlinJsonAdapterFactory())
+                .build()
+        }
     }
 
     @Binds
@@ -66,10 +73,4 @@ abstract class NetworkModule {
     abstract fun providerHeaderInterceptor(
         authInterceptor: AuthInterceptor
     ): Interceptor
-
-    @Binds
-    @Singleton
-    abstract fun provideTokenAuthenticator(
-        tokenAuthenticator: TokenAuthenticator
-    ): Authenticator
 }

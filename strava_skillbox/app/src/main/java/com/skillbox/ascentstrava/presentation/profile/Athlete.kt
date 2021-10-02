@@ -13,10 +13,10 @@ data class Athlete(
     val firstName: String,
     @Json(name = "lastname")
     val lastName: String,
-    @Json(name = "friend_count")
-    val friends: Long,
-    @Json(name = "follower_count")
-    val followers: Long,
+    @Json(name = "friend")
+    val friends: Long?,
+    @Json(name = "follower")
+    val followers: Long?,
     @Json(name = "sex")
     val gender: String,
     @Json(name = "country")
