@@ -42,8 +42,7 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
         viewModel.getProfileInfo()
 
         binding.testTextView.setOnClickListener {
-            authManager.brokeAccessToken()
-            TODO("удалить")
+            authManager.brokeAccessToken() //TODO()
         }
 
         viewModel.athlete.observe(viewLifecycleOwner) {

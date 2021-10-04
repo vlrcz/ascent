@@ -63,10 +63,10 @@ class AuthInterceptor @Inject constructor(
     private fun createRefreshRequest(refreshToken: String): Request {
         val post = moshi.adapter(RefreshRequest::class.java).toJson(
             RefreshRequest(
-                AuthConfig.CLIENT_ID,
-                AuthConfig.CLIENT_SECRET,
-                refreshToken,
-                "refresh_token"
+                clientId = AuthConfig.CLIENT_ID,
+                clientSecret = AuthConfig.CLIENT_SECRET,
+                refreshToken = refreshToken,
+                grantType = "refresh_token"
             )
         )
 

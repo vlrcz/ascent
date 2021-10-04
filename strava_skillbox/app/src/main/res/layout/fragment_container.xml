@@ -23,7 +23,7 @@
     </com.google.android.material.appbar.AppBarLayout>
 
     <androidx.fragment.app.FragmentContainerView
-        app:defaultNavHost="false"
+        app:defaultNavHost="true"
         app:navGraph="@navigation/nav_graph_nested"
         android:name="androidx.navigation.fragment.NavHostFragment"
         android:id="@+id/container"
