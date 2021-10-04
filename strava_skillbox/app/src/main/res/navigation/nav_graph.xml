@@ -6,21 +6,24 @@
     app:startDestination="@id/mainFragment">
     <fragment
         android:id="@+id/mainFragment"
-        tools:layout="@layout/fragment_main"
         android:name="com.skillbox.ascentstrava.presentation.main.MainFragment"
-        android:label="MainFragment" >
+        android:label="MainFragment"
+        tools:layout="@layout/fragment_main">
         <action
             android:id="@+id/action_mainFragment_to_onboardingFragment"
             app:destination="@id/onboardingFragment" />
         <action
             android:id="@+id/action_mainFragment_to_authFragment"
             app:destination="@id/authFragment" />
+        <action
+            android:id="@+id/action_mainFragment_to_containerFragment"
+            app:destination="@id/containerFragment" />
     </fragment>
     <fragment
-        tools:layout="@layout/fragment_onboarding"
         android:id="@+id/onboardingFragment"
         android:name="com.skillbox.ascentstrava.presentation.onboarding.OnboardingFragment"
-        android:label="OnboardingFragment" >
+        android:label="OnboardingFragment"
+        tools:layout="@layout/fragment_onboarding">
         <action
             android:id="@+id/action_onboardingFragment_to_authFragment"
             app:destination="@id/authFragment"
@@ -30,24 +33,14 @@
             app:popExitAnim="@android:anim/fade_out" />
     </fragment>
     <fragment
-        tools:layout="@layout/fragment_auth"
         android:id="@+id/authFragment"
         android:name="com.skillbox.ascentstrava.presentation.auth.AuthFragment"
-        android:label="AuthFragment" >
+        android:label="AuthFragment"
+        tools:layout="@layout/fragment_auth">
         <action
             android:id="@+id/action_authFragment_to_containerFragment"
             app:destination="@id/containerFragment" />
     </fragment>
-    <fragment
-        tools:layout="@layout/fragment_profile"
-        android:id="@+id/personFragment"
-        android:name="com.skillbox.ascentstrava.presentation.profile.ProfileFragment"
-        android:label="PersonFragment" />
-    <fragment
-        tools:layout="@layout/fragment_activities"
-        android:id="@+id/activitiesFragment"
-        android:name="com.skillbox.ascentstrava.presentation.activities.ActivitiesFragment"
-        android:label="ActivitiesFragment" />
     <fragment
         tools:layout="@layout/fragment_container"
         android:id="@+id/containerFragment"

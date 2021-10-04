@@ -21,4 +21,8 @@ class MainViewModel @Inject constructor(
     fun addFlagAfterFirstEntry() {
         mainRepository.addFlagAfterFirstEntry()
     }
+
+    fun containsAccessToken(): Boolean {
+        return mainRepository.containsAccessToken()
+    }
 }

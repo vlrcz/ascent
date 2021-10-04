@@ -2,29 +2,14 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/profile"
+        android:id="@+id/profileFragment"
         android:enabled="true"
         android:icon="@drawable/ic_profile_purple"
         android:title="@string/profile" />
 
     <item
-        android:id="@+id/activities"
+        android:id="@+id/activitiesFragment"
         android:enabled="true"
         android:icon="@drawable/ic_activities"
         android:title="@string/activities" />
-
-    <!--<item
-        android:id="@+id/profileDisabled"
-        android:enabled="true"
-        android:icon="@drawable/ic_profile"
-        android:title="@string/profile_disabled"
-        android:visible="false"/>
-
-    <item
-        android:id="@+id/activitiesEnabled"
-        android:enabled="true"
-        android:icon="@drawable/ic_activities_purple"
-        android:title="@string/activities"
-        android:visible="false"/>-->
-
 </menu>

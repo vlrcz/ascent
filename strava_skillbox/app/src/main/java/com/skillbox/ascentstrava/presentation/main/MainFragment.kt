@@ -31,12 +31,19 @@ class MainFragment : Fragment(R.layout.fragment_main) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel.isFirstEntry.observe(viewLifecycleOwner) {
-            if (it == true) {
-                findNavController().navigate(R.id.action_mainFragment_to_authFragment)
-            } else {
-                findNavController().navigate(R.id.action_mainFragment_to_onboardingFragment)
-                viewModel.addFlagAfterFirstEntry()
+        viewModel.isFirstEntry.observe(viewLifecycleOwner) { isFirstEntry ->
+            when (isFirstEntry) {
+                true -> {
+                    if (viewModel.containsAccessToken()) {
+                        findNavController().navigate(R.id.action_mainFragment_to_containerFragment)
+                    } else {
+                        findNavController().navigate(R.id.action_mainFragment_to_authFragment)
+                    }
+                }
+                else -> {
+                    findNavController().navigate(R.id.action_mainFragment_to_onboardingFragment)
+                    viewModel.addFlagAfterFirstEntry()
+                }
             }
         }
     }

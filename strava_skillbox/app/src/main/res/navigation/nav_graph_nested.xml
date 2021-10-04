@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/nav_graph_nested"
+    app:startDestination="@id/profileFragment">
+
+    <fragment
+        android:id="@+id/profileFragment"
+        android:name="com.skillbox.ascentstrava.presentation.profile.ProfileFragment"
+        android:label="ProfileFragment" >
+        <action
+            android:id="@+id/action_profileFragment_to_activitiesFragment"
+            app:destination="@id/activitiesFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/activitiesFragment"
+        android:name="com.skillbox.ascentstrava.presentation.activities.ActivitiesFragment"
+        android:label="ActivitiesFragment" />
+</navigation>
