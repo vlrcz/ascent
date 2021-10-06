@@ -7,6 +7,7 @@ import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import by.kirich1409.viewbindingdelegate.viewBinding
+import com.bumptech.glide.Glide
 import com.skillbox.ascentstrava.R
 import com.skillbox.ascentstrava.app.appComponent
 import com.skillbox.ascentstrava.data.AuthManager
@@ -41,19 +42,19 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
         super.onViewCreated(view, savedInstanceState)
         viewModel.getProfileInfo()
 
-        binding.testTextView.setOnClickListener {
+        binding.shareBtn.setOnClickListener {
             authManager.brokeAccessToken() //TODO()
         }
 
-        viewModel.athlete.observe(viewLifecycleOwner) {
-            binding.testTextView.text = """
-                ${it.userName}
-                ${it.lastName}
-                ${it.firstName}
-            """.trimIndent()
-        }
-        viewModel.error.observe(viewLifecycleOwner) {
-            binding.testTextView.text = it.message
+        viewModel.athlete.observe(viewLifecycleOwner) { athlete ->
+            binding.nameTextView.text = athlete.firstName + athlete.lastName
+            binding.usernameTextView.text = "@" + athlete.userName
+            binding.followersCountTextView.text = athlete.followers.toString()
+            binding.followingCountTextView.text = athlete.friends.toString()
+
+            Glide.with(this)
+                .load(athlete.photoUrl)
+                .into(binding.imageView)
         }
     }
 }

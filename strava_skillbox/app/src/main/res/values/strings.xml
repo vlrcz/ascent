@@ -18,4 +18,11 @@
     <string name="profile">Profile</string>
     <string name="profile_disabled">Profile_disabled</string>
     <string name="activities_menu">Activities</string>
+    <string name="logout_btn">Logout</string>
+    <string name="followingTextView">Following</string>
+    <string name="followersTextView">Followers</string>
+    <string name="shareBtn">Share</string>
+    <string name="genderTextView">Gender</string>
+    <string name="countryTextView">Country</string>
+    <string name="weightTextView">Weight</string>
 </resources>
