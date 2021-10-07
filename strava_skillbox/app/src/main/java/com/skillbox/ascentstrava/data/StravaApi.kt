@@ -1,10 +1,8 @@
 package com.skillbox.ascentstrava.data
 
 import com.skillbox.ascentstrava.presentation.profile.Athlete
-import retrofit2.http.Field
-import retrofit2.http.FormUrlEncoded
-import retrofit2.http.GET
-import retrofit2.http.POST
+import com.skillbox.ascentstrava.presentation.profile.data.UpdateRequestBody
+import retrofit2.http.*
 
 interface StravaApi {
 
@@ -12,10 +10,15 @@ interface StravaApi {
     @POST("auth/refresh-token")
     suspend fun refreshAccessToken(
         @Field("refresh_token") refreshToken: String?
-    ): TokenResponse
+    ): TokenResponse //todo удалить? не используется
 
     @GET("athlete")
     suspend fun getProfileInfo(): Athlete
+
+    @PUT("athlete")
+    suspend fun changeAthleteWeight(
+        @Body weight: UpdateRequestBody
+    )
 
     @POST("activities")
     suspend fun createActivity(

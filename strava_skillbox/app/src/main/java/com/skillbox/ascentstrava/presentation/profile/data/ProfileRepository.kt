@@ -14,4 +14,10 @@ class ProfileRepository @Inject constructor(
             stravaApi.getProfileInfo()
         }
     }
+
+    suspend fun changeAthleteWeight(weight: UpdateRequestBody) {
+        withContext(Dispatchers.IO) {
+            stravaApi.changeAthleteWeight(weight)
+        }
+    }
 }

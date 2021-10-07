@@ -24,5 +24,5 @@
     <string name="shareBtn">Share</string>
     <string name="genderTextView">Gender</string>
     <string name="countryTextView">Country</string>
-    <string name="weightTextView">Weight</string>
+    <string name="weightTextView">Weight (edit)</string>
 </resources>

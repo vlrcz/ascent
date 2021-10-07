@@ -28,7 +28,7 @@ class AuthManager @Inject constructor(private val sharedPrefs: SharedPreferences
     }
 
     fun brokeAccessToken() {
-        saveAccessToken("a5syuy67") //TODO()
+        saveAccessToken("a5syuy67") //todo удалить
     }
 
     companion object {
