@@ -2,9 +2,9 @@ package com.skillbox.ascentstrava.presentation.profile.data
 
 import com.skillbox.ascentstrava.data.StravaApi
 import com.skillbox.ascentstrava.presentation.profile.Athlete
-import javax.inject.Inject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import javax.inject.Inject
 
 class ProfileRepository @Inject constructor(
     private val stravaApi: StravaApi

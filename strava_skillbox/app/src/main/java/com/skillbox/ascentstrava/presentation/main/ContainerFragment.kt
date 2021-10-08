@@ -1,7 +1,11 @@
 package com.skillbox.ascentstrava.presentation.main
 
+import android.Manifest
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.View
+import androidx.appcompat.app.AlertDialog
+import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
@@ -18,10 +22,21 @@ class ContainerFragment : Fragment(R.layout.fragment_container) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val nestedHavHostFragment = childFragmentManager.findFragmentById(R.id.container) as? NavHostFragment
+        val nestedHavHostFragment =
+            childFragmentManager.findFragmentById(R.id.container) as? NavHostFragment
         navController = nestedHavHostFragment?.navController
         if (navController != null) {
             binding.bottomNavigation.setupWithNavController(navController!!)
+        }
+
+        binding.topAppBar.setOnMenuItemClickListener {
+            when (it.itemId) {
+                R.id.shareButton -> {
+
+                    true
+                }
+                else -> false
+            }
         }
     }
 }

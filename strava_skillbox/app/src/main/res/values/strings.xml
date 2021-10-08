@@ -25,4 +25,11 @@
     <string name="genderTextView">Gender</string>
     <string name="countryTextView">Country</string>
     <string name="weightTextView">Weight (edit)</string>
+    <string name="negativeBtn">Отмена</string>
+    <string name="positiveBtn">OK</string>
+    <string name="need_contacts_read_permission">Необходимо одобрение разрешения для доступа к контактам</string>
+    <string name="profile_url">https://www.strava.com/athletes/</string>
+    <string name="no_contact_selected">Не выбран контакт</string>
+    <string name="already_in_strava">Я уже в Strava: </string>
+    <string name="weight_not_selected">Вес не выбран</string>
 </resources>
