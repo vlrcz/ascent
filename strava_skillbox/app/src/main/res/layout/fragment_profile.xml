@@ -28,7 +28,7 @@
                 app:layout_constraintBottom_toTopOf="@id/guideline"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:shapeAppearanceOverlay="@style/roundedImageViewRounded"
+                app:shapeAppearanceOverlay="@style/RoundedImageViewStyle"
                 app:strokeWidth="1dp"
                 tools:srcCompat="@tools:sample/avatars" />
 

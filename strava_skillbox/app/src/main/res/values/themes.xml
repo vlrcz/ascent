@@ -41,7 +41,7 @@
         <item name="colorAccent">@color/gray</item>
     </style>
 
-    <style name="roundedImageViewRounded">
+    <style name="RoundedImageViewStyle">
         <item name="cornerFamily">rounded</item>
         <item name="cornerSize">50%</item>
     </style>

@@ -46,4 +46,9 @@
         android:id="@+id/containerFragment"
         android:name="com.skillbox.ascentstrava.presentation.main.ContainerFragment"
         android:label="ContainerFragment" />
+    <fragment
+        tools:layout="@layout/fragment_webview"
+        android:id="@+id/webViewFragment"
+        android:name="com.skillbox.ascentstrava.presentation.main.WebViewFragment"
+        android:label="WebViewFragment" />
 </navigation>
