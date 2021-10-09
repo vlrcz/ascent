@@ -218,7 +218,7 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
         athlete: Athlete
     ) {
         val list = (0..200).toList().map {
-            "$it kg"
+            "$it $KG"
         }
         val adapter = ArrayAdapter(requireContext(), R.layout.dropdown_item, list)
         binding.autoCompleteTextView.setAdapter(adapter)
@@ -232,7 +232,7 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
         }
 
         binding.autoCompleteTextView.setOnItemClickListener { _, _, position, _ ->
-            val newWeight = adapter.getItem(position)?.substringBefore(" kg")?.toFloat()!!
+            val newWeight = adapter.getItem(position)?.substringBefore(" $KG")?.toFloat()!!
             viewModel.changeAthleteWeight(UpdateRequestBody(newWeight))
         }
     }
