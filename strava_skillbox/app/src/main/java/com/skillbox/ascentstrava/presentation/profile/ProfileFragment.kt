@@ -82,6 +82,21 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
             }
         }
 
+    private val requestContactsReadResultLauncher =
+        registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
+            if (isGranted) {
+                openContactsBook()
+            } else {
+                val needRationale = ActivityCompat.shouldShowRequestPermissionRationale(
+                    requireActivity(),
+                    Manifest.permission.READ_CONTACTS
+                )
+                if (needRationale) {
+                    showRationaleDialog()
+                }
+            }
+        }
+
     override fun onAttach(context: Context) {
         super.onAttach(context)
         DaggerProfileComponent
@@ -152,21 +167,6 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
         requestContactsReadResultLauncher.launch(Manifest.permission.READ_CONTACTS)
     }
 
-    private val requestContactsReadResultLauncher =
-        registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
-            if (isGranted) {
-                openContactsBook()
-            } else {
-                val needRationale = ActivityCompat.shouldShowRequestPermissionRationale(
-                    requireActivity(),
-                    Manifest.permission.READ_CONTACTS
-                )
-                if (needRationale) {
-                    showRationaleDialog()
-                }
-            }
-        }
-
     private fun openContactsBook() {
         val intent = Intent(Intent.ACTION_PICK).apply {
             type = ContactsContract.CommonDataKinds.Phone.CONTENT_TYPE
@@ -210,6 +210,8 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
 
         Glide.with(this)
             .load(athlete.photoUrl)
+            .placeholder(R.drawable.ic_placeholder)
+            .error(R.drawable.ic_error_placeholder)
             .into(binding.imageView)
     }
 

@@ -50,5 +50,10 @@
         tools:layout="@layout/fragment_webview"
         android:id="@+id/webViewFragment"
         android:name="com.skillbox.ascentstrava.presentation.main.WebViewFragment"
-        android:label="WebViewFragment" />
+        android:label="WebViewFragment" >
+        <argument
+            android:name="url"
+            app:argType="string" />
+    </fragment>
+    <action android:id="@+id/action_global_webViewFragment" app:destination="@id/webViewFragment" />
 </navigation>
