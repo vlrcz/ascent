@@ -12,11 +12,31 @@
         android:label="ProfileFragment" >
         <action
             android:id="@+id/action_profileFragment_to_activitiesFragment"
-            app:destination="@id/activitiesFragment" />
+            app:destination="@id/activitiesFragment"
+            app:enterAnim="@android:anim/fade_in"
+            app:exitAnim="@android:anim/fade_out"
+            app:popEnterAnim="@android:anim/fade_in"
+            app:popExitAnim="@android:anim/fade_out" />
     </fragment>
     <fragment
         tools:layout="@layout/fragment_activities"
         android:id="@+id/activitiesFragment"
         android:name="com.skillbox.ascentstrava.presentation.activities.ActivitiesFragment"
         android:label="ActivitiesFragment" />
+    <fragment
+        tools:layout="@layout/fragment_share"
+        android:id="@+id/shareFragment"
+        android:name="com.skillbox.ascentstrava.presentation.share.ShareFragment"
+        android:label="ShareFragment" >
+        <argument
+            android:name="url"
+            app:argType="string" />
+    </fragment>
+    <action
+        android:id="@+id/action_global_shareFragment"
+        app:destination="@id/shareFragment"
+        app:enterAnim="@android:anim/fade_in"
+        app:exitAnim="@android:anim/fade_out"
+        app:popEnterAnim="@android:anim/fade_in"
+        app:popExitAnim="@android:anim/fade_out" />
 </navigation>

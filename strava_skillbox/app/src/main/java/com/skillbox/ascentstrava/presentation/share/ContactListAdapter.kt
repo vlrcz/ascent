@@ -5,11 +5,15 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import com.skillbox.ascentstrava.R
 import com.skillbox.ascentstrava.databinding.ItemContactBinding
 import com.skillbox.ascentstrava.presentation.share.data.Contact
 
 
-class ContactListAdapter :
+class ContactListAdapter(
+    private val onItemClicked: (contact: Contact) -> Unit
+) :
     ListAdapter<Contact, ContactListAdapter.ContactViewHolder>(MovieDiffUtilCallback()) {
 
     override fun onCreateViewHolder(
@@ -17,7 +21,7 @@ class ContactListAdapter :
         viewType: Int
     ): ContactViewHolder {
         val binding = ItemContactBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return ContactViewHolder(binding)
+        return ContactViewHolder(binding, onItemClicked)
     }
 
     override fun onBindViewHolder(holder: ContactViewHolder, position: Int) {
@@ -25,11 +29,23 @@ class ContactListAdapter :
     }
 
     class ContactViewHolder(
-        private val binding: ItemContactBinding
+        private val binding: ItemContactBinding,
+        private val onItemClicked: (contact: Contact) -> Unit
     ) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(contact: Contact) {
-            binding.imageView
+            binding.nameTextView.text = contact.name
+            binding.phoneNumberTextView.text = contact.phone
+
+            Glide.with(itemView)
+                .load(contact.imageUri)
+                .placeholder(R.drawable.ic_placeholder)
+                .error(R.drawable.ic_error_placeholder)
+                .into(binding.imageView)
+
+            itemView.setOnClickListener {
+                onItemClicked(contact)
+            }
         }
     }
 

@@ -14,4 +14,6 @@ object AuthConfig {
 
     const val AUTHORIZATION_HEADER = "Authorization"
     const val BASE_URL = "https://www.strava.com/api/v3/"
+
+    var PROFILE_URL: String? = null
 }
