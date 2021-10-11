@@ -67,9 +67,7 @@ class ShareFragment : Fragment(R.layout.fragment_share) {
         super.onViewCreated(view, savedInstanceState)
         initList()
         bindViewModel()
-        Handler(Looper.getMainLooper()).post {
-            requestContactsReadPermission()
-        }
+        requestContactsReadPermission()
     }
 
     override fun onAttach(context: Context) {
@@ -97,21 +95,19 @@ class ShareFragment : Fragment(R.layout.fragment_share) {
         }
     }
 
-    private fun initList() = with(binding.contactsList) {
-        contactListAdapter = ContactListAdapter() { contact ->
-            contact.phone?.let { shareProfileWithCheckPermission(it) }
+    private fun initList() {
+        with(binding.contactsList) {
+            contactListAdapter = ContactListAdapter() { contact ->
+                contact.phone?.let { shareProfileWithCheckPermission(it) }
+            }
+            adapter = contactListAdapter
+            setHasFixedSize(true)
+            layoutManager = LinearLayoutManager(requireContext())
         }
-        adapter = contactListAdapter
-        setHasFixedSize(true)
-        layoutManager = LinearLayoutManager(requireContext())
     }
 
     private fun shareProfileWithCheckPermission(phoneNumber: String) {
-        if (ContextCompat.checkSelfPermission(
-                requireContext(),
-                Manifest.permission.READ_CONTACTS
-            ) == PackageManager.PERMISSION_GRANTED
-        ) {
+        if (isReadContactsGranted()) {
             sendSmsToContact(phoneNumber)
         } else {
             val needRationale = ActivityCompat.shouldShowRequestPermissionRationale(
@@ -124,6 +120,13 @@ class ShareFragment : Fragment(R.layout.fragment_share) {
                 requestContactsReadPermission()
             }
         }
+    }
+
+    private fun isReadContactsGranted(): Boolean {
+        return ContextCompat.checkSelfPermission(
+            requireContext(),
+            Manifest.permission.READ_CONTACTS
+        ) == PackageManager.PERMISSION_GRANTED
     }
 
     private fun showRationaleDialog() {

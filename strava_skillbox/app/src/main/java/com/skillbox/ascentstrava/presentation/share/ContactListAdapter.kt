@@ -1,6 +1,7 @@
 package com.skillbox.ascentstrava.presentation.share
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
@@ -31,9 +32,16 @@ class ContactListAdapter(
     class ContactViewHolder(
         private val binding: ItemContactBinding,
         private val onItemClicked: (contact: Contact) -> Unit
-    ) : RecyclerView.ViewHolder(binding.root) {
+    ) : RecyclerView.ViewHolder(binding.root), View.OnClickListener {
+
+        private lateinit var contact: Contact
+
+        init {
+            itemView.setOnClickListener(this)
+        }
 
         fun bind(contact: Contact) {
+            this.contact = contact
             binding.nameTextView.text = contact.name
             binding.phoneNumberTextView.text = contact.phone
 
@@ -42,10 +50,10 @@ class ContactListAdapter(
                 .placeholder(R.drawable.ic_placeholder)
                 .error(R.drawable.ic_error_placeholder)
                 .into(binding.imageView)
+        }
 
-            itemView.setOnClickListener {
-                onItemClicked(contact)
-            }
+        override fun onClick(v: View?) {
+            v?.let { onItemClicked.invoke(contact) }
         }
     }
 

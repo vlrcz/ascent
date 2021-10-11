@@ -11,7 +11,7 @@ class ContactsRepository @Inject constructor(private val context: Context) {
 
     suspend fun getAllContacts(): List<Contact> = withContext(Dispatchers.IO) {
         context.contentResolver.query(
-            ContactsContract.Contacts.CONTENT_URI,
+            ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
             null,
             null,
             null,
@@ -25,23 +25,17 @@ class ContactsRepository @Inject constructor(private val context: Context) {
         if (cursor.moveToFirst().not()) return emptyList()
         val list = mutableListOf<Contact>()
         do {
-            val nameIndex = cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME_PRIMARY)
+            val nameIndex = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME)
             val name = cursor.getString(nameIndex).orEmpty()
 
-            val idIndex = cursor.getColumnIndex(ContactsContract.Contacts._ID)
+            val idIndex = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone._ID)
             val id = cursor.getLong(idIndex)
 
-            val phone = if (getPhoneForContact(id).isEmpty()) {
-                ""
-            } else {
-                getPhoneForContact(id)
-            }
+            val phoneId = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER)
+            val phone = cursor.getString(phoneId)
 
-            val imageUri = if (getImageUriForContact(id).isEmpty()) {
-                ""
-            } else {
-                getImageUriForContact(id)
-            }
+            val imageId = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Photo.PHOTO_URI)
+            val imageUri = cursor.getString(imageId)
 
             val contact = Contact(
                 id = id,
@@ -53,49 +47,5 @@ class ContactsRepository @Inject constructor(private val context: Context) {
         } while (cursor.moveToNext())
 
         return list
-    }
-
-    private fun getImageUriForContact(contactId: Long): String {
-        return context.contentResolver.query(
-            ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
-            null,
-            "${ContactsContract.CommonDataKinds.Phone.CONTACT_ID} = ?",
-            arrayOf(contactId.toString()),
-            null
-        )?.use {
-            getImageUriFromCursor(it)
-        }.orEmpty()
-    }
-
-    private fun getImageUriFromCursor(cursor: Cursor): String {
-        return if (cursor.moveToFirst()) {
-            val numberIndex =
-                cursor.getColumnIndex(ContactsContract.CommonDataKinds.Photo.PHOTO_URI)
-            cursor.getString(numberIndex)
-        } else {
-            ""
-        }
-    }
-
-    private fun getPhoneForContact(contactId: Long): String {
-        return context.contentResolver.query(
-            ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
-            null,
-            "${ContactsContract.CommonDataKinds.Phone.CONTACT_ID} = ?",
-            arrayOf(contactId.toString()),
-            null
-        )?.use {
-            getPhoneFromCursor(it)
-        }.orEmpty()
-    }
-
-    private fun getPhoneFromCursor(cursor: Cursor): String {
-        return if (cursor.moveToFirst()) {
-            val numberIndex =
-                cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER)
-            cursor.getString(numberIndex)
-        } else {
-            ""
-        }
     }
 }

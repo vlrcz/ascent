@@ -8,6 +8,7 @@ import com.skillbox.ascentstrava.data.StravaApi
 import com.skillbox.ascentstrava.di.module.AuthModule
 import com.skillbox.ascentstrava.di.module.NetworkModule
 import com.skillbox.ascentstrava.di.module.StorageModule
+import com.skillbox.ascentstrava.presentation.profile.data.AthleteManager
 import dagger.BindsInstance
 import dagger.Component
 import javax.inject.Singleton
@@ -23,6 +24,7 @@ interface AppComponent {
     fun application(): Application
     fun authService(): AuthorizationService
     fun stravaApi(): StravaApi
+    fun athleteManager(): AthleteManager
 
     @Component.Factory
     interface Factory {

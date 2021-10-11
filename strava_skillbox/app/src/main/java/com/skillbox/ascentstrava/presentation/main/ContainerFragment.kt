@@ -11,9 +11,15 @@ import by.kirich1409.viewbindingdelegate.viewBinding
 import com.skillbox.ascentstrava.R
 import com.skillbox.ascentstrava.data.AuthConfig
 import com.skillbox.ascentstrava.databinding.FragmentContainerBinding
+import com.skillbox.ascentstrava.presentation.profile.Athlete
 import com.skillbox.ascentstrava.presentation.profile.ProfileFragmentDirections
+import com.skillbox.ascentstrava.presentation.profile.data.AthleteManager
+import javax.inject.Inject
 
 class ContainerFragment : Fragment(R.layout.fragment_container) {
+
+    @Inject
+    lateinit var athleteManager: AthleteManager
 
     private var navController: NavController? = null
 
@@ -39,9 +45,9 @@ class ContainerFragment : Fragment(R.layout.fragment_container) {
         binding.topAppBar.setOnMenuItemClickListener {
             when (it.itemId) {
                 R.id.shareButton -> {
-                    if (AuthConfig.PROFILE_URL != null) {
+                    if (athleteManager.getProfileUrl() != null) {
                         val action = ProfileFragmentDirections.actionGlobalShareFragment(
-                            AuthConfig.PROFILE_URL!!
+                            athleteManager.getProfileUrl()!!
                         )
                         navController?.navigate(action)
                     }

@@ -18,6 +18,7 @@ import com.skillbox.ascentstrava.data.AuthConfig
 import com.skillbox.ascentstrava.data.AuthManager
 import com.skillbox.ascentstrava.databinding.FragmentProfileBinding
 import com.skillbox.ascentstrava.di.ViewModelFactory
+import com.skillbox.ascentstrava.presentation.profile.data.AthleteManager
 import com.skillbox.ascentstrava.presentation.profile.data.UpdateRequestBody
 import com.skillbox.ascentstrava.presentation.profile.di.DaggerProfileComponent
 import javax.inject.Inject
@@ -37,6 +38,9 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
 
     @Inject
     lateinit var authManager: AuthManager
+
+    @Inject
+    lateinit var athleteManager: AthleteManager
 
     private val viewModel: ProfileViewModel by viewModels { ViewModelFactory { viewModelProvider.get() } }
 
@@ -64,9 +68,9 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
         super.onViewCreated(view, savedInstanceState)
 
         binding.shareBtn.setOnClickListener {
-            if (AuthConfig.PROFILE_URL != null) {
+            if (athleteManager.getProfileUrl() != null) {
                 val action = ProfileFragmentDirections.actionGlobalShareFragment(
-                    AuthConfig.PROFILE_URL!!
+                    athleteManager.getProfileUrl()!!
                 )
                 findNavController().navigate(action)
             }
@@ -85,7 +89,7 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
         viewModel.athlete.observe(viewLifecycleOwner) { athlete ->
             bindProfileInfo(athlete)
             bindWeightView(athlete)
-            AuthConfig.PROFILE_URL = getString(R.string.profile_url) + athlete.userName
+            athleteManager.putProfileUrl(getString(R.string.profile_url) + athlete.userName)
         }
 
         viewModel.error.observe(viewLifecycleOwner) { t ->
