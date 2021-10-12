@@ -14,7 +14,6 @@ import by.kirich1409.viewbindingdelegate.viewBinding
 import com.bumptech.glide.Glide
 import com.skillbox.ascentstrava.R
 import com.skillbox.ascentstrava.app.appComponent
-import com.skillbox.ascentstrava.data.AuthConfig
 import com.skillbox.ascentstrava.data.AuthManager
 import com.skillbox.ascentstrava.databinding.FragmentProfileBinding
 import com.skillbox.ascentstrava.di.ViewModelFactory
@@ -37,10 +36,7 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
     lateinit var viewModelProvider: Provider<ProfileViewModel>
 
     @Inject
-    lateinit var authManager: AuthManager
-
-    @Inject
-    lateinit var athleteManager: AthleteManager
+    lateinit var authManager: AuthManager // todo удалить
 
     private val viewModel: ProfileViewModel by viewModels { ViewModelFactory { viewModelProvider.get() } }
 
@@ -68,9 +64,10 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
         super.onViewCreated(view, savedInstanceState)
 
         binding.shareBtn.setOnClickListener {
-            if (athleteManager.getProfileUrl() != null) {
+            val url = viewModel.getProfileUrl()
+            if (url != null) {
                 val action = ProfileFragmentDirections.actionGlobalShareFragment(
-                    athleteManager.getProfileUrl()!!
+                    url
                 )
                 findNavController().navigate(action)
             }
@@ -89,7 +86,7 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
         viewModel.athlete.observe(viewLifecycleOwner) { athlete ->
             bindProfileInfo(athlete)
             bindWeightView(athlete)
-            athleteManager.putProfileUrl(getString(R.string.profile_url) + athlete.userName)
+            viewModel.putAthlete(athlete)
         }
 
         viewModel.error.observe(viewLifecycleOwner) { t ->

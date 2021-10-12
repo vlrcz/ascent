@@ -32,16 +32,17 @@ class ContactListAdapter(
     class ContactViewHolder(
         private val binding: ItemContactBinding,
         private val onItemClicked: (contact: Contact) -> Unit
-    ) : RecyclerView.ViewHolder(binding.root), View.OnClickListener {
-
-        private lateinit var contact: Contact
+    ) : RecyclerView.ViewHolder(binding.root) {
 
         init {
-            itemView.setOnClickListener(this)
+            itemView.setOnClickListener {
+                val item = (bindingAdapter as? ContactListAdapter)?.getItem(bindingAdapterPosition)
+                    ?: return@setOnClickListener
+                onItemClicked.invoke(item)
+            }
         }
 
         fun bind(contact: Contact) {
-            this.contact = contact
             binding.nameTextView.text = contact.name
             binding.phoneNumberTextView.text = contact.phone
 
@@ -50,10 +51,6 @@ class ContactListAdapter(
                 .placeholder(R.drawable.ic_placeholder)
                 .error(R.drawable.ic_error_placeholder)
                 .into(binding.imageView)
-        }
-
-        override fun onClick(v: View?) {
-            v?.let { onItemClicked.invoke(contact) }
         }
     }
 

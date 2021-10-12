@@ -4,13 +4,15 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.skillbox.ascentstrava.presentation.profile.data.AthleteManager
 import com.skillbox.ascentstrava.presentation.profile.data.ProfileRepository
 import com.skillbox.ascentstrava.presentation.profile.data.UpdateRequestBody
 import javax.inject.Inject
 import kotlinx.coroutines.launch
 
 class ProfileViewModel @Inject constructor(
-    private val profileRepository: ProfileRepository
+    private val profileRepository: ProfileRepository,
+    private val athleteManager: AthleteManager
 ) : ViewModel() {
 
     private val athleteLiveData = MutableLiveData<Athlete>()
@@ -41,5 +43,13 @@ class ProfileViewModel @Inject constructor(
                 errorLiveData.postValue(t)
             }
         }
+    }
+
+    fun getProfileUrl(): String? {
+        return athleteManager.getProfileUrl()
+    }
+
+    fun putAthlete(athlete: Athlete) {
+        athleteManager.putAthlete(athlete)
     }
 }

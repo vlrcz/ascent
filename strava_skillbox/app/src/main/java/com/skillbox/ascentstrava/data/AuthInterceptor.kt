@@ -1,5 +1,6 @@
 package com.skillbox.ascentstrava.data
 
+import com.skillbox.ascentstrava.presentation.profile.data.AthleteManager
 import com.squareup.moshi.Moshi
 import okhttp3.Interceptor
 import okhttp3.MediaType.Companion.toMediaType
@@ -11,7 +12,8 @@ import javax.inject.Inject
 
 class AuthInterceptor @Inject constructor(
     private val authManager: AuthManager,
-    private val moshi: Moshi
+    private val moshi: Moshi,
+    private val athleteManager: AthleteManager
 ) : Interceptor {
 
     private val contentType by lazy { "application/json; charset=utf-8".toMediaType() }
@@ -30,6 +32,8 @@ class AuthInterceptor @Inject constructor(
 
             var response = chain.proceed(modifiedRequest)
             if (response.code != UNAUTHORIZED_CODE) return response
+
+            athleteManager.clearAthlete()
 
             val refreshToken = authManager.receiveRefreshToken() ?: return response
             response.close()

@@ -1,6 +1,7 @@
 package com.skillbox.ascentstrava.presentation.main.di
 
 import com.skillbox.ascentstrava.di.AppComponent
+import com.skillbox.ascentstrava.presentation.main.ContainerFragment
 import com.skillbox.ascentstrava.presentation.main.MainFragment
 import dagger.Component
 
@@ -11,6 +12,7 @@ import dagger.Component
 interface MainComponent {
 
     fun inject(mainFragment: MainFragment)
+    fun inject(containerFragment: ContainerFragment)
 
     @Component.Factory
     interface Factory {
