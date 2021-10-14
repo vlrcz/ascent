@@ -91,7 +91,7 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
         }
 
         binding.logoutBtn.setOnClickListener {
-            viewModel.deAuthorize()
+            viewModel.logout()
         }
 
         viewModel.clearData.observe(viewLifecycleOwner) {
@@ -103,7 +103,7 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
 
     private fun showLogoutDialog() {
         logoutDialog = AlertDialog.Builder(requireContext())
-            .setMessage("Вы уверены, что хотите выйти? Все локальные данные будут удалены.")
+            .setMessage(getString(R.string.logout_positive))
             .setPositiveButton(getString(R.string.positiveBtn)) { _, _ ->
                 clearLocalData()
             }

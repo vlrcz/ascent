@@ -39,4 +39,5 @@
     <string name="timeEditText">Time</string>
     <string name="dateEditText">Date</string>
     <string name="addBtn">Add</string>
+    <string name="logout_positive">Вы уверены, что хотите выйти? Все локальные данные будут удалены.</string>
 </resources>

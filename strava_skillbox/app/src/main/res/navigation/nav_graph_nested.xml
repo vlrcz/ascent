@@ -9,7 +9,7 @@
         tools:layout="@layout/fragment_profile"
         android:id="@+id/profileFragment"
         android:name="com.skillbox.ascentstrava.presentation.profile.ProfileFragment"
-        android:label="ProfileFragment" >
+        android:label="Profile" >
         <action
             android:id="@+id/action_profileFragment_to_activitiesFragment"
             app:destination="@id/activitiesFragment"
@@ -22,12 +22,12 @@
         tools:layout="@layout/fragment_activities"
         android:id="@+id/activitiesFragment"
         android:name="com.skillbox.ascentstrava.presentation.activities.ActivitiesFragment"
-        android:label="ActivitiesFragment" />
+        android:label="Activities" />
     <fragment
         tools:layout="@layout/fragment_share"
         android:id="@+id/shareFragment"
         android:name="com.skillbox.ascentstrava.presentation.share.ShareFragment"
-        android:label="ShareFragment" >
+        android:label="Share" >
         <argument
             android:name="url"
             app:argType="string" />

@@ -46,7 +46,7 @@ class ContainerFragment : Fragment(R.layout.fragment_container) {
         val appBarConfiguration = AppBarConfiguration(
             setOf(
                 R.id.profileFragment, R.id.activitiesFragment, R.id.shareFragment
-            ) //todo разобраться как переименовать названия в тулбаре
+            )
         )
 
         val nestedHavHostFragment =

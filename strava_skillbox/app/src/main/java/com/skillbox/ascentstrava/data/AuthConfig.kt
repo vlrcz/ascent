@@ -14,4 +14,8 @@ object AuthConfig {
 
     const val AUTHORIZATION_HEADER = "Authorization"
     const val BASE_URL = "https://www.strava.com/"
+    const val API_URL = BASE_URL + "api/v3/"
+
+    const val ACCESS_TOKEN = "access_token"
+    const val LOGOUT = "oauth/deauthorize"
 }

@@ -33,8 +33,6 @@ class AuthInterceptor @Inject constructor(
             var response = chain.proceed(modifiedRequest)
             if (response.code != UNAUTHORIZED_CODE) return response
 
-            athleteManager.clearAthlete()
-
             val refreshToken = authManager.receiveRefreshToken() ?: return response
             response.close()
 
@@ -43,7 +41,10 @@ class AuthInterceptor @Inject constructor(
             val refreshTokenRequest = createRefreshRequest(refreshToken)
 
             response = chain.proceed(refreshTokenRequest)
-            if (!response.isSuccessful) return response
+            if (!response.isSuccessful) {
+                athleteManager.clearAthlete()
+                return response
+            }
 
             val tokenResponse = moshi.adapter(TokenResponse::class.java)
                 .fromJson(response.body?.string().orEmpty()) ?: return response

@@ -47,7 +47,7 @@ abstract class NetworkModule {
         @Singleton
         fun providesRetrofit(okHttpClient: OkHttpClient): Retrofit {
             return Retrofit.Builder()
-                .baseUrl(AuthConfig.BASE_URL)
+                .baseUrl(AuthConfig.API_URL)
                 .addConverterFactory(MoshiConverterFactory.create())
                 .client(okHttpClient)
                 .build()

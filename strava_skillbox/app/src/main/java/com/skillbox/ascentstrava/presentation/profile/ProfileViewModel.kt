@@ -59,10 +59,10 @@ class ProfileViewModel @Inject constructor(
         athleteManager.putAthlete(athlete)
     }
 
-    fun deAuthorize() {
+    fun logout() {
         viewModelScope.launch {
             try {
-                profileRepository.deAuthorize()
+                profileRepository.logout()
                 clearDataLiveData.postValue(true)
             } catch (t: Throwable) {
                 errorLiveData.postValue(t)

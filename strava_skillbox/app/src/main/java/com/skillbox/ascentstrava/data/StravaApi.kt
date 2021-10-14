@@ -9,24 +9,25 @@ import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.PUT
 import retrofit2.http.Query
+import retrofit2.http.Url
 
 interface StravaApi {
 
-    @GET("api/v3/athlete")
+    @GET("athlete")
     suspend fun getProfileInfo(): Athlete
 
-    @PUT("api/v3/athlete")
+    @PUT("athlete")
     suspend fun changeAthleteWeight(
         @Body weight: UpdateRequestBody
     )
 
-    @POST("api/v3/activities")
+    @POST("activities")
     suspend fun createActivity(
         @Field("name") name: String
     )
 
-    @POST("oauth/deauthorize")
-    suspend fun deAuthorize(
-        @Query("access_token") accessToken: String
+    @POST
+    suspend fun logout(
+        @Url url: String
     )
 }
