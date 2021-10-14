@@ -31,7 +31,7 @@ class AuthManager @Inject constructor(private val sharedPrefs: SharedPreferences
         saveAccessToken("a5syuy67") //todo удалить
     }
 
-    fun clearSharedPrefs() {
+    fun logout() {
         sharedPrefs.edit()
             .remove(ACCESS_TOKEN)
             .remove(REFRESH_TOKEN)

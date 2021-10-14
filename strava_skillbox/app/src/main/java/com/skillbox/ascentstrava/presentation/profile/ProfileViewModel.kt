@@ -71,7 +71,7 @@ class ProfileViewModel @Inject constructor(
     }
 
     fun clearData() {
-        authManager.clearSharedPrefs()
+        authManager.logout()
         athleteManager.clearAthlete()
         //todo очистить базу данных
     }

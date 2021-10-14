@@ -103,7 +103,7 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
 
     private fun showLogoutDialog() {
         logoutDialog = AlertDialog.Builder(requireContext())
-            .setMessage(getString(R.string.logout_positive))
+            .setMessage(getString(R.string.logout_message))
             .setPositiveButton(getString(R.string.positiveBtn)) { _, _ ->
                 clearLocalData()
             }
