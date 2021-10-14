@@ -1,6 +1,7 @@
 package com.skillbox.ascentstrava.presentation.profile
 
 import android.annotation.SuppressLint
+import android.app.AlertDialog
 import android.content.Context
 import android.os.Bundle
 import android.view.View
@@ -9,6 +10,8 @@ import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.NavController
+import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.bumptech.glide.Glide
@@ -17,11 +20,11 @@ import com.skillbox.ascentstrava.app.appComponent
 import com.skillbox.ascentstrava.data.AuthManager
 import com.skillbox.ascentstrava.databinding.FragmentProfileBinding
 import com.skillbox.ascentstrava.di.ViewModelFactory
-import com.skillbox.ascentstrava.presentation.profile.data.AthleteManager
 import com.skillbox.ascentstrava.presentation.profile.data.UpdateRequestBody
 import com.skillbox.ascentstrava.presentation.profile.di.DaggerProfileComponent
 import javax.inject.Inject
 import javax.inject.Provider
+
 
 class ProfileFragment : Fragment(R.layout.fragment_profile) {
 
@@ -40,6 +43,10 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
 
     private val viewModel: ProfileViewModel by viewModels { ViewModelFactory { viewModelProvider.get() } }
 
+    private var logoutDialog: AlertDialog? = null
+
+    private var navController: NavController? = null
+
     private val binding: FragmentProfileBinding by viewBinding(FragmentProfileBinding::bind)
 
     override fun onAttach(context: Context) {
@@ -48,6 +55,12 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
             .factory()
             .create(context.appComponent)
             .inject(this)
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        logoutDialog?.dismiss()
+        logoutDialog = null
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -77,7 +90,36 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
             authManager.brokeAccessToken() //todo удалить
         }
 
+        binding.logoutBtn.setOnClickListener {
+            viewModel.deAuthorize()
+        }
+
+        viewModel.clearData.observe(viewLifecycleOwner) {
+            showLogoutDialog()
+        }
+
         bindViewModel()
+    }
+
+    private fun showLogoutDialog() {
+        logoutDialog = AlertDialog.Builder(requireContext())
+            .setMessage("Вы уверены, что хотите выйти? Все локальные данные будут удалены.")
+            .setPositiveButton(getString(R.string.positiveBtn)) { _, _ ->
+                clearLocalData()
+            }
+            .setNegativeButton(getString(R.string.negativeBtn), null)
+            .show()
+    }
+
+    private fun clearLocalData() {
+        viewModel.clearData()
+        navController = activity?.findNavController(R.id.fragment)
+        if (navController != null) {
+            navController?.apply {
+                this.navigate(R.id.authFragment)
+                this.popBackStack(R.id.containerFragment, true)
+            }
+        }
     }
 
     private fun bindViewModel() {
@@ -110,6 +152,7 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
         Glide.with(this)
             .load(athlete.photoUrl)
             .placeholder(R.drawable.ic_placeholder)
+            .fallback(R.drawable.ic_placeholder)
             .error(R.drawable.ic_error_placeholder)
             .into(binding.imageView)
     }

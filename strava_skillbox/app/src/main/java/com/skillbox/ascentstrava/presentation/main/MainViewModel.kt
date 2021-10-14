@@ -12,8 +12,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class MainViewModel @Inject constructor(
-    private val mainRepository: MainRepository,
-    private val athleteManager: AthleteManager
+    private val mainRepository: MainRepository
 ) : ViewModel() {
 
     private val isFirstTimeEntry = MutableLiveData(mainRepository.isFirstEntry())
@@ -27,9 +26,5 @@ class MainViewModel @Inject constructor(
 
     fun containsAccessToken(): Boolean {
         return mainRepository.containsAccessToken()
-    }
-
-    fun getProfileUrl(): String? {
-        return athleteManager.getProfileUrl()
     }
 }

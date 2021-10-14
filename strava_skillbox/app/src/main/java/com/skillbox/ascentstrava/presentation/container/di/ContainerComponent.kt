@@ -1,22 +1,22 @@
-package com.skillbox.ascentstrava.presentation.main.di
+package com.skillbox.ascentstrava.presentation.container.di
 
 import com.skillbox.ascentstrava.di.AppComponent
 import com.skillbox.ascentstrava.presentation.container.ContainerFragment
-import com.skillbox.ascentstrava.presentation.main.MainFragment
+import com.skillbox.ascentstrava.presentation.main.di.MainScope
 import dagger.Component
 
-@MainScope
+@ContainerScope
 @Component(
     dependencies = [AppComponent::class]
 )
-interface MainComponent {
+interface ContainerComponent {
 
-    fun inject(mainFragment: MainFragment)
+    fun inject(containerFragment: ContainerFragment)
 
     @Component.Factory
     interface Factory {
         fun create(
             appComponent: AppComponent
-        ): MainComponent
+        ): ContainerComponent
     }
 }

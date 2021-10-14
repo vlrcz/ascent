@@ -49,6 +49,7 @@ class ContactListAdapter(
             Glide.with(itemView)
                 .load(contact.imageUri)
                 .placeholder(R.drawable.ic_placeholder)
+                .fallback(R.drawable.ic_placeholder)
                 .error(R.drawable.ic_error_placeholder)
                 .into(binding.imageView)
         }

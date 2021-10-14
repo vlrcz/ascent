@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.skillbox.ascentstrava.data.AuthManager
 import com.skillbox.ascentstrava.presentation.profile.data.AthleteManager
 import com.skillbox.ascentstrava.presentation.profile.data.ProfileRepository
 import com.skillbox.ascentstrava.presentation.profile.data.UpdateRequestBody
@@ -12,17 +13,22 @@ import kotlinx.coroutines.launch
 
 class ProfileViewModel @Inject constructor(
     private val profileRepository: ProfileRepository,
-    private val athleteManager: AthleteManager
+    private val athleteManager: AthleteManager,
+    private val authManager: AuthManager
 ) : ViewModel() {
 
     private val athleteLiveData = MutableLiveData<Athlete>()
     private val errorLiveData = MutableLiveData<Throwable>()
+    private val clearDataLiveData = MutableLiveData<Boolean>()
 
     val athlete: LiveData<Athlete>
         get() = athleteLiveData
 
     val error: LiveData<Throwable>
         get() = errorLiveData
+
+    val clearData: LiveData<Boolean>
+        get() = clearDataLiveData
 
     fun getProfileInfo() {
         viewModelScope.launch {
@@ -51,5 +57,22 @@ class ProfileViewModel @Inject constructor(
 
     fun putAthlete(athlete: Athlete) {
         athleteManager.putAthlete(athlete)
+    }
+
+    fun deAuthorize() {
+        viewModelScope.launch {
+            try {
+                profileRepository.deAuthorize()
+                clearDataLiveData.postValue(true)
+            } catch (t: Throwable) {
+                errorLiveData.postValue(t)
+            }
+        }
+    }
+
+    fun clearData() {
+        authManager.clearSharedPrefs()
+        athleteManager.clearAthlete()
+        //todo очистить базу данных
     }
 }

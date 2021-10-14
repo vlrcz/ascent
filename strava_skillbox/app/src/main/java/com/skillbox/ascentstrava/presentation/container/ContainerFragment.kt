@@ -1,4 +1,4 @@
-package com.skillbox.ascentstrava.presentation.main
+package com.skillbox.ascentstrava.presentation.container
 
 import android.content.Context
 import android.os.Bundle
@@ -12,22 +12,21 @@ import androidx.navigation.ui.setupWithNavController
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.skillbox.ascentstrava.R
 import com.skillbox.ascentstrava.app.appComponent
-import com.skillbox.ascentstrava.data.AuthConfig
 import com.skillbox.ascentstrava.databinding.FragmentContainerBinding
 import com.skillbox.ascentstrava.di.ViewModelFactory
+import com.skillbox.ascentstrava.presentation.container.di.DaggerContainerComponent
+import com.skillbox.ascentstrava.presentation.main.MainViewModel
 import com.skillbox.ascentstrava.presentation.main.di.DaggerMainComponent
-import com.skillbox.ascentstrava.presentation.profile.Athlete
 import com.skillbox.ascentstrava.presentation.profile.ProfileFragmentDirections
-import com.skillbox.ascentstrava.presentation.profile.data.AthleteManager
 import javax.inject.Inject
 import javax.inject.Provider
 
 class ContainerFragment : Fragment(R.layout.fragment_container) {
 
     @Inject
-    lateinit var viewModelProvider: Provider<MainViewModel>
+    lateinit var viewModelProvider: Provider<ContainerViewModel>
 
-    private val viewModel: MainViewModel by viewModels { ViewModelFactory { viewModelProvider.get() } }
+    private val viewModel: ContainerViewModel by viewModels { ViewModelFactory { viewModelProvider.get() } }
 
     private var navController: NavController? = null
 
@@ -35,7 +34,7 @@ class ContainerFragment : Fragment(R.layout.fragment_container) {
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        DaggerMainComponent
+        DaggerContainerComponent
             .factory()
             .create(context.appComponent)
             .inject(this)

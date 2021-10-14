@@ -13,5 +13,5 @@ object AuthConfig {
     const val CALLBACK_URL = "ascent://ru.ascent.strava"
 
     const val AUTHORIZATION_HEADER = "Authorization"
-    const val BASE_URL = "https://www.strava.com/api/v3/"
+    const val BASE_URL = "https://www.strava.com/"
 }

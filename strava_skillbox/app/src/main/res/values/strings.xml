@@ -32,4 +32,11 @@
     <string name="no_contact_selected">Не выбран контакт</string>
     <string name="already_in_strava">Я уже в Strava: </string>
     <string name="weight_not_selected">Вес не выбран</string>
+    <string name="nameEditText">Name</string>
+    <string name="typeEditText">Type</string>
+    <string name="descriptionEditText">Description</string>
+    <string name="distanceEditText">Distance</string>
+    <string name="timeEditText">Time</string>
+    <string name="dateEditText">Date</string>
+    <string name="addBtn">Add</string>
 </resources>
