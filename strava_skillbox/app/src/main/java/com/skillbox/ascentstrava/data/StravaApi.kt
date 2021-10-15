@@ -1,5 +1,6 @@
 package com.skillbox.ascentstrava.data
 
+import com.skillbox.ascentstrava.presentation.activities.data.ActivityType
 import com.skillbox.ascentstrava.presentation.profile.Athlete
 import com.skillbox.ascentstrava.presentation.profile.data.UpdateRequestBody
 import retrofit2.http.Body
@@ -21,9 +22,15 @@ interface StravaApi {
         @Body weight: UpdateRequestBody
     )
 
+    @FormUrlEncoded
     @POST("activities")
     suspend fun createActivity(
-        @Field("name") name: String
+        @Field("name") name: String?,
+        @Field("type") activityType: String?,
+        @Field("start_date_local") startedAt: String?,
+        @Field("elapsed_time") elapsedTime: Int?,
+        @Field("distance") distance: Float?,
+        @Field("description") description: String?
     )
 
     @POST

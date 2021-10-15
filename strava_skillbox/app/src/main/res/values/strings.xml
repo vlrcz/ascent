@@ -40,4 +40,5 @@
     <string name="dateEditText">Date</string>
     <string name="addBtn">Add</string>
     <string name="logout_message">Вы уверены, что хотите выйти? Все локальные данные будут удалены.</string>
+    <string name="create_a_new_activity">Create a new activity</string>
 </resources>

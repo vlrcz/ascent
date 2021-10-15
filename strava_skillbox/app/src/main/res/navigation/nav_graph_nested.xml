@@ -21,8 +21,12 @@
     <fragment
         tools:layout="@layout/fragment_activities"
         android:id="@+id/activitiesFragment"
-        android:name="com.skillbox.ascentstrava.presentation.activities.ActivitiesFragment"
-        android:label="Activities" />
+        android:name="com.skillbox.ascentstrava.presentation.activities.list.ActivitiesFragment"
+        android:label="Activities" >
+        <action
+            android:id="@+id/action_activitiesFragment_to_createActivityFragment"
+            app:destination="@id/createActivityFragment" />
+    </fragment>
     <fragment
         tools:layout="@layout/fragment_share"
         android:id="@+id/shareFragment"
@@ -39,4 +43,9 @@
         app:exitAnim="@android:anim/fade_out"
         app:popEnterAnim="@android:anim/fade_in"
         app:popExitAnim="@android:anim/fade_out" />
+    <fragment
+        tools:layout="@layout/fragment_create_activity"
+        android:id="@+id/createActivityFragment"
+        android:name="com.skillbox.ascentstrava.presentation.activities.create.CreateActivityFragment"
+        android:label="CreateActivityFragment" />
 </navigation>
