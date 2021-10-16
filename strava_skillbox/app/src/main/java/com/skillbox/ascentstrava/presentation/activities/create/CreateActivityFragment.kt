@@ -3,10 +3,12 @@ package com.skillbox.ascentstrava.presentation.activities.create
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.content.Context
+import android.os.Build
 import android.os.Bundle
 import android.view.View
 import android.widget.ArrayAdapter
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -16,11 +18,12 @@ import com.skillbox.ascentstrava.app.appComponent
 import com.skillbox.ascentstrava.databinding.FragmentCreateActivityBinding
 import com.skillbox.ascentstrava.di.ViewModelFactory
 import com.skillbox.ascentstrava.presentation.activities.create.di.DaggerCreateActivityComponent
-import com.skillbox.ascentstrava.presentation.activities.data.Activity
+import com.skillbox.ascentstrava.presentation.activities.data.ActivityModel
 import com.skillbox.ascentstrava.presentation.activities.data.ActivityType
-import org.threeten.bp.LocalDateTime
-import org.threeten.bp.ZoneId
-import org.threeten.bp.format.DateTimeFormatter
+import java.time.LocalDateTime
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
+
 import javax.inject.Inject
 import javax.inject.Provider
 
@@ -41,6 +44,7 @@ class CreateActivityFragment : Fragment(R.layout.fragment_create_activity) {
             .inject(this)
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         bindTypeView()
@@ -66,7 +70,8 @@ class CreateActivityFragment : Fragment(R.layout.fragment_create_activity) {
         val elapsedTime = binding.timeEditText.text?.toString().orEmpty()
         val distance = binding.distanceEditText.text?.toString().orEmpty()
         val description = binding.descriptionEditText.text?.toString().orEmpty()
-        val activity = Activity(
+        val activity = ActivityModel(
+            id = null,
             activityName = name,
             activityType = type,
             startedAt = date,
@@ -77,6 +82,7 @@ class CreateActivityFragment : Fragment(R.layout.fragment_create_activity) {
         viewModel.createActivity(activity)
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     private fun initStartedAtTimePicker() {
         val currentDateTime = LocalDateTime.now()
         DatePickerDialog(

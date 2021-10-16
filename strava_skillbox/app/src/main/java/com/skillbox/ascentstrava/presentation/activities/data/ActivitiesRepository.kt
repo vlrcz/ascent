@@ -7,16 +7,22 @@ import javax.inject.Inject
 
 class ActivitiesRepository @Inject constructor(private val stravaApi: StravaApi) {
 
-    suspend fun createActivity(activity: Activity) {
+    suspend fun createActivity(activityModel: ActivityModel) {
         withContext(Dispatchers.IO) {
             stravaApi.createActivity(
-                name = activity.activityName,
-                activityType = activity.activityType,
-                startedAt = activity.startedAt,
-                elapsedTime = activity.elapsedTime,
-                distance = activity.distance,
-                description = activity.description
+                name = activityModel.activityName,
+                activityType = activityModel.activityType,
+                startedAt = activityModel.startedAt,
+                elapsedTime = activityModel.elapsedTime,
+                distance = activityModel.distance,
+                description = activityModel.description
             )
+        }
+    }
+
+    suspend fun getActivities(): List<ActivityModel> {
+        return withContext(Dispatchers.IO) {
+            stravaApi.getActivities()
         }
     }
 }

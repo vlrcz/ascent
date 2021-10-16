@@ -4,7 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.skillbox.ascentstrava.presentation.activities.data.ActivitiesRepository
-import com.skillbox.ascentstrava.presentation.activities.data.Activity
+import com.skillbox.ascentstrava.presentation.activities.data.ActivityModel
 import com.skillbox.ascentstrava.utils.SingleLiveEvent
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -23,10 +23,10 @@ class CreateActivityViewModel @Inject constructor(
         get() = saveErrorLiveEvent
 
 
-    fun createActivity(activity: Activity) {
+    fun createActivity(activityModel: ActivityModel) {
         viewModelScope.launch {
             try {
-                activitiesRepository.createActivity(activity)
+                activitiesRepository.createActivity(activityModel)
                 saveSuccessLiveEvent.postValue(Unit)
             } catch (t: Throwable) {
                 saveErrorLiveEvent.postValue(t.message)

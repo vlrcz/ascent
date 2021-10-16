@@ -1,7 +1,6 @@
 package com.skillbox.ascentstrava.presentation.share
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
@@ -15,7 +14,7 @@ import com.skillbox.ascentstrava.presentation.share.data.Contact
 class ContactListAdapter(
     private val onItemClicked: (contact: Contact) -> Unit
 ) :
-    ListAdapter<Contact, ContactListAdapter.ContactViewHolder>(MovieDiffUtilCallback()) {
+    ListAdapter<Contact, ContactListAdapter.ContactViewHolder>(ContactDiffUtilCallback()) {
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
@@ -51,11 +50,11 @@ class ContactListAdapter(
                 .placeholder(R.drawable.ic_placeholder)
                 .fallback(R.drawable.ic_placeholder)
                 .error(R.drawable.ic_error_placeholder)
-                .into(binding.imageView)
+                .into(binding.athleteImageView)
         }
     }
 
-    class MovieDiffUtilCallback : DiffUtil.ItemCallback<Contact>() {
+    class ContactDiffUtilCallback : DiffUtil.ItemCallback<Contact>() {
         override fun areItemsTheSame(oldItem: Contact, newItem: Contact): Boolean {
             return oldItem.id == newItem.id
         }

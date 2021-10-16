@@ -19,6 +19,10 @@ class AthleteManager @Inject constructor(private val context: Context) {
         }
     }
 
+    fun getAthlete(): Athlete? {
+        return athlete
+    }
+
     fun clearAthlete() {
         athlete = null
     } // todo добавить в кнопку logout

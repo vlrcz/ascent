@@ -154,7 +154,7 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
             .placeholder(R.drawable.ic_placeholder)
             .fallback(R.drawable.ic_placeholder)
             .error(R.drawable.ic_error_placeholder)
-            .into(binding.imageView)
+            .into(binding.athleteImageView)
     }
 
     @SuppressLint("SetTextI18n")

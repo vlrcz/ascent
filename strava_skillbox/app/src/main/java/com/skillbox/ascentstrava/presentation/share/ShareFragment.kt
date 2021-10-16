@@ -10,6 +10,7 @@ import android.os.Handler
 import android.os.Looper
 import android.view.View
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.annotation.StringRes
 import androidx.appcompat.app.AlertDialog
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -140,9 +141,19 @@ class ShareFragment : Fragment(R.layout.fragment_share) {
     private fun sendSmsToContact(number: String?) {
         val uri = Uri.parse("smsto:$number")
         val intent = Intent(Intent.ACTION_SENDTO, uri)
+        val url = args.url
+        if (url.contains("athletes")) {
+            startSmsActivity(intent, R.string.already_in_strava)
+        }
+        if (url.contains("activities")) {
+            startSmsActivity(intent, R.string.rate_my_activity)
+        }
+    }
+
+    private fun startSmsActivity(intent: Intent, @StringRes stringRes: Int) {
         intent.putExtra(
             SMS_BODY,
-            getString(R.string.already_in_strava) + " " + args.url
+            getString(stringRes) + " " + args.url
         )
         startActivity(intent)
     }
