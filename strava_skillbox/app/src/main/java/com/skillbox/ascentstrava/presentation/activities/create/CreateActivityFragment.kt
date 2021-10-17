@@ -5,6 +5,7 @@ import android.app.TimePickerDialog
 import android.content.Context
 import android.os.Build
 import android.os.Bundle
+import android.text.format.DateUtils
 import android.view.View
 import android.widget.ArrayAdapter
 import android.widget.Toast
@@ -20,9 +21,11 @@ import com.skillbox.ascentstrava.di.ViewModelFactory
 import com.skillbox.ascentstrava.presentation.activities.create.di.DaggerCreateActivityComponent
 import com.skillbox.ascentstrava.presentation.activities.data.ActivityModel
 import com.skillbox.ascentstrava.presentation.activities.data.ActivityType
+import java.text.SimpleDateFormat
 import java.time.LocalDateTime
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
+import java.util.*
 
 import javax.inject.Inject
 import javax.inject.Provider
@@ -44,7 +47,6 @@ class CreateActivityFragment : Fragment(R.layout.fragment_create_activity) {
             .inject(this)
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         bindTypeView()
@@ -82,30 +84,28 @@ class CreateActivityFragment : Fragment(R.layout.fragment_create_activity) {
         viewModel.createActivity(activity)
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     private fun initStartedAtTimePicker() {
-        val currentDateTime = LocalDateTime.now()
+        val currentDateTime = Calendar.getInstance()
         DatePickerDialog(
             requireContext(),
             { _, year, monthOfYear, dayOfMonth ->
                 TimePickerDialog(
                     requireContext(),
                     { _, hourOfDay, minute ->
-                        val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ssXXX")
-                        val zonedDateTime =
-                            LocalDateTime.of(year, monthOfYear + 1, dayOfMonth, hourOfDay, minute)
-                                .atZone(ZoneId.systemDefault())
-                        binding.dateEditText.setText(formatter.format(zonedDateTime))
+                        val formatter =
+                            SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ", Locale.getDefault())
+                        currentDateTime.set(year, monthOfYear, dayOfMonth, hourOfDay, minute)
+                        binding.dateEditText.setText(formatter.format(currentDateTime.time))
                     },
-                    currentDateTime.hour,
-                    currentDateTime.minute,
+                    currentDateTime.get(Calendar.HOUR_OF_DAY),
+                    currentDateTime.get(Calendar.MINUTE),
                     true
                 )
                     .show()
             },
-            currentDateTime.year,
-            currentDateTime.monthValue - 1,
-            currentDateTime.dayOfMonth
+            currentDateTime.get(Calendar.YEAR),
+            currentDateTime.get(Calendar.MONTH),
+            currentDateTime.get(Calendar.DAY_OF_MONTH)
         )
             .show()
     }

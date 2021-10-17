@@ -64,7 +64,8 @@ class ActivitiesFragment : Fragment(R.layout.fragment_activities) {
             }
             adapter = activitiesListAdapter
             setHasFixedSize(true)
-            layoutManager = LinearLayoutManager(requireContext())
+            layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
+            scrollToPosition(0)
         }
     }
 

@@ -43,6 +43,16 @@ class ActivitiesListAdapter(
         private val onShareClicked: (activityUrl: String) -> Unit
     ) : RecyclerView.ViewHolder(binding.root) {
 
+        init {
+            binding.shareActivityBtn.setOnClickListener {
+                val item =
+                    (bindingAdapter as? ActivitiesListAdapter)?.getItem(bindingAdapterPosition)
+                        ?: return@setOnClickListener
+                val url = AuthConfig.ACTIVITY_URL + item.id
+                onShareClicked.invoke(url)
+            }
+        }
+
         @SuppressLint("SetTextI18n")
         fun bind(activityModel: ActivityModel, athlete: Athlete) {
 
@@ -59,11 +69,6 @@ class ActivitiesListAdapter(
                 ActivityType.Ride.toString() -> binding.typeImageView.setImageResource(R.drawable.ride)
                 ActivityType.Walk.toString() -> binding.typeImageView.setImageResource(R.drawable.walk)
                 ActivityType.Hike.toString() -> binding.typeImageView.setImageResource(R.drawable.hike)
-            }
-
-            binding.shareActivityBtn.setOnClickListener {
-                val url = AuthConfig.ACTIVITY_URL + activityModel.id
-                onShareClicked.invoke(url)
             }
 
             Glide.with(itemView)
