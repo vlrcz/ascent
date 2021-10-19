@@ -3,6 +3,7 @@ package com.skillbox.ascentstrava.presentation.activities.list
 import android.content.Context
 import android.os.Bundle
 import android.view.View
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -13,8 +14,6 @@ import com.skillbox.ascentstrava.app.appComponent
 import com.skillbox.ascentstrava.databinding.FragmentActivitiesBinding
 import com.skillbox.ascentstrava.di.ViewModelFactory
 import com.skillbox.ascentstrava.presentation.activities.list.di.DaggerActivitiesComponent
-import com.skillbox.ascentstrava.presentation.share.ContactListAdapter
-import com.skillbox.ascentstrava.presentation.share.ContactListViewModel
 import javax.inject.Inject
 import javax.inject.Provider
 
@@ -54,6 +53,11 @@ class ActivitiesFragment : Fragment(R.layout.fragment_activities) {
         viewModel.activitiesLiveData.observe(viewLifecycleOwner) {
             activitiesListAdapter?.submitList(it)
         }
+
+        viewModel.listFromDbLiveData.observe(viewLifecycleOwner) {
+            Toast.makeText(requireContext(), "Активности из базы данных", Toast.LENGTH_LONG)
+                .show() //todo удалить и показать кастомный баннер
+        }
     }
 
     private fun initList() {
@@ -64,7 +68,8 @@ class ActivitiesFragment : Fragment(R.layout.fragment_activities) {
             }
             adapter = activitiesListAdapter
             setHasFixedSize(true)
-            layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
+            layoutManager =
+                LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
             scrollToPosition(0)
         }
     }

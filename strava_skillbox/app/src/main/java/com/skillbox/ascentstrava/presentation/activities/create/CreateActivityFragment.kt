@@ -3,13 +3,10 @@ package com.skillbox.ascentstrava.presentation.activities.create
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.content.Context
-import android.os.Build
 import android.os.Bundle
-import android.text.format.DateUtils
 import android.view.View
 import android.widget.ArrayAdapter
 import android.widget.Toast
-import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -22,9 +19,6 @@ import com.skillbox.ascentstrava.presentation.activities.create.di.DaggerCreateA
 import com.skillbox.ascentstrava.presentation.activities.data.ActivityModel
 import com.skillbox.ascentstrava.presentation.activities.data.ActivityType
 import java.text.SimpleDateFormat
-import java.time.LocalDateTime
-import java.time.ZoneId
-import java.time.format.DateTimeFormatter
 import java.util.*
 
 import javax.inject.Inject
@@ -61,27 +55,37 @@ class CreateActivityFragment : Fragment(R.layout.fragment_create_activity) {
     }
 
     private fun bindViewModel() {
-        viewModel.saveSuccessLiveData.observe(viewLifecycleOwner) { findNavController().popBackStack() }
-        viewModel.saveErrorLiveData.observe(viewLifecycleOwner) { toast(it) }
+        /*viewModel.saveSuccessLiveData.observe(viewLifecycleOwner) { findNavController().popBackStack() }
+        viewModel.saveErrorLiveData.observe(viewLifecycleOwner) { toast(it) }*/
+
+        viewModel.insertSuccessLiveData.observe(viewLifecycleOwner) { findNavController().popBackStack() }
+        viewModel.insertErrorLiveData.observe(viewLifecycleOwner) { toast(it) }
     }
 
     private fun createActivity() {
-        val name = binding.nameEditText.text?.toString().orEmpty()
-        val type = binding.typeEditText.text?.toString().orEmpty()
-        val date = binding.dateEditText.text?.toString().orEmpty()
-        val elapsedTime = binding.timeEditText.text?.toString().orEmpty()
-        val distance = binding.distanceEditText.text?.toString().orEmpty()
+        val name = binding.nameEditText.text?.toString()
+        val type = binding.typeEditText.text?.toString()
+        val date = binding.dateEditText.text?.toString()
+        val elapsedTime = binding.timeEditText.text?.toString()
+        val distance = binding.distanceEditText.text?.toString()
         val description = binding.descriptionEditText.text?.toString().orEmpty()
-        val activity = ActivityModel(
-            id = null,
-            activityName = name,
-            activityType = type,
-            startedAt = date,
-            elapsedTime = elapsedTime.toInt(),
-            distance = distance.toFloat(),
-            description = description
-        )
-        viewModel.createActivity(activity)
+        if (name.isNullOrBlank() || type.isNullOrBlank() || date.isNullOrBlank() || elapsedTime.isNullOrBlank() || distance.isNullOrBlank()) {
+            toast(getString(R.string.incorrect_form)) //todo добавить обводку форм красным цветом
+        } else {
+            val uniqueId = UUID.randomUUID().toString()
+            val activity = ActivityModel(
+                bdId = uniqueId,
+                stravaId = null,
+                activityName = name,
+                activityType = type,
+                startedAt = date,
+                elapsedTime = elapsedTime.toInt(),
+                distance = distance.toFloat(),
+                description = description
+            )
+            //viewModel.createActivityModel(activity)
+            viewModel.insertActivityToDb(activity)
+        }
     }
 
     private fun initStartedAtTimePicker() {
@@ -93,7 +97,7 @@ class CreateActivityFragment : Fragment(R.layout.fragment_create_activity) {
                     requireContext(),
                     { _, hourOfDay, minute ->
                         val formatter =
-                            SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ", Locale.getDefault())
+                            SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ", Locale.ROOT)
                         currentDateTime.set(year, monthOfYear, dayOfMonth, hourOfDay, minute)
                         binding.dateEditText.setText(formatter.format(currentDateTime.time))
                     },

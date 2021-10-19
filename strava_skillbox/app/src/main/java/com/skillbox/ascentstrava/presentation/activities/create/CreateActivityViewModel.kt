@@ -15,6 +15,8 @@ class CreateActivityViewModel @Inject constructor(
 
     private val saveSuccessLiveEvent = SingleLiveEvent<Unit>()
     private val saveErrorLiveEvent = SingleLiveEvent<String>()
+    private val insertSuccessLiveEvent = SingleLiveEvent<Unit>()
+    private val insertErrorLiveEvent = SingleLiveEvent<String>()
 
     val saveSuccessLiveData: LiveData<Unit>
         get() = saveSuccessLiveEvent
@@ -22,14 +24,31 @@ class CreateActivityViewModel @Inject constructor(
     val saveErrorLiveData: LiveData<String>
         get() = saveErrorLiveEvent
 
+    val insertSuccessLiveData: LiveData<Unit>
+        get() = insertSuccessLiveEvent
 
-    fun createActivity(activityModel: ActivityModel) {
+    val insertErrorLiveData: LiveData<String>
+        get() = insertErrorLiveEvent
+
+
+    fun createActivityModel(activityModel: ActivityModel) {
         viewModelScope.launch {
             try {
                 activitiesRepository.createActivity(activityModel)
                 saveSuccessLiveEvent.postValue(Unit)
             } catch (t: Throwable) {
                 saveErrorLiveEvent.postValue(t.message)
+            }
+        }
+    }
+
+    fun insertActivityToDb(activityModel: ActivityModel) {
+        viewModelScope.launch {
+            try {
+                activitiesRepository.insertActivityModel(activityModel)
+                insertSuccessLiveEvent.postValue(Unit)
+            } catch (t: Throwable) {
+                insertErrorLiveEvent.postValue(t.message)
             }
         }
     }

@@ -13,6 +13,8 @@ import com.skillbox.ascentstrava.databinding.ItemActivityBinding
 import com.skillbox.ascentstrava.presentation.activities.data.ActivityModel
 import com.skillbox.ascentstrava.presentation.activities.data.ActivityType
 import com.skillbox.ascentstrava.presentation.profile.Athlete
+import java.text.SimpleDateFormat
+import java.util.*
 
 class ActivitiesListAdapter(
     viewModel: ActivitiesViewModel,
@@ -48,7 +50,7 @@ class ActivitiesListAdapter(
                 val item =
                     (bindingAdapter as? ActivitiesListAdapter)?.getItem(bindingAdapterPosition)
                         ?: return@setOnClickListener
-                val url = AuthConfig.ACTIVITY_URL + item.id
+                val url = AuthConfig.ACTIVITY_URL + item.stravaId
                 onShareClicked.invoke(url)
             }
         }
@@ -56,8 +58,7 @@ class ActivitiesListAdapter(
         @SuppressLint("SetTextI18n")
         fun bind(activityModel: ActivityModel, athlete: Athlete) {
 
-            binding.athleteNameTextView.text = athlete.firstName + athlete.lastName
-            binding.dateTimeTextView.text = activityModel.startedAt
+            binding.athleteNameTextView.text = "${athlete.firstName} ${athlete.lastName}"
             binding.activityNameTextView.text = activityModel.activityName
             binding.distanceCountTextView.text =
                 "${activityModel.distance?.toInt()?.div(1000)} $KM"
@@ -77,12 +78,21 @@ class ActivitiesListAdapter(
                 .fallback(R.drawable.ic_placeholder)
                 .error(R.drawable.ic_error_placeholder)
                 .into(binding.athleteImageView)
+
+            val date = activityModel.startedAt
+            if (date != null) {
+                val currentFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ", Locale.ROOT) //todo при работе с api работает только ss'Z'
+                val targetFormat = SimpleDateFormat("MMM dd,yyyy hh:mm a", Locale.ROOT)
+                val calendar = Calendar.getInstance()
+                calendar.time = currentFormat.parse(date)
+                binding.dateTimeTextView.text = targetFormat.format(calendar.time)
+            }
         }
     }
 
     class ActivityDiffUtilCallback : DiffUtil.ItemCallback<ActivityModel>() {
         override fun areItemsTheSame(oldItem: ActivityModel, newItem: ActivityModel): Boolean {
-            return oldItem.id == newItem.id
+            return oldItem.bdId == newItem.bdId
         }
 
         override fun areContentsTheSame(oldItem: ActivityModel, newItem: ActivityModel): Boolean {
@@ -94,5 +104,4 @@ class ActivitiesListAdapter(
         private const val KM = "km"
         private const val MIN = "m"
     }
-
 }
