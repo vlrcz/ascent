@@ -47,4 +47,6 @@
     <string name="elevationTextView">Elevation</string>
     <string name="typeTextView">Type</string>
     <string name="incorrect_form">Incorrect form</string>
+    <string name="activity_add_to_db">Активность добавлена  в базу данных</string>
+    <string name="activities_from_db">Активности из базы данных</string>
 </resources>

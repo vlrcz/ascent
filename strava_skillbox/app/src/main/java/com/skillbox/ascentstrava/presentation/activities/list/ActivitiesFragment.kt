@@ -3,7 +3,6 @@ package com.skillbox.ascentstrava.presentation.activities.list
 import android.content.Context
 import android.os.Bundle
 import android.view.View
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -13,7 +12,10 @@ import com.skillbox.ascentstrava.R
 import com.skillbox.ascentstrava.app.appComponent
 import com.skillbox.ascentstrava.databinding.FragmentActivitiesBinding
 import com.skillbox.ascentstrava.di.ViewModelFactory
+import com.skillbox.ascentstrava.network.ConnectionManager
 import com.skillbox.ascentstrava.presentation.activities.list.di.DaggerActivitiesComponent
+import com.skillbox.ascentstrava.utils.toast
+import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Provider
 
@@ -45,6 +47,18 @@ class ActivitiesFragment : Fragment(R.layout.fragment_activities) {
         binding.fab.setOnClickListener {
             findNavController().navigate(R.id.action_activitiesFragment_to_createActivityFragment)
         }
+
+        binding.pullToRefresh.setOnRefreshListener {
+            viewModel.loadList()
+            if (ConnectionManager.isOnline(requireContext())) {
+                binding.infoCardView.visibility = View.GONE
+            }
+            binding.pullToRefresh.isRefreshing = false
+        }
+
+        binding.closeInfoBtn.setOnClickListener {
+            binding.infoCardView.visibility = View.GONE
+        }
     }
 
     private fun bindViewModel() {
@@ -52,11 +66,33 @@ class ActivitiesFragment : Fragment(R.layout.fragment_activities) {
 
         viewModel.activitiesLiveData.observe(viewLifecycleOwner) {
             activitiesListAdapter?.submitList(it)
+            if (ConnectionManager.isOnline(requireContext())) {
+                viewModel.insertActivitiesToDbFromServer(it)
+            } //todo работает неправильно, проходит по всему списку
         }
 
-        viewModel.listFromDbLiveData.observe(viewLifecycleOwner) {
-            Toast.makeText(requireContext(), "Активности из базы данных", Toast.LENGTH_LONG)
-                .show() //todo удалить и показать кастомный баннер
+        viewModel.errorLiveData.observe(viewLifecycleOwner) {
+            toast(it)
+        }
+
+        viewModel.pendingActivitiesLiveData.observe(viewLifecycleOwner) {
+            if (it.isNotEmpty()) {
+                viewModel.sentPendingActivities(it)
+            }
+        }
+
+        if (ConnectionManager.isOnline(requireContext())) {
+            viewModel.getListOfPendingActivities()
+            binding.infoCardView.visibility = View.GONE
+        }
+
+        viewModel.sentPendingActivitiesLiveData.observe(viewLifecycleOwner) {
+            viewModel.loadList()
+        }
+
+        viewModel.activitiesFromDbLiveData.observe(viewLifecycleOwner) {
+            binding.infoCardView.visibility = View.VISIBLE
+            viewModel.loadListFromDb()
         }
     }
 
@@ -70,7 +106,7 @@ class ActivitiesFragment : Fragment(R.layout.fragment_activities) {
             setHasFixedSize(true)
             layoutManager =
                 LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
-            scrollToPosition(0)
+            scrollToPosition(0) // todo добавить сортировку по дате активности
         }
     }
 

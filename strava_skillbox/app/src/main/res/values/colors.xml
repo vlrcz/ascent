@@ -13,4 +13,7 @@
     <color name="gray">#B5B5B5</color>
     <color name="so_light_gray">#E1E1E1</color>
     <color name="light_purple">#887ADE</color>
+    <color name="light_purple_100">#EEE5FD</color>
+    <color name="orange">#D84910</color>
+    <color name="light_orange">#FDDBCE</color>
 </resources>

@@ -1,8 +1,14 @@
 package com.skillbox.ascentstrava.presentation.activities.list
 
 import android.annotation.SuppressLint
+import android.content.Context
+import android.content.res.ColorStateList
+import android.os.Build
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.RequiresApi
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -10,6 +16,7 @@ import com.bumptech.glide.Glide
 import com.skillbox.ascentstrava.R
 import com.skillbox.ascentstrava.data.AuthConfig
 import com.skillbox.ascentstrava.databinding.ItemActivityBinding
+import com.skillbox.ascentstrava.presentation.activities.data.ActivityItem
 import com.skillbox.ascentstrava.presentation.activities.data.ActivityModel
 import com.skillbox.ascentstrava.presentation.activities.data.ActivityType
 import com.skillbox.ascentstrava.presentation.profile.Athlete
@@ -20,7 +27,7 @@ class ActivitiesListAdapter(
     viewModel: ActivitiesViewModel,
     private val onShareClicked: (activityUrl: String) -> Unit
 ) :
-    ListAdapter<ActivityModel, ActivitiesListAdapter.ActivitiesListViewHolder>(
+    ListAdapter<ActivityItem, ActivitiesListAdapter.ActivitiesListViewHolder>(
         ActivityDiffUtilCallback()
     ) {
 
@@ -36,8 +43,7 @@ class ActivitiesListAdapter(
     }
 
     override fun onBindViewHolder(holder: ActivitiesListViewHolder, position: Int) {
-        if (athlete != null)
-            holder.bind(getItem(position), athlete)
+        holder.bind(getItem(position), athlete)
     }
 
     class ActivitiesListViewHolder(
@@ -55,15 +61,17 @@ class ActivitiesListAdapter(
             }
         }
 
-        @SuppressLint("SetTextI18n")
-        fun bind(activityModel: ActivityModel, athlete: Athlete) {
+        @SuppressLint("SetTextI18n", "ResourceAsColor")
+        fun bind(activityItem: ActivityItem, athlete: Athlete?) {
 
-            binding.athleteNameTextView.text = "${athlete.firstName} ${athlete.lastName}"
-            binding.activityNameTextView.text = activityModel.activityName
+            if (athlete != null) {
+                binding.athleteNameTextView.text = "${athlete.firstName} ${athlete.lastName}"
+            }
+            binding.activityNameTextView.text = activityItem.activityName
             binding.distanceCountTextView.text =
-                "${activityModel.distance?.toInt()?.div(1000)} $KM"
-            binding.timeCountTextView.text = "${activityModel.elapsedTime?.div(60)}$MIN"
-            binding.typeValueTextView.text = activityModel.activityType
+                "${activityItem.distance?.toInt()?.div(1000)} $KM"
+            binding.timeCountTextView.text = "${activityItem.elapsedTime?.div(60)}$MIN"
+            binding.typeValueTextView.text = activityItem.activityType
 
             when (binding.typeValueTextView.text) {
                 ActivityType.Run.toString() -> binding.typeImageView.setImageResource(R.drawable.run)
@@ -72,16 +80,25 @@ class ActivitiesListAdapter(
                 ActivityType.Hike.toString() -> binding.typeImageView.setImageResource(R.drawable.hike)
             }
 
-            Glide.with(itemView)
-                .load(athlete.photoUrl)
-                .placeholder(R.drawable.ic_placeholder)
-                .fallback(R.drawable.ic_placeholder)
-                .error(R.drawable.ic_error_placeholder)
-                .into(binding.athleteImageView)
+            if (activityItem.isPending == true) {
+                binding.pendingTextView.visibility = View.VISIBLE
+            }
 
-            val date = activityModel.startedAt
+            if (athlete != null) {
+                Glide.with(itemView)
+                    .load(athlete.photoUrl)
+                    .placeholder(R.drawable.ic_placeholder)
+                    .fallback(R.drawable.ic_placeholder)
+                    .error(R.drawable.ic_error_placeholder)
+                    .into(binding.athleteImageView)
+            }
+
+            val date = activityItem.startedAt
             if (date != null) {
-                val currentFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ", Locale.ROOT) //todo при работе с api работает только ss'Z'
+                val currentFormat = SimpleDateFormat(
+                    "yyyy-MM-dd'T'HH:mm:ss",
+                    Locale.ROOT
+                )
                 val targetFormat = SimpleDateFormat("MMM dd,yyyy hh:mm a", Locale.ROOT)
                 val calendar = Calendar.getInstance()
                 calendar.time = currentFormat.parse(date)
@@ -90,12 +107,12 @@ class ActivitiesListAdapter(
         }
     }
 
-    class ActivityDiffUtilCallback : DiffUtil.ItemCallback<ActivityModel>() {
-        override fun areItemsTheSame(oldItem: ActivityModel, newItem: ActivityModel): Boolean {
-            return oldItem.bdId == newItem.bdId
+    class ActivityDiffUtilCallback : DiffUtil.ItemCallback<ActivityItem>() {
+        override fun areItemsTheSame(oldItem: ActivityItem, newItem: ActivityItem): Boolean {
+            return oldItem.uniqueId == newItem.uniqueId || oldItem.stravaId == newItem.stravaId
         }
 
-        override fun areContentsTheSame(oldItem: ActivityModel, newItem: ActivityModel): Boolean {
+        override fun areContentsTheSame(oldItem: ActivityItem, newItem: ActivityItem): Boolean {
             return oldItem == newItem
         }
     }

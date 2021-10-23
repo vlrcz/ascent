@@ -20,6 +20,7 @@ import com.skillbox.ascentstrava.app.appComponent
 import com.skillbox.ascentstrava.data.AuthManager
 import com.skillbox.ascentstrava.databinding.FragmentProfileBinding
 import com.skillbox.ascentstrava.di.ViewModelFactory
+import com.skillbox.ascentstrava.network.ConnectionManager
 import com.skillbox.ascentstrava.presentation.profile.data.UpdateRequestBody
 import com.skillbox.ascentstrava.presentation.profile.di.DaggerProfileComponent
 import javax.inject.Inject
@@ -94,11 +95,23 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
             viewModel.logout()
         }
 
-        viewModel.clearData.observe(viewLifecycleOwner) {
-            showLogoutDialog()
+        bindViewModel()
+
+        binding.infoCardView.visibility = View.GONE
+
+        binding.closeInfoBtn.setOnClickListener {
+            binding.infoCardView.visibility = View.GONE
         }
 
-        bindViewModel()
+        if (!ConnectionManager.isOnline(requireContext())) {
+            val athlete = viewModel.getAthleteFromCache()
+            if (athlete != null) {
+                bindProfileInfo(athlete)
+                bindWeightView(athlete)
+                binding.logoutBtn.visibility = View.GONE
+                binding.infoCardView.visibility = View.VISIBLE
+            }
+        }
     }
 
     private fun showLogoutDialog() {
@@ -129,10 +142,15 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
             bindProfileInfo(athlete)
             bindWeightView(athlete)
             viewModel.putAthlete(athlete)
+            //todo put athlete to db
         }
 
         viewModel.error.observe(viewLifecycleOwner) { t ->
             t.message?.let { toast(it) }
+        }
+
+        viewModel.clearData.observe(viewLifecycleOwner) {
+            showLogoutDialog()
         }
     }
 

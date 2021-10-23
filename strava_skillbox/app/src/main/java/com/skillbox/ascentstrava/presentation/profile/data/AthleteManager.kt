@@ -3,11 +3,17 @@ package com.skillbox.ascentstrava.presentation.profile.data
 import android.content.Context
 import com.skillbox.ascentstrava.R
 import com.skillbox.ascentstrava.presentation.profile.Athlete
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 import javax.inject.Singleton
+import kotlin.coroutines.suspendCoroutine
 
 @Singleton
-class AthleteManager @Inject constructor(private val context: Context) {
+class AthleteManager @Inject constructor(
+    private val context: Context
+) {
 
     private var athlete: Athlete? = null
 

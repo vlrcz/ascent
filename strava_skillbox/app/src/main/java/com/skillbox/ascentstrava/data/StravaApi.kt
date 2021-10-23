@@ -1,5 +1,6 @@
 package com.skillbox.ascentstrava.data
 
+import com.skillbox.ascentstrava.presentation.activities.data.ActivityItem
 import com.skillbox.ascentstrava.presentation.activities.data.ActivityModel
 import com.skillbox.ascentstrava.presentation.profile.Athlete
 import com.skillbox.ascentstrava.presentation.profile.data.UpdateRequestBody
@@ -38,5 +39,5 @@ interface StravaApi {
     )
 
     @GET("athlete/activities")
-    suspend fun getActivities(): List<ActivityModel>
+    suspend fun getActivities(): List<ActivityItem>
 }

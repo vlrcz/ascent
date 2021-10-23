@@ -4,7 +4,9 @@ import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
-data class ActivityModel(
+data class ActivityItem(
+    @Transient
+    val uniqueId: String? = null,
     @Json(name = "id")
     val stravaId: Long?,
     @Json(name = "name")
@@ -18,5 +20,7 @@ data class ActivityModel(
     @Json(name = "distance")
     val distance: Float?,
     @Json(name = "description")
-    val description: String?
+    val description: String?,
+    @Transient
+    val isPending: Boolean? = false
 )

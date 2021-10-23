@@ -13,11 +13,14 @@ import androidx.navigation.fragment.findNavController
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.skillbox.ascentstrava.R
 import com.skillbox.ascentstrava.app.appComponent
+import com.skillbox.ascentstrava.data.db.ActivityEntity
 import com.skillbox.ascentstrava.databinding.FragmentCreateActivityBinding
 import com.skillbox.ascentstrava.di.ViewModelFactory
+import com.skillbox.ascentstrava.network.ConnectionManager
 import com.skillbox.ascentstrava.presentation.activities.create.di.DaggerCreateActivityComponent
 import com.skillbox.ascentstrava.presentation.activities.data.ActivityModel
 import com.skillbox.ascentstrava.presentation.activities.data.ActivityType
+import com.skillbox.ascentstrava.utils.toast
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -55,11 +58,20 @@ class CreateActivityFragment : Fragment(R.layout.fragment_create_activity) {
     }
 
     private fun bindViewModel() {
-        /*viewModel.saveSuccessLiveData.observe(viewLifecycleOwner) { findNavController().popBackStack() }
-        viewModel.saveErrorLiveData.observe(viewLifecycleOwner) { toast(it) }*/
-
-        viewModel.insertSuccessLiveData.observe(viewLifecycleOwner) { findNavController().popBackStack() }
-        viewModel.insertErrorLiveData.observe(viewLifecycleOwner) { toast(it) }
+        viewModel.saveSuccessLiveData.observe(viewLifecycleOwner) {
+            findNavController().popBackStack()
+            viewModel.updateEntityByUniqueId(it.first, it.second)
+        }
+        viewModel.insertSuccessLiveData.observe(viewLifecycleOwner) {
+            if (!ConnectionManager.isOnline(requireContext())) {
+                findNavController().popBackStack()
+            }
+        }
+        viewModel.saveErrorLiveData.observe(viewLifecycleOwner) {
+            viewModel.deleteEntityByUniqueId(it)
+        }
+        viewModel.errorLiveData.observe(viewLifecycleOwner) { toast(it) }
+        viewModel.toastLiveData.observe(viewLifecycleOwner) { toast(it) }
     }
 
     private fun createActivity() {
@@ -73,8 +85,7 @@ class CreateActivityFragment : Fragment(R.layout.fragment_create_activity) {
             toast(getString(R.string.incorrect_form)) //todo добавить обводку форм красным цветом
         } else {
             val uniqueId = UUID.randomUUID().toString()
-            val activity = ActivityModel(
-                bdId = uniqueId,
+            val activityModel = ActivityModel(
                 stravaId = null,
                 activityName = name,
                 activityType = type,
@@ -83,8 +94,18 @@ class CreateActivityFragment : Fragment(R.layout.fragment_create_activity) {
                 distance = distance.toFloat(),
                 description = description
             )
-            //viewModel.createActivityModel(activity)
-            viewModel.insertActivityToDb(activity)
+            val activityEntity = ActivityEntity(
+                id = uniqueId,
+                activityName = name,
+                activityType = type,
+                startedAt = date,
+                elapsedTime = elapsedTime.toInt(),
+                distance = distance.toFloat(),
+                description = description,
+                isPending = true
+            )
+            viewModel.createActivityModel(activityModel, uniqueId)
+            viewModel.insertActivityEntityToDb(activityEntity)
         }
     }
 
@@ -118,9 +139,5 @@ class CreateActivityFragment : Fragment(R.layout.fragment_create_activity) {
         val list = ActivityType.values()
         val adapter = ArrayAdapter(requireContext(), R.layout.dropdown_item, list)
         binding.typeEditText.setAdapter(adapter)
-    }
-
-    private fun toast(text: String) {
-        Toast.makeText(requireContext(), text, Toast.LENGTH_SHORT).show()
     }
 }

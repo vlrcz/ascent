@@ -59,6 +59,10 @@ class ProfileViewModel @Inject constructor(
         athleteManager.putAthlete(athlete)
     }
 
+    fun getAthleteFromCache(): Athlete? {
+        return athleteManager.getAthlete()
+    }
+
     fun logout() {
         viewModelScope.launch {
             try {

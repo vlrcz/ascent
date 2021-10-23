@@ -10,6 +10,7 @@ import com.skillbox.ascentstrava.di.module.AuthModule
 import com.skillbox.ascentstrava.di.module.DatabaseModule
 import com.skillbox.ascentstrava.di.module.NetworkModule
 import com.skillbox.ascentstrava.di.module.StorageModule
+import com.skillbox.ascentstrava.presentation.profile.data.AthleteDao
 import com.skillbox.ascentstrava.presentation.profile.data.AthleteManager
 import dagger.BindsInstance
 import dagger.Component
@@ -28,6 +29,7 @@ interface AppComponent {
     fun stravaApi(): StravaApi
     fun athleteManager(): AthleteManager
     fun activitiesDao(): ActivitiesDao
+    fun athleteDao(): AthleteDao
 
     @Component.Factory
     interface Factory {
