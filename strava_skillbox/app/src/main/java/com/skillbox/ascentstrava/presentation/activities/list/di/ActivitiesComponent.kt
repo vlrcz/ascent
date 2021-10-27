@@ -1,8 +1,7 @@
 package com.skillbox.ascentstrava.presentation.activities.list.di
 
 import com.skillbox.ascentstrava.di.AppComponent
-import com.skillbox.ascentstrava.presentation.activities.list.ActivitiesFragment
-import com.skillbox.ascentstrava.presentation.activities.create.CreateActivityFragment
+import com.skillbox.ascentstrava.presentation.activities.list.ActivityListFragment
 import dagger.Component
 
 @ActivitiesScope
@@ -11,7 +10,7 @@ import dagger.Component
 )
 interface ActivitiesComponent {
 
-    fun inject(activitiesFragment: ActivitiesFragment)
+    fun inject(activityListFragment: ActivityListFragment)
 
     @Component.Factory
     interface Factory {

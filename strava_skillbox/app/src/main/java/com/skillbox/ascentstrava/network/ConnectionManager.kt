@@ -5,15 +5,53 @@ import android.net.ConnectivityManager
 import android.net.Network
 import android.net.NetworkCapabilities
 import android.os.Build
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import javax.inject.Inject
+import javax.inject.Singleton
 
-object ConnectionManager {
+@Singleton
+class ConnectionManager @Inject constructor(
+    private val context: Context
+) {
 
-    fun isOnline(context: Context): Boolean {
+    private val networkListener = MutableLiveData(isNetworkAvailable())
+
+    private val connectivityManager =
+        context.getSystemService(Context.CONNECTIVITY_SERVICE) as? ConnectivityManager
+
+    init {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            connectivityManager?.registerDefaultNetworkCallback(
+                object : ConnectivityManager.NetworkCallback() {
+                    override fun onAvailable(network: Network) {
+                        super.onAvailable(network)
+                        networkListener.postValue(checkNetworkConnection(connectivityManager, network))
+                    }
+
+                    override fun onUnavailable() {
+                        super.onUnavailable()
+                        networkListener.postValue(checkNetworkConnection(connectivityManager, null))
+                    }
+
+                    override fun onLost(network: Network) {
+                        super.onLost(network)
+                        networkListener.postValue(checkNetworkConnection(connectivityManager, network))
+                    }
+                }
+            )
+        }
+    }
+
+    fun observeNetworkState(): MutableLiveData<Boolean> = networkListener
+
+    private fun isNetworkAvailable(): Boolean {
         var result = false
-        val connectivityManager =
-            context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
 
-        connectivityManager.apply {
+        connectivityManager?.apply {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 result = checkNetworkConnection(this, this.activeNetwork)
             } else {
@@ -24,8 +62,8 @@ object ConnectionManager {
                     }
                 }
             }
-            return result
         }
+        return result
     }
 
     private fun checkNetworkConnection(

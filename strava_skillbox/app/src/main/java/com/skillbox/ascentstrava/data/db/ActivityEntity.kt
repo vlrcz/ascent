@@ -12,9 +12,9 @@ data class ActivityEntity(
     @ColumnInfo(name = ActivitiesContract.Columns.ID)
     val id: String,
     @ColumnInfo(name = ActivitiesContract.Columns.NAME)
-    val activityName: String?,
+    val name: String?,
     @ColumnInfo(name = ActivitiesContract.Columns.TYPE)
-    val activityType: String?,
+    val type: String?,
     @ColumnInfo(name = ActivitiesContract.Columns.STARTED_AT)
     val startedAt: String?,
     @ColumnInfo(name = ActivitiesContract.Columns.ELAPSED_TIME)

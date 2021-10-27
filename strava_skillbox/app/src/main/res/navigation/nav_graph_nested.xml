@@ -21,7 +21,7 @@
     <fragment
         tools:layout="@layout/fragment_activities"
         android:id="@+id/activitiesFragment"
-        android:name="com.skillbox.ascentstrava.presentation.activities.list.ActivitiesFragment"
+        android:name="com.skillbox.ascentstrava.presentation.activities.list.ActivityListFragment"
         android:label="Activities" >
         <action
             android:id="@+id/action_activitiesFragment_to_createActivityFragment"

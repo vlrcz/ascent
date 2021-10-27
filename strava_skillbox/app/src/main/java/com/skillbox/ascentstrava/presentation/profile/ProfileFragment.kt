@@ -103,7 +103,7 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
             binding.infoCardView.visibility = View.GONE
         }
 
-        if (!ConnectionManager.isOnline(requireContext())) {
+        /*if (!ConnectionManager.isOnline(requireContext())) {
             val athlete = viewModel.getAthleteFromCache()
             if (athlete != null) {
                 bindProfileInfo(athlete)
@@ -111,7 +111,7 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
                 binding.logoutBtn.visibility = View.GONE
                 binding.infoCardView.visibility = View.VISIBLE
             }
-        }
+        }*/
     }
 
     private fun showLogoutDialog() {

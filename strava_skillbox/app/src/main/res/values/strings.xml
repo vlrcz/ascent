@@ -47,6 +47,7 @@
     <string name="elevationTextView">Elevation</string>
     <string name="typeTextView">Type</string>
     <string name="incorrect_form">Incorrect form</string>
-    <string name="activity_add_to_db">Активность добавлена  в базу данных</string>
+    <string name="activity_add_to_db">Активность добавлена только в базу данных</string>
     <string name="activities_from_db">Активности из базы данных</string>
+    <string name="no_connection_add_to_db">Подключение к сети отсутствует, активность добавлена в базу данных</string>
 </resources>

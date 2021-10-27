@@ -39,5 +39,5 @@ interface StravaApi {
     )
 
     @GET("athlete/activities")
-    suspend fun getActivities(): List<ActivityItem>
+    suspend fun getActivities(): List<ActivityModel>
 }

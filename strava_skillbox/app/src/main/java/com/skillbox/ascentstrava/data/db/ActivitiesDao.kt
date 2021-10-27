@@ -4,13 +4,12 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import com.skillbox.ascentstrava.presentation.activities.data.ActivityModel
 
 @Dao
 interface ActivitiesDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertActivityModel(activityEntity: ActivityEntity)
+    suspend fun insertActivityToDb(activityEntity: ActivityEntity)
 
     @Query("SELECT * FROM ${ActivitiesContract.TABLE_NAME}")
     suspend fun getActivities(): List<ActivityEntity>

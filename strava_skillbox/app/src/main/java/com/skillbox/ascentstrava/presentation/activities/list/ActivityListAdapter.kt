@@ -1,14 +1,9 @@
 package com.skillbox.ascentstrava.presentation.activities.list
 
 import android.annotation.SuppressLint
-import android.content.Context
-import android.content.res.ColorStateList
-import android.os.Build
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.annotation.RequiresApi
-import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -17,17 +12,16 @@ import com.skillbox.ascentstrava.R
 import com.skillbox.ascentstrava.data.AuthConfig
 import com.skillbox.ascentstrava.databinding.ItemActivityBinding
 import com.skillbox.ascentstrava.presentation.activities.data.ActivityItem
-import com.skillbox.ascentstrava.presentation.activities.data.ActivityModel
 import com.skillbox.ascentstrava.presentation.activities.data.ActivityType
 import com.skillbox.ascentstrava.presentation.profile.Athlete
 import java.text.SimpleDateFormat
 import java.util.*
 
-class ActivitiesListAdapter(
-    viewModel: ActivitiesViewModel,
+class ActivityListAdapter(
+    viewModel: ActivityListViewModel,
     private val onShareClicked: (activityUrl: String) -> Unit
 ) :
-    ListAdapter<ActivityItem, ActivitiesListAdapter.ActivitiesListViewHolder>(
+    ListAdapter<ActivityItem, ActivityListAdapter.ActivitiesListViewHolder>(
         ActivityDiffUtilCallback()
     ) {
 
@@ -54,7 +48,7 @@ class ActivitiesListAdapter(
         init {
             binding.shareActivityBtn.setOnClickListener {
                 val item =
-                    (bindingAdapter as? ActivitiesListAdapter)?.getItem(bindingAdapterPosition)
+                    (bindingAdapter as? ActivityListAdapter)?.getItem(bindingAdapterPosition)
                         ?: return@setOnClickListener
                 val url = AuthConfig.ACTIVITY_URL + item.stravaId
                 onShareClicked.invoke(url)
@@ -67,11 +61,11 @@ class ActivitiesListAdapter(
             if (athlete != null) {
                 binding.athleteNameTextView.text = "${athlete.firstName} ${athlete.lastName}"
             }
-            binding.activityNameTextView.text = activityItem.activityName
+            binding.activityNameTextView.text = activityItem.name
             binding.distanceCountTextView.text =
                 "${activityItem.distance?.toInt()?.div(1000)} $KM"
             binding.timeCountTextView.text = "${activityItem.elapsedTime?.div(60)}$MIN"
-            binding.typeValueTextView.text = activityItem.activityType
+            binding.typeValueTextView.text = activityItem.type
 
             when (binding.typeValueTextView.text) {
                 ActivityType.Run.toString() -> binding.typeImageView.setImageResource(R.drawable.run)

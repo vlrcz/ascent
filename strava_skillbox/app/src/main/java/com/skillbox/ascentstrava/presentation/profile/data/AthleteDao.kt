@@ -13,7 +13,7 @@ interface AthleteDao {
     suspend fun insertAthlete(athlete: Athlete)
 
     @Query("SELECT * FROM ${AthleteContract.TABLE_NAME}")
-    suspend fun getAthlete(): Athlete
+    suspend fun getAthlete(): Athlete?
 
     @Query("DELETE FROM ${AthleteContract.TABLE_NAME}")
     suspend fun clearAthlete()
