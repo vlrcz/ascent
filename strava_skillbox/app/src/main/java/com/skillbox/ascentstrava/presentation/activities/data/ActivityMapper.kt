@@ -1,6 +1,8 @@
 package com.skillbox.ascentstrava.presentation.activities.data
 
 import com.skillbox.ascentstrava.data.db.ActivityEntity
+import java.text.SimpleDateFormat
+import java.util.*
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -25,9 +27,9 @@ class ActivityMapper @Inject constructor() {
             stravaId = activityModel.id,
             name = activityModel.name,
             type = activityModel.type,
-            startedAt = activityModel.startedAt,
-            elapsedTime = activityModel.elapsedTime,
-            distance = activityModel.distance,
+            startedAt = activityModel.startedAt?.let { bindDate(it) },
+            elapsedTime = activityModel.elapsedTime?.div(60),
+            distance = activityModel.distance?.toInt()?.div(1000),
             description = activityModel.description,
             false
         )
@@ -39,12 +41,21 @@ class ActivityMapper @Inject constructor() {
             stravaId = null,
             name = activityEntity.name,
             type = activityEntity.type,
-            startedAt = activityEntity.startedAt,
-            elapsedTime = activityEntity.elapsedTime,
-            distance = activityEntity.distance,
+            startedAt = activityEntity.startedAt?.let { bindDate(it) },
+            elapsedTime = activityEntity.elapsedTime?.div(60),
+            distance = activityEntity.distance?.toInt()?.div(1000),
             description = activityEntity.description,
             isPending = activityEntity.isPending
         )
+    }
+
+    private fun bindDate(date: String): String {
+        val currentFormat = SimpleDateFormat(
+            "yyyy-MM-dd'T'HH:mm:ss",
+            Locale.ROOT
+        )
+        val targetFormat = SimpleDateFormat("MMM dd,yyyy hh:mm a", Locale.ROOT)
+        return targetFormat.format(currentFormat.parse(date))
     }
 
     fun mapModelToEntity(activityModel: ActivityModel): ActivityEntity {

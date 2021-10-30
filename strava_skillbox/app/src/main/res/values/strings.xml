@@ -50,4 +50,6 @@
     <string name="activity_add_to_db">Активность добавлена только в базу данных</string>
     <string name="activities_from_db">Активности из базы данных</string>
     <string name="no_connection_add_to_db">Подключение к сети отсутствует, активность добавлена в базу данных</string>
+    <string name="failed_to_add_activity">Не удалось добавить активность</string>
+    <string name="download_error">Ошибка загрузки</string>
 </resources>

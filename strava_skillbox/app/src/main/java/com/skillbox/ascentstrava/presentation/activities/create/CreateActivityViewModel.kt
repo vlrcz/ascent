@@ -1,18 +1,14 @@
 package com.skillbox.ascentstrava.presentation.activities.create
 
-import android.net.ConnectivityManager
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.skillbox.ascentstrava.R
 import com.skillbox.ascentstrava.data.db.ActivityEntity
-import com.skillbox.ascentstrava.network.ConnectionManager
 import com.skillbox.ascentstrava.presentation.activities.data.ActivitiesRepository
 import com.skillbox.ascentstrava.presentation.activities.data.ActivityMapper
-import com.skillbox.ascentstrava.presentation.activities.data.ActivityModel
 import com.skillbox.ascentstrava.utils.SingleLiveEvent
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.flow
@@ -20,6 +16,7 @@ import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
+import retrofit2.HttpException
 import timber.log.Timber
 import java.net.UnknownHostException
 import java.util.*
@@ -30,22 +27,14 @@ class CreateActivityViewModel @Inject constructor(
     private val activityMapper: ActivityMapper
 ) : ViewModel() {
 
-    private val saveSuccessLiveEvent = SingleLiveEvent<Unit>()
-    private val insertSuccessLiveEvent = SingleLiveEvent<Unit>()
-    private val saveErrorLiveEvent = SingleLiveEvent<String>()
-    private val toastLiveEvent = SingleLiveEvent<Int>()
+    private val successLiveEvent = SingleLiveEvent<Unit>()
+    private val errorLiveEvent = SingleLiveEvent<Int>()
 
-    val saveSuccessLiveData: LiveData<Unit>
-        get() = saveSuccessLiveEvent
+    val successLiveData: LiveData<Unit>
+        get() = successLiveEvent
 
-    val insertSuccessLiveData: LiveData<Unit>
-        get() = insertSuccessLiveEvent
-
-    val saveErrorLiveData: LiveData<String>
-        get() = saveErrorLiveEvent
-
-    val toastLiveData: LiveData<Int>
-        get() = toastLiveEvent
+    val errorLiveData: LiveData<Int>
+        get() = errorLiveEvent
 
     fun createActivity(
         name: String?,
@@ -75,7 +64,7 @@ class CreateActivityViewModel @Inject constructor(
                     activitiesRepository.insertActivityToDb(it)
                 }
                 .catch {
-                    Timber.d("Не удалось добавить активность в базу данных")
+                    Timber.e("Не удалось добавить активность в базу данных")
                 }
                 .map {
                     val activityModel = activityMapper.mapEntityToModel(activityEntity)
@@ -83,21 +72,21 @@ class CreateActivityViewModel @Inject constructor(
                 }
                 .flowOn(Dispatchers.IO)
                 .catch {
-                    if (it is UnknownHostException) {
-                        insertSuccessLiveEvent.postValue(Unit)
-                        toastLiveEvent.postValue(R.string.no_connection_add_to_db)
+                    if (it is UnknownHostException || it is HttpException) {
+                        successLiveEvent.postValue(Unit)
                     } else {
                         activitiesRepository.deleteEntityByUniqueId(uniqueId)
+                        errorLiveEvent.postValue(R.string.failed_to_add_activity)
                     }
                 }
                 .onEach {
                     activitiesRepository.updateEntityByUniqueId(it, uniqueId)
                 }
                 .catch {
-                    Timber.d("Не удалось обновить активность в базе данных")
+                    Timber.e("Не удалось обновить активность в базе данных")
                 }
                 .collect {
-                    saveSuccessLiveEvent.postValue(Unit)
+                    successLiveEvent.postValue(Unit)
                 }
         }
     }

@@ -11,6 +11,10 @@ interface ActivitiesDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertActivityToDb(activityEntity: ActivityEntity)
 
+    @JvmSuppressWildcards
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertListOfActivityToDb(list: List<ActivityEntity>)
+
     @Query("SELECT * FROM ${ActivitiesContract.TABLE_NAME}")
     suspend fun getActivities(): List<ActivityEntity>
 

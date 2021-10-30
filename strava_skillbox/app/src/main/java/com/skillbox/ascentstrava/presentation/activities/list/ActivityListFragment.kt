@@ -73,17 +73,13 @@ class ActivityListFragment : Fragment(R.layout.fragment_activities) {
         }
 
         viewModel.isNetworkAvailable.observe(viewLifecycleOwner) {
-            Timber.d("observer $it")
-            when (it) {
-                true -> {
-                    binding.infoCardView.visibility = View.GONE
-                    viewModel.loadList()
-                    viewModel.sentPendingActivities()
-                }
-                false -> {
-                    binding.infoCardView.visibility = View.VISIBLE
-                    viewModel.loadList()
-                }
+            if (it == true) {
+                binding.infoCardView.visibility = View.GONE
+                viewModel.loadList()
+                viewModel.sentPendingActivities()
+            } else {
+                binding.infoCardView.visibility = View.VISIBLE
+                viewModel.loadList()
             }
         }
 

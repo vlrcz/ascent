@@ -9,8 +9,7 @@ import javax.inject.Inject
 
 class ActivitiesRepository @Inject constructor(
     private val api: StravaApi,
-    private val activitiesDao: ActivitiesDao,
-    private val activityMapper: ActivityMapper
+    private val activitiesDao: ActivitiesDao
 ) {
 
     suspend fun createActivity(activityModel: ActivityModel): ActivityModel {
@@ -35,6 +34,12 @@ class ActivitiesRepository @Inject constructor(
     suspend fun insertActivityToDb(activityEntity: ActivityEntity) {
         withContext(Dispatchers.IO) {
             activitiesDao.insertActivityToDb(activityEntity)
+        }
+    }
+
+    suspend fun insertListOfActivityToDb(list: List<ActivityEntity>) {
+        withContext(Dispatchers.IO) {
+            activitiesDao.insertListOfActivityToDb(list)
         }
     }
 

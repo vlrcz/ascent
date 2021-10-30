@@ -14,7 +14,6 @@ import com.skillbox.ascentstrava.R
 import com.skillbox.ascentstrava.app.appComponent
 import com.skillbox.ascentstrava.databinding.FragmentCreateActivityBinding
 import com.skillbox.ascentstrava.di.ViewModelFactory
-import com.skillbox.ascentstrava.network.ConnectionManager
 import com.skillbox.ascentstrava.presentation.activities.create.di.DaggerCreateActivityComponent
 import com.skillbox.ascentstrava.presentation.activities.data.ActivityType
 import com.skillbox.ascentstrava.utils.toast
@@ -55,13 +54,12 @@ class CreateActivityFragment : Fragment(R.layout.fragment_create_activity) {
     }
 
     private fun bindViewModel() {
-        viewModel.saveSuccessLiveData.observe(viewLifecycleOwner) {
+        viewModel.successLiveData.observe(viewLifecycleOwner) {
             findNavController().popBackStack()
         }
-        viewModel.insertSuccessLiveData.observe(viewLifecycleOwner) {
-            findNavController().popBackStack()
+        viewModel.errorLiveData.observe(viewLifecycleOwner) {
+            toast(it)
         }
-        viewModel.toastLiveData.observe(viewLifecycleOwner) { toast(it) }
     }
 
     private fun createActivity() {

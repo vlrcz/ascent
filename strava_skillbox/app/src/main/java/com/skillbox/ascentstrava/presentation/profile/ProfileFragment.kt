@@ -97,21 +97,25 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
 
         bindViewModel()
 
-        binding.infoCardView.visibility = View.GONE
-
         binding.closeInfoBtn.setOnClickListener {
             binding.infoCardView.visibility = View.GONE
         }
 
-        /*if (!ConnectionManager.isOnline(requireContext())) {
-            val athlete = viewModel.getAthleteFromCache()
-            if (athlete != null) {
-                bindProfileInfo(athlete)
-                bindWeightView(athlete)
-                binding.logoutBtn.visibility = View.GONE
-                binding.infoCardView.visibility = View.VISIBLE
+        viewModel.isNetworkAvailable.observe(viewLifecycleOwner) {
+            if (it == false) {
+                val athlete = viewModel.getAthleteFromCache()
+                if (athlete != null) {
+                    bindProfileInfo(athlete)
+                    bindWeightView(athlete)
+                    binding.logoutBtn.visibility = View.GONE
+                    binding.infoCardView.visibility = View.VISIBLE
+                }
             }
-        }*/
+             else {
+                binding.infoCardView.visibility = View.GONE
+                binding.logoutBtn.visibility = View.VISIBLE
+            }
+        }
     }
 
     private fun showLogoutDialog() {
@@ -154,7 +158,6 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
         }
     }
 
-    @SuppressLint("SetTextI18n")
     private fun bindProfileInfo(athlete: Athlete) {
         binding.nameTextView.text = "${athlete.firstName} ${athlete.lastName}"
         binding.usernameTextView.text = "@ ${athlete.userName}"
@@ -175,7 +178,6 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
             .into(binding.athleteImageView)
     }
 
-    @SuppressLint("SetTextI18n")
     private fun bindWeightView(
         athlete: Athlete
     ) {

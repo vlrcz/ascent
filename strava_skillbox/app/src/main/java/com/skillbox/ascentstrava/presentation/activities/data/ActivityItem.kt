@@ -7,7 +7,7 @@ data class ActivityItem(
     val type: String?,
     val startedAt: String?,
     val elapsedTime: Int?,
-    val distance: Float?,
+    val distance: Int?,
     val description: String?,
     val isPending: Boolean? = false
 )

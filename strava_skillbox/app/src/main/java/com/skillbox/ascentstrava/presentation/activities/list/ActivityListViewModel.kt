@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.skillbox.ascentstrava.R
 import com.skillbox.ascentstrava.network.ConnectionManager
 import com.skillbox.ascentstrava.presentation.activities.data.ActivitiesRepository
 import com.skillbox.ascentstrava.presentation.activities.data.ActivityItem
@@ -32,7 +33,7 @@ class ActivityListViewModel @Inject constructor(
 ) : ViewModel() {
 
     private val activitiesMutableLiveData = MutableLiveData<List<ActivityItem>>()
-    private val errorLiveEvent = SingleLiveEvent<String>()
+    private val errorLiveEvent = SingleLiveEvent<Int>()
     private val networkMutableLiveData = connectionManager.observeNetworkState()
     private val sentSuccessLiveEvent = SingleLiveEvent<Unit>()
 
@@ -42,7 +43,7 @@ class ActivityListViewModel @Inject constructor(
     val activitiesLiveData: LiveData<List<ActivityItem>>
         get() = activitiesMutableLiveData
 
-    val errorLiveData: LiveData<String>
+    val errorLiveData: LiveData<Int>
         get() = errorLiveEvent
 
     val sentSuccessLiveData: LiveData<Unit>
@@ -63,10 +64,10 @@ class ActivityListViewModel @Inject constructor(
                             }.sortedByDescending { it.startedAt }
                             activitiesMutableLiveData.postValue(listOfItems)
                         } catch (t: Throwable) {
-                            errorLiveEvent.postValue("Ошибка загрузки")
+                            errorLiveEvent.postValue(R.string.download_error)
                         }
                     } else {
-                        errorLiveEvent.postValue("Ошибка загрузки")
+                        errorLiveEvent.postValue(R.string.download_error)
                     }
                 }
                 .onEach {
@@ -79,9 +80,7 @@ class ActivityListViewModel @Inject constructor(
                     val listOfEntities = it.map { model ->
                         activityMapper.mapModelToEntity(model)
                     }
-                    listOfEntities.map { entity ->
-                        activitiesRepository.insertActivityToDb(entity)
-                    }
+                    activitiesRepository.insertListOfActivityToDb(listOfEntities)
                 }
                 .collect()
         }
@@ -92,20 +91,20 @@ class ActivityListViewModel @Inject constructor(
             flow {
                 emit(activitiesRepository.getListOfPendingActivities())
             }
-                .catch { Timber.d("Get list of pending activities error") }
+                .catch { Timber.e("Get list of pending activities error") }
                 .onEach {
                     it.map { entity ->
-                        val model = activityMapper.mapEntityToModel(entity)
-                        activitiesRepository.createActivity(model)
+                        val model = activitiesRepository.createActivity(
+                            activityMapper.mapEntityToModel(entity)
+                        )
+                        try {
+                            activitiesRepository.updateEntityByUniqueId(model, entity.id)
+                        } catch (t: Throwable) {
+                            Timber.e("Update entity by uniqueid error")
+                        }
                     }
                 }
-                .catch { Timber.d("Create pending activities error") }
-                .onEach {
-                    it.map { entity ->
-                        val model = activityMapper.mapEntityToModel(entity)
-                        activitiesRepository.updateEntityByUniqueId(model, entity.id)
-                    }
-                }
+                .catch { Timber.e("Create pending activities error") }
                 .collect {
                     sentSuccessLiveEvent.postValue(Unit)
                 }

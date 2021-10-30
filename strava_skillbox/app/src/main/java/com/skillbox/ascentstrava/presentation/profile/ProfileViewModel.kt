@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.skillbox.ascentstrava.data.AuthManager
+import com.skillbox.ascentstrava.network.ConnectionManager
 import com.skillbox.ascentstrava.presentation.profile.data.AthleteManager
 import com.skillbox.ascentstrava.presentation.profile.data.ProfileRepository
 import com.skillbox.ascentstrava.presentation.profile.data.UpdateRequestBody
@@ -14,12 +15,14 @@ import kotlinx.coroutines.launch
 class ProfileViewModel @Inject constructor(
     private val profileRepository: ProfileRepository,
     private val athleteManager: AthleteManager,
-    private val authManager: AuthManager
+    private val authManager: AuthManager,
+    private val connectionManager: ConnectionManager
 ) : ViewModel() {
 
     private val athleteLiveData = MutableLiveData<Athlete>()
     private val errorLiveData = MutableLiveData<Throwable>()
     private val clearDataLiveData = MutableLiveData<Boolean>()
+    private val networkMutableLiveData = connectionManager.observeNetworkState()
 
     val athlete: LiveData<Athlete>
         get() = athleteLiveData
@@ -29,6 +32,9 @@ class ProfileViewModel @Inject constructor(
 
     val clearData: LiveData<Boolean>
         get() = clearDataLiveData
+
+    val isNetworkAvailable: LiveData<Boolean>
+        get() = networkMutableLiveData
 
     fun getProfileInfo() {
         viewModelScope.launch {

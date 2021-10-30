@@ -55,17 +55,16 @@ class ActivityListAdapter(
             }
         }
 
-        @SuppressLint("SetTextI18n", "ResourceAsColor")
         fun bind(activityItem: ActivityItem, athlete: Athlete?) {
 
             if (athlete != null) {
                 binding.athleteNameTextView.text = "${athlete.firstName} ${athlete.lastName}"
             }
             binding.activityNameTextView.text = activityItem.name
-            binding.distanceCountTextView.text =
-                "${activityItem.distance?.toInt()?.div(1000)} $KM"
-            binding.timeCountTextView.text = "${activityItem.elapsedTime?.div(60)}$MIN"
+            binding.distanceCountTextView.text = "${activityItem.distance} $KM"
+            binding.timeCountTextView.text = "${activityItem.elapsedTime}$MIN"
             binding.typeValueTextView.text = activityItem.type
+            binding.dateTimeTextView.text = activityItem.startedAt
 
             when (binding.typeValueTextView.text) {
                 ActivityType.Run.toString() -> binding.typeImageView.setImageResource(R.drawable.run)
@@ -85,18 +84,6 @@ class ActivityListAdapter(
                     .fallback(R.drawable.ic_placeholder)
                     .error(R.drawable.ic_error_placeholder)
                     .into(binding.athleteImageView)
-            }
-
-            val date = activityItem.startedAt
-            if (date != null) {
-                val currentFormat = SimpleDateFormat(
-                    "yyyy-MM-dd'T'HH:mm:ss",
-                    Locale.ROOT
-                )
-                val targetFormat = SimpleDateFormat("MMM dd,yyyy hh:mm a", Locale.ROOT)
-                val calendar = Calendar.getInstance()
-                calendar.time = currentFormat.parse(date)
-                binding.dateTimeTextView.text = targetFormat.format(calendar.time)
             }
         }
     }
