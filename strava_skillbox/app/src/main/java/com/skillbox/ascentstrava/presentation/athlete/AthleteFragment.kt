@@ -1,15 +1,14 @@
-package com.skillbox.ascentstrava.presentation.profile
+package com.skillbox.ascentstrava.presentation.athlete
 
-import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.content.Context
 import android.os.Bundle
 import android.view.View
 import android.widget.ArrayAdapter
-import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
@@ -20,14 +19,16 @@ import com.skillbox.ascentstrava.app.appComponent
 import com.skillbox.ascentstrava.data.AuthManager
 import com.skillbox.ascentstrava.databinding.FragmentProfileBinding
 import com.skillbox.ascentstrava.di.ViewModelFactory
-import com.skillbox.ascentstrava.network.ConnectionManager
-import com.skillbox.ascentstrava.presentation.profile.data.UpdateRequestBody
-import com.skillbox.ascentstrava.presentation.profile.di.DaggerProfileComponent
+import com.skillbox.ascentstrava.presentation.athlete.data.UpdateRequestBody
+import com.skillbox.ascentstrava.presentation.athlete.di.DaggerProfileComponent
+import com.skillbox.ascentstrava.utils.toast
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import javax.inject.Inject
 import javax.inject.Provider
 
 
-class ProfileFragment : Fragment(R.layout.fragment_profile) {
+class AthleteFragment : Fragment(R.layout.fragment_profile) {
 
     companion object {
         private const val MALE = "Male"
@@ -37,12 +38,12 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
     }
 
     @Inject
-    lateinit var viewModelProvider: Provider<ProfileViewModel>
+    lateinit var viewModelProvider: Provider<AthleteViewModel>
 
     @Inject
     lateinit var authManager: AuthManager // todo удалить
 
-    private val viewModel: ProfileViewModel by viewModels { ViewModelFactory { viewModelProvider.get() } }
+    private val viewModel: AthleteViewModel by viewModels { ViewModelFactory { viewModelProvider.get() } }
 
     private var logoutDialog: AlertDialog? = null
 
@@ -77,44 +78,24 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        bindViewModel()
         binding.shareBtn.setOnClickListener {
             val url = viewModel.getProfileUrl()
             if (url != null) {
-                val action = ProfileFragmentDirections.actionGlobalShareFragment(
-                    url
+                findNavController().navigate(
+                    AthleteFragmentDirections.actionGlobalShareFragment(
+                        url
+                    )
                 )
-                findNavController().navigate(action)
             }
-        }
-
-        binding.followersTextView.setOnClickListener {
-            authManager.brokeAccessToken() //todo удалить
         }
 
         binding.logoutBtn.setOnClickListener {
-            viewModel.logout()
+            showLogoutDialog()
         }
-
-        bindViewModel()
 
         binding.closeInfoBtn.setOnClickListener {
             binding.infoCardView.visibility = View.GONE
-        }
-
-        viewModel.isNetworkAvailable.observe(viewLifecycleOwner) {
-            if (it == false) {
-                val athlete = viewModel.getAthleteFromCache()
-                if (athlete != null) {
-                    bindProfileInfo(athlete)
-                    bindWeightView(athlete)
-                    binding.logoutBtn.visibility = View.GONE
-                    binding.infoCardView.visibility = View.VISIBLE
-                }
-            }
-             else {
-                binding.infoCardView.visibility = View.GONE
-                binding.logoutBtn.visibility = View.VISIBLE
-            }
         }
     }
 
@@ -122,31 +103,17 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
         logoutDialog = AlertDialog.Builder(requireContext())
             .setMessage(getString(R.string.logout_message))
             .setPositiveButton(getString(R.string.positiveBtn)) { _, _ ->
-                clearLocalData()
+                viewModel.logout()
             }
             .setNegativeButton(getString(R.string.negativeBtn), null)
             .show()
     }
 
-    private fun clearLocalData() {
-        viewModel.clearData()
-        navController = activity?.findNavController(R.id.fragment)
-        if (navController != null) {
-            navController?.apply {
-                this.navigate(R.id.authFragment)
-                this.popBackStack(R.id.containerFragment, true)
-            }
-        }
-    }
-
     private fun bindViewModel() {
-        viewModel.getProfileInfo()
 
         viewModel.athlete.observe(viewLifecycleOwner) { athlete ->
             bindProfileInfo(athlete)
             bindWeightView(athlete)
-            viewModel.putAthlete(athlete)
-            //todo put athlete to db
         }
 
         viewModel.error.observe(viewLifecycleOwner) { t ->
@@ -154,12 +121,26 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
         }
 
         viewModel.clearData.observe(viewLifecycleOwner) {
-            showLogoutDialog()
+            navController = activity?.findNavController(R.id.fragment)
+            navController?.apply {
+                this.navigate(R.id.authFragment)
+                this.popBackStack(R.id.containerFragment, true)
+            }
+        }
+
+        viewModel.isNetworkAvailable.observe(viewLifecycleOwner) {
+            if (!it) {
+                binding.infoCardView.visibility = View.VISIBLE
+                binding.logoutBtn.visibility = View.GONE
+            } else {
+                binding.infoCardView.visibility = View.GONE
+                binding.logoutBtn.visibility = View.VISIBLE
+            }
         }
     }
 
     private fun bindProfileInfo(athlete: Athlete) {
-        binding.nameTextView.text = "${athlete.firstName} ${athlete.lastName}"
+        binding.nameTextView.text = athlete.fullName
         binding.usernameTextView.text = "@ ${athlete.userName}"
         binding.followersCountTextView.text = athlete.followers?.toString() ?: "0"
         binding.followingCountTextView.text = athlete.friends?.toString() ?: "0"
@@ -199,9 +180,5 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
             val newWeight = adapter.getItem(position)?.substringBefore(" $KG")?.toFloat()!!
             viewModel.changeAthleteWeight(UpdateRequestBody(newWeight))
         }
-    }
-
-    private fun toast(text: String) {
-        Toast.makeText(requireContext(), text, Toast.LENGTH_LONG).show()
     }
 }

@@ -8,7 +8,7 @@
     <fragment
         tools:layout="@layout/fragment_profile"
         android:id="@+id/profileFragment"
-        android:name="com.skillbox.ascentstrava.presentation.profile.ProfileFragment"
+        android:name="com.skillbox.ascentstrava.presentation.athlete.AthleteFragment"
         android:label="Profile" >
         <action
             android:id="@+id/action_profileFragment_to_activitiesFragment"

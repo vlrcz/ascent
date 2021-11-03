@@ -1,6 +1,7 @@
 package com.skillbox.ascentstrava.presentation.activities.data
 
 import com.skillbox.ascentstrava.data.db.ActivityEntity
+import com.skillbox.ascentstrava.presentation.athlete.Athlete
 import java.text.SimpleDateFormat
 import java.util.*
 import javax.inject.Inject
@@ -8,6 +9,11 @@ import javax.inject.Singleton
 
 @Singleton
 class ActivityMapper @Inject constructor() {
+
+    companion object {
+        private const val KM = "km"
+        private const val MIN = "m"
+    }
 
     fun mapEntityToModel(activityEntity: ActivityEntity): ActivityModel {
         return ActivityModel(
@@ -21,33 +27,40 @@ class ActivityMapper @Inject constructor() {
         )
     }
 
-    fun mapModelToItem(activityModel: ActivityModel): ActivityItem {
+    fun mapModelToItem(activityModel: ActivityModel, athlete: Athlete?): ActivityItem {
         return ActivityItem(
             uniqueId = null,
             stravaId = activityModel.id,
+            athleteName = athleteName(athlete),
+            athleteImage = athlete?.photoUrl.orEmpty(),
             name = activityModel.name,
             type = activityModel.type,
             startedAt = activityModel.startedAt?.let { bindDate(it) },
-            elapsedTime = activityModel.elapsedTime?.div(60),
-            distance = activityModel.distance?.toInt()?.div(1000),
+            elapsedTime = "${activityModel.elapsedTime?.div(60)}$MIN",
+            distance = "${activityModel.distance?.toInt()?.div(1000)} $KM" ,
             description = activityModel.description,
-            false
+            isPending = false
         )
     }
 
-    fun mapEntityToItem(activityEntity: ActivityEntity): ActivityItem {
+    fun mapEntityToItem(activityEntity: ActivityEntity, athlete: Athlete?): ActivityItem {
         return ActivityItem(
             uniqueId = activityEntity.id,
-            stravaId = null,
+            stravaId = if (activityEntity.isPending) null else activityEntity.id.toLongOrNull(),
+            athleteName = athleteName(athlete),
+            athleteImage = athlete?.photoUrl.orEmpty(),
             name = activityEntity.name,
             type = activityEntity.type,
             startedAt = activityEntity.startedAt?.let { bindDate(it) },
-            elapsedTime = activityEntity.elapsedTime?.div(60),
-            distance = activityEntity.distance?.toInt()?.div(1000),
+            elapsedTime = "${activityEntity.elapsedTime?.div(60)}$MIN",
+            distance = "${activityEntity.distance?.toInt()?.div(1000)} $KM",
             description = activityEntity.description,
             isPending = activityEntity.isPending
         )
     }
+
+    private fun athleteName(athlete: Athlete?) =
+        "${athlete?.firstName} ${athlete?.lastName}"
 
     private fun bindDate(date: String): String {
         val currentFormat = SimpleDateFormat(

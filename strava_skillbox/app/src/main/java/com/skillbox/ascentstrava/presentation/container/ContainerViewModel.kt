@@ -1,7 +1,7 @@
 package com.skillbox.ascentstrava.presentation.container
 
 import androidx.lifecycle.ViewModel
-import com.skillbox.ascentstrava.presentation.profile.data.AthleteManager
+import com.skillbox.ascentstrava.presentation.athlete.data.AthleteManager
 import javax.inject.Inject
 
 class ContainerViewModel @Inject constructor(

@@ -1,6 +1,5 @@
 package com.skillbox.ascentstrava.presentation.activities.list
 
-import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,19 +12,14 @@ import com.skillbox.ascentstrava.data.AuthConfig
 import com.skillbox.ascentstrava.databinding.ItemActivityBinding
 import com.skillbox.ascentstrava.presentation.activities.data.ActivityItem
 import com.skillbox.ascentstrava.presentation.activities.data.ActivityType
-import com.skillbox.ascentstrava.presentation.profile.Athlete
-import java.text.SimpleDateFormat
 import java.util.*
 
 class ActivityListAdapter(
-    viewModel: ActivityListViewModel,
     private val onShareClicked: (activityUrl: String) -> Unit
 ) :
     ListAdapter<ActivityItem, ActivityListAdapter.ActivitiesListViewHolder>(
         ActivityDiffUtilCallback()
     ) {
-
-    val athlete = viewModel.getAthlete()
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
@@ -37,7 +31,7 @@ class ActivityListAdapter(
     }
 
     override fun onBindViewHolder(holder: ActivitiesListViewHolder, position: Int) {
-        holder.bind(getItem(position), athlete)
+        holder.bind(getItem(position))
     }
 
     class ActivitiesListViewHolder(
@@ -55,16 +49,13 @@ class ActivityListAdapter(
             }
         }
 
-        fun bind(activityItem: ActivityItem, athlete: Athlete?) {
-
-            if (athlete != null) {
-                binding.athleteNameTextView.text = "${athlete.firstName} ${athlete.lastName}"
-            }
-            binding.activityNameTextView.text = activityItem.name
-            binding.distanceCountTextView.text = "${activityItem.distance} $KM"
-            binding.timeCountTextView.text = "${activityItem.elapsedTime}$MIN"
-            binding.typeValueTextView.text = activityItem.type
-            binding.dateTimeTextView.text = activityItem.startedAt
+        fun bind(item: ActivityItem) {
+            binding.athleteNameTextView.text = item.athleteName
+            binding.activityNameTextView.text = item.name
+            binding.distanceCountTextView.text = item.distance
+            binding.timeCountTextView.text = item.elapsedTime
+            binding.typeValueTextView.text = item.type
+            binding.dateTimeTextView.text = item.startedAt
 
             when (binding.typeValueTextView.text) {
                 ActivityType.Run.toString() -> binding.typeImageView.setImageResource(R.drawable.run)
@@ -73,18 +64,16 @@ class ActivityListAdapter(
                 ActivityType.Hike.toString() -> binding.typeImageView.setImageResource(R.drawable.hike)
             }
 
-            if (activityItem.isPending == true) {
+            if (item.isPending) {
                 binding.pendingTextView.visibility = View.VISIBLE
             }
 
-            if (athlete != null) {
-                Glide.with(itemView)
-                    .load(athlete.photoUrl)
-                    .placeholder(R.drawable.ic_placeholder)
-                    .fallback(R.drawable.ic_placeholder)
-                    .error(R.drawable.ic_error_placeholder)
-                    .into(binding.athleteImageView)
-            }
+            Glide.with(itemView)
+                .load(item.athleteImage)
+                .placeholder(R.drawable.ic_placeholder)
+                .fallback(R.drawable.ic_placeholder)
+                .error(R.drawable.ic_error_placeholder)
+                .into(binding.athleteImageView)
         }
     }
 
@@ -96,10 +85,5 @@ class ActivityListAdapter(
         override fun areContentsTheSame(oldItem: ActivityItem, newItem: ActivityItem): Boolean {
             return oldItem == newItem
         }
-    }
-
-    companion object {
-        private const val KM = "km"
-        private const val MIN = "m"
     }
 }

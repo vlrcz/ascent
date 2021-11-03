@@ -2,9 +2,8 @@ package com.skillbox.ascentstrava.data.db
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
-import com.skillbox.ascentstrava.presentation.activities.data.ActivityModel
-import com.skillbox.ascentstrava.presentation.profile.Athlete
-import com.skillbox.ascentstrava.presentation.profile.data.AthleteDao
+import com.skillbox.ascentstrava.presentation.athlete.Athlete
+import com.skillbox.ascentstrava.presentation.athlete.data.AthleteDao
 
 @Database(
     entities = [

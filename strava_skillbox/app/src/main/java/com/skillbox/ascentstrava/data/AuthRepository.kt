@@ -39,9 +39,8 @@ class AuthRepository @Inject constructor(private val authManager: AuthManager) {
             when {
                 response != null -> {
                     val accessToken = response.accessToken.orEmpty()
-                    authManager.saveAccessToken(accessToken)
                     val refreshToken = response.refreshToken.orEmpty()
-                    authManager.saveRefreshToken(refreshToken)
+                    authManager.login(TokenResponse(accessToken, refreshToken))
                     onComplete()
                 }
                 else -> onError()

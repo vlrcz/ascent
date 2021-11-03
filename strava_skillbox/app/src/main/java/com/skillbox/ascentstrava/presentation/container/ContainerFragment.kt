@@ -14,10 +14,8 @@ import com.skillbox.ascentstrava.R
 import com.skillbox.ascentstrava.app.appComponent
 import com.skillbox.ascentstrava.databinding.FragmentContainerBinding
 import com.skillbox.ascentstrava.di.ViewModelFactory
+import com.skillbox.ascentstrava.presentation.athlete.AthleteFragmentDirections
 import com.skillbox.ascentstrava.presentation.container.di.DaggerContainerComponent
-import com.skillbox.ascentstrava.presentation.main.MainViewModel
-import com.skillbox.ascentstrava.presentation.main.di.DaggerMainComponent
-import com.skillbox.ascentstrava.presentation.profile.ProfileFragmentDirections
 import javax.inject.Inject
 import javax.inject.Provider
 
@@ -62,10 +60,11 @@ class ContainerFragment : Fragment(R.layout.fragment_container) {
                 R.id.shareButton -> {
                     val url = viewModel.getProfileUrl()
                     if (url != null) {
-                        val action = ProfileFragmentDirections.actionGlobalShareFragment(
-                            url
+                        navController?.navigate(
+                            AthleteFragmentDirections.actionGlobalShareFragment(
+                                url
+                            )
                         )
-                        navController?.navigate(action)
                     }
                     true
                 }

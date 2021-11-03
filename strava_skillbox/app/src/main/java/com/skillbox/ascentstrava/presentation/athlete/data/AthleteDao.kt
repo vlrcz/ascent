@@ -1,10 +1,10 @@
-package com.skillbox.ascentstrava.presentation.profile.data
+package com.skillbox.ascentstrava.presentation.athlete.data
 
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import com.skillbox.ascentstrava.presentation.profile.Athlete
+import com.skillbox.ascentstrava.presentation.athlete.Athlete
 
 @Dao
 interface AthleteDao {
@@ -13,7 +13,7 @@ interface AthleteDao {
     suspend fun insertAthlete(athlete: Athlete)
 
     @Query("SELECT * FROM ${AthleteContract.TABLE_NAME}")
-    suspend fun getAthlete(): Athlete?
+    suspend fun fetchAthlete(): Athlete?
 
     @Query("DELETE FROM ${AthleteContract.TABLE_NAME}")
     suspend fun clearAthlete()

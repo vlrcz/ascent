@@ -6,8 +6,6 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.view.View
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.StringRes
@@ -23,10 +21,7 @@ import com.skillbox.ascentstrava.R
 import com.skillbox.ascentstrava.app.appComponent
 import com.skillbox.ascentstrava.databinding.FragmentShareBinding
 import com.skillbox.ascentstrava.di.ViewModelFactory
-import com.skillbox.ascentstrava.presentation.profile.ProfileFragment
-import com.skillbox.ascentstrava.presentation.profile.ProfileViewModel
 import com.skillbox.ascentstrava.presentation.share.di.DaggerShareComponent
-import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Provider
 

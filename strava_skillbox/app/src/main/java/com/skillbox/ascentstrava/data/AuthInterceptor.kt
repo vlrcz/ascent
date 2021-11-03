@@ -1,6 +1,5 @@
 package com.skillbox.ascentstrava.data
 
-import com.skillbox.ascentstrava.presentation.profile.data.AthleteManager
 import com.squareup.moshi.Moshi
 import okhttp3.Interceptor
 import okhttp3.MediaType.Companion.toMediaType
@@ -12,8 +11,7 @@ import javax.inject.Inject
 
 class AuthInterceptor @Inject constructor(
     private val authManager: AuthManager,
-    private val moshi: Moshi,
-    private val athleteManager: AthleteManager
+    private val moshi: Moshi
 ) : Interceptor {
 
     private val contentType by lazy { "application/json; charset=utf-8".toMediaType() }
@@ -23,7 +21,7 @@ class AuthInterceptor @Inject constructor(
 
         synchronized(this) {
             val accessToken =
-                authManager.receiveAccessToken() ?: return chain.proceed(originalRequest)
+                authManager.fetchAccessToken() ?: return chain.proceed(originalRequest)
             Timber.d("send request with access token $accessToken")
 
             val modifiedRequest = originalRequest.newBuilder()
@@ -33,7 +31,7 @@ class AuthInterceptor @Inject constructor(
             var response = chain.proceed(modifiedRequest)
             if (response.code != UNAUTHORIZED_CODE) return response
 
-            val refreshToken = authManager.receiveRefreshToken() ?: return response
+            val refreshToken = authManager.fetchRefreshToken() ?: return response
             response.close()
 
             Timber.d("send request with refresh token $refreshToken")
@@ -42,15 +40,14 @@ class AuthInterceptor @Inject constructor(
 
             response = chain.proceed(refreshTokenRequest)
             if (!response.isSuccessful) {
-                athleteManager.clearAthlete()
+                authManager.logout()
                 return response
             }
 
             val tokenResponse = moshi.adapter(TokenResponse::class.java)
                 .fromJson(response.body?.string().orEmpty()) ?: return response
             Timber.d("save response with new token $tokenResponse")
-            authManager.saveAccessToken(tokenResponse.accessToken)
-            authManager.saveRefreshToken(tokenResponse.refreshToken)
+            authManager.login(tokenResponse)
 
             response.close()
         }
@@ -59,7 +56,7 @@ class AuthInterceptor @Inject constructor(
             .url(originalRequest.url)
             .header(
                 AuthConfig.AUTHORIZATION_HEADER,
-                "Bearer ${authManager.receiveAccessToken()}"
+                "Bearer ${authManager.fetchAccessToken()}"
             )
             .build()
         return chain.proceed(newRequest)

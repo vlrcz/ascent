@@ -3,6 +3,7 @@ package com.skillbox.ascentstrava.di
 import android.app.Application
 import android.content.Context
 import android.content.SharedPreferences
+import com.skillbox.ascentstrava.app.App
 import com.skillbox.ascentstrava.data.AuthManager
 import com.skillbox.ascentstrava.data.StravaApi
 import com.skillbox.ascentstrava.data.db.ActivitiesDao
@@ -12,12 +13,13 @@ import com.skillbox.ascentstrava.di.module.NetworkModule
 import com.skillbox.ascentstrava.di.module.StorageModule
 import com.skillbox.ascentstrava.network.ConnectionManager
 import com.skillbox.ascentstrava.presentation.activities.data.ActivityMapper
-import com.skillbox.ascentstrava.presentation.profile.data.AthleteDao
-import com.skillbox.ascentstrava.presentation.profile.data.AthleteManager
+import com.skillbox.ascentstrava.presentation.athlete.data.AthleteAppInitializer
+import com.skillbox.ascentstrava.presentation.athlete.data.AthleteDao
+import com.skillbox.ascentstrava.presentation.athlete.data.AthleteManager
 import dagger.BindsInstance
 import dagger.Component
-import javax.inject.Singleton
 import net.openid.appauth.AuthorizationService
+import javax.inject.Singleton
 
 @Singleton
 @Component(modules = [NetworkModule::class, StorageModule::class, AuthModule::class, DatabaseModule::class])
@@ -34,6 +36,8 @@ interface AppComponent {
     fun athleteDao(): AthleteDao
     fun connectionManager(): ConnectionManager
     fun activityMapper(): ActivityMapper
+    fun athleteAppInitializer(): AthleteAppInitializer
+    fun inject(app: App)
 
     @Component.Factory
     interface Factory {

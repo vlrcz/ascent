@@ -1,9 +1,8 @@
 package com.skillbox.ascentstrava.data
 
-import com.skillbox.ascentstrava.presentation.activities.data.ActivityItem
 import com.skillbox.ascentstrava.presentation.activities.data.ActivityModel
-import com.skillbox.ascentstrava.presentation.profile.Athlete
-import com.skillbox.ascentstrava.presentation.profile.data.UpdateRequestBody
+import com.skillbox.ascentstrava.presentation.athlete.Athlete
+import com.skillbox.ascentstrava.presentation.athlete.data.UpdateRequestBody
 import retrofit2.http.Body
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
@@ -15,7 +14,7 @@ import retrofit2.http.Url
 interface StravaApi {
 
     @GET("athlete")
-    suspend fun getProfileInfo(): Athlete
+    suspend fun fetchAthlete(): Athlete
 
     @PUT("athlete")
     suspend fun changeAthleteWeight(

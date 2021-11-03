@@ -4,7 +4,7 @@ import android.app.Application
 import androidx.room.Room
 import com.skillbox.ascentstrava.data.db.ActivitiesDao
 import com.skillbox.ascentstrava.data.db.AscentStravaDatabase
-import com.skillbox.ascentstrava.presentation.profile.data.AthleteDao
+import com.skillbox.ascentstrava.presentation.athlete.data.AthleteDao
 import dagger.Module
 import dagger.Provides
 import javax.inject.Singleton

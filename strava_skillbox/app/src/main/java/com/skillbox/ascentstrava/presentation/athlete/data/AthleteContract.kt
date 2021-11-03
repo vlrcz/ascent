@@ -1,4 +1,4 @@
-package com.skillbox.ascentstrava.presentation.profile.data
+package com.skillbox.ascentstrava.presentation.athlete.data
 
 object AthleteContract {
 

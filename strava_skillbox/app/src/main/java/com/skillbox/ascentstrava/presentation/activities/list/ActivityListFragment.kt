@@ -15,6 +15,7 @@ import com.skillbox.ascentstrava.databinding.FragmentActivitiesBinding
 import com.skillbox.ascentstrava.di.ViewModelFactory
 import com.skillbox.ascentstrava.presentation.activities.list.di.DaggerActivitiesComponent
 import com.skillbox.ascentstrava.utils.toast
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
@@ -73,13 +74,10 @@ class ActivityListFragment : Fragment(R.layout.fragment_activities) {
         }
 
         viewModel.isNetworkAvailable.observe(viewLifecycleOwner) {
-            if (it == true) {
+            if (it) {
                 binding.infoCardView.visibility = View.GONE
-                viewModel.loadList()
-                viewModel.sentPendingActivities()
             } else {
                 binding.infoCardView.visibility = View.VISIBLE
-                viewModel.loadList()
             }
         }
 
@@ -90,7 +88,7 @@ class ActivityListFragment : Fragment(R.layout.fragment_activities) {
 
     private fun initList() {
         with(binding.activitiesList) {
-            activityListAdapter = ActivityListAdapter(viewModel) { url ->
+            activityListAdapter = ActivityListAdapter() { url ->
                 val action = ActivityListFragmentDirections.actionGlobalShareFragment(url)
                 findNavController().navigate(action)
             }

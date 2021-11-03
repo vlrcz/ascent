@@ -1,7 +1,7 @@
-package com.skillbox.ascentstrava.presentation.profile.di
+package com.skillbox.ascentstrava.presentation.athlete.di
 
 import com.skillbox.ascentstrava.di.AppComponent
-import com.skillbox.ascentstrava.presentation.profile.ProfileFragment
+import com.skillbox.ascentstrava.presentation.athlete.AthleteFragment
 import dagger.Component
 
 @ProfileScope
@@ -10,7 +10,7 @@ import dagger.Component
 )
 interface ProfileComponent {
 
-    fun inject(profileFragment: ProfileFragment)
+    fun inject(athleteFragment: AthleteFragment)
 
     @Component.Factory
     interface Factory {

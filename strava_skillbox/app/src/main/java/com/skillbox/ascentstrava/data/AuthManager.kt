@@ -1,34 +1,34 @@
 package com.skillbox.ascentstrava.data
 
 import android.content.SharedPreferences
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class AuthManager @Inject constructor(private val sharedPrefs: SharedPreferences) {
 
-    fun saveAccessToken(accessToken: String) {
+    private val authListener = MutableStateFlow(false)
+
+    init {
+        val accessToken = fetchAccessToken()
+        val refreshToken = fetchRefreshToken()
+
+        if (!accessToken.isNullOrEmpty() && !refreshToken.isNullOrEmpty()) {
+            authListener.value = true
+        }
+    }
+
+    fun observerAuth(): Flow<Boolean> = authListener
+
+    fun login(tokenResponse: TokenResponse) {
         sharedPrefs.edit()
-            .putString(ACCESS_TOKEN, accessToken)
+            .putString(ACCESS_TOKEN, tokenResponse.accessToken)
+            .putString(REFRESH_TOKEN, tokenResponse.refreshToken)
             .apply()
-    }
 
-    fun saveRefreshToken(refreshToken: String) {
-        sharedPrefs.edit()
-            .putString(REFRESH_TOKEN, refreshToken)
-            .apply()
-    }
-
-    fun receiveAccessToken(): String? {
-        return sharedPrefs.getString(ACCESS_TOKEN, null)
-    }
-
-    fun receiveRefreshToken(): String? {
-        return sharedPrefs.getString(REFRESH_TOKEN, null)
-    }
-
-    fun brokeAccessToken() {
-        saveAccessToken("a5syuy67") //todo удалить
+        authListener.value = true
     }
 
     fun logout() {
@@ -36,6 +36,16 @@ class AuthManager @Inject constructor(private val sharedPrefs: SharedPreferences
             .remove(ACCESS_TOKEN)
             .remove(REFRESH_TOKEN)
             .apply()
+
+        authListener.value = false
+    }
+
+    fun fetchAccessToken(): String? {
+        return sharedPrefs.getString(ACCESS_TOKEN, null)
+    }
+
+    fun fetchRefreshToken(): String? {
+        return sharedPrefs.getString(REFRESH_TOKEN, null)
     }
 
     companion object {

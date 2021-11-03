@@ -8,6 +8,8 @@ import com.skillbox.ascentstrava.data.db.ActivityEntity
 import com.skillbox.ascentstrava.presentation.activities.data.ActivitiesRepository
 import com.skillbox.ascentstrava.presentation.activities.data.ActivityMapper
 import com.skillbox.ascentstrava.utils.SingleLiveEvent
+import com.skillbox.ascentstrava.utils.isNetworkError
+import com.skillbox.ascentstrava.utils.isServerError
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collect
@@ -71,16 +73,16 @@ class CreateActivityViewModel @Inject constructor(
                     activitiesRepository.createActivity(activityModel)
                 }
                 .flowOn(Dispatchers.IO)
+                .onEach {
+                    activitiesRepository.updateEntityByUniqueId(it, uniqueId)
+                }
                 .catch {
-                    if (it is UnknownHostException || it is HttpException) {
+                    if (it.isNetworkError() || it.isServerError()) {
                         successLiveEvent.postValue(Unit)
                     } else {
                         activitiesRepository.deleteEntityByUniqueId(uniqueId)
                         errorLiveEvent.postValue(R.string.failed_to_add_activity)
                     }
-                }
-                .onEach {
-                    activitiesRepository.updateEntityByUniqueId(it, uniqueId)
                 }
                 .catch {
                     Timber.e("Не удалось обновить активность в базе данных")

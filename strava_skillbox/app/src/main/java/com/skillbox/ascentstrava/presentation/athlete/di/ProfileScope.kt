@@ -1,4 +1,4 @@
-package com.skillbox.ascentstrava.presentation.profile.di
+package com.skillbox.ascentstrava.presentation.athlete.di
 
 import javax.inject.Scope
 

@@ -1,10 +1,9 @@
-package com.skillbox.ascentstrava.presentation.profile
+package com.skillbox.ascentstrava.presentation.athlete
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.skillbox.ascentstrava.data.db.ActivitiesContract
-import com.skillbox.ascentstrava.presentation.profile.data.AthleteContract
+import com.skillbox.ascentstrava.presentation.athlete.data.AthleteContract
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 
@@ -44,4 +43,13 @@ data class Athlete(
     @ColumnInfo(name = AthleteContract.Columns.PHOTO_URL)
     @Json(name = "profile_medium")
     val photoUrl: String
-)
+) {
+    companion object {
+        private const val ATHLETE_API_URL = "https://www.strava.com/athletes/"
+    }
+
+    @Transient
+    val shareLink: String = "$ATHLETE_API_URL$userName"
+    @Transient
+    val fullName = "$firstName $lastName"
+}
