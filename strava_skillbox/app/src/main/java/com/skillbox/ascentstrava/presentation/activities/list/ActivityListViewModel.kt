@@ -31,6 +31,10 @@ class ActivityListViewModel @Inject constructor(
     private val errorLiveEvent = SingleLiveEvent<Int>()
     private val networkLiveData = MutableLiveData<Boolean>()
     private val sentSuccessLiveEvent = SingleLiveEvent<Unit>()
+    private val isLoadingLiveData = MutableLiveData<Boolean>()
+
+    val isLoading: LiveData<Boolean>
+        get() = isLoadingLiveData
 
     val isNetworkAvailable: LiveData<Boolean>
         get() = networkLiveData
@@ -63,6 +67,9 @@ class ActivityListViewModel @Inject constructor(
                 .observeAthlete()
                 .filterNotNull()
                 .take(1)
+                .onEach {
+                    isLoadingLiveData.postValue(true)
+                }
                 .flatMapConcat { athlete ->
                     flow {
                         emit(activitiesRepository.getActivities())
@@ -97,6 +104,7 @@ class ActivityListViewModel @Inject constructor(
                 }
                 .flowOn(Dispatchers.IO)
                 .collect {
+                    isLoadingLiveData.postValue(false)
                     activitiesMutableLiveData.postValue(it)
                 }
 

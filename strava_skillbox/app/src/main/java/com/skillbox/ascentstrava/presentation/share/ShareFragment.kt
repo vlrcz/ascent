@@ -12,6 +12,7 @@ import androidx.annotation.StringRes
 import androidx.appcompat.app.AlertDialog
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.navArgs
@@ -48,6 +49,8 @@ class ShareFragment : Fragment(R.layout.fragment_share) {
         registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
             if (isGranted) {
                 viewModel.loadList()
+                updateAllowState(false)
+
             } else {
                 val needRationale = ActivityCompat.shouldShowRequestPermissionRationale(
                     requireActivity(),
@@ -55,15 +58,25 @@ class ShareFragment : Fragment(R.layout.fragment_share) {
                 )
                 if (needRationale) {
                     showRationaleDialog()
+                    updateAllowState(true)
                 }
             }
         }
+
+    private fun updateAllowState(isAllow: Boolean) {
+        binding.infoCardView.isVisible = isAllow
+        binding.allowTextView.isVisible = isAllow
+        binding.allowBtn.isVisible = isAllow
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initList()
         bindViewModel()
         requestContactsReadPermission()
+        binding.allowBtn.setOnClickListener {
+            requestContactsReadPermission()
+        }
     }
 
     override fun onAttach(context: Context) {
@@ -87,7 +100,12 @@ class ShareFragment : Fragment(R.layout.fragment_share) {
 
     private fun bindViewModel() {
         viewModel.contactsLiveData.observe(viewLifecycleOwner) {
-            contactListAdapter?.submitList(it)
+            if (it.isNotEmpty()) {
+                contactListAdapter?.submitList(it)
+                binding.emptyListTextView.visibility = View.GONE
+            } else {
+                binding.emptyListTextView.visibility = View.VISIBLE
+            }
         }
     }
 

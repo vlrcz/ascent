@@ -3,6 +3,7 @@ package com.skillbox.ascentstrava.presentation.activities.list
 import android.content.Context
 import android.os.Bundle
 import android.view.View
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -66,7 +67,12 @@ class ActivityListFragment : Fragment(R.layout.fragment_activities) {
         viewModel.loadList()
 
         viewModel.activitiesLiveData.observe(viewLifecycleOwner) {
-            activityListAdapter?.submitList(it)
+            if (it.isNotEmpty()) {
+                activityListAdapter?.submitList(it)
+                binding.emptyListTextView.visibility = View.GONE
+            } else {
+                binding.emptyListTextView.visibility = View.VISIBLE
+            }
         }
 
         viewModel.errorLiveData.observe(viewLifecycleOwner) {
@@ -84,6 +90,8 @@ class ActivityListFragment : Fragment(R.layout.fragment_activities) {
         viewModel.sentSuccessLiveData.observe(viewLifecycleOwner) {
             viewModel.loadList()
         }
+
+        viewModel.isLoading.observe(viewLifecycleOwner, ::updateLoadingState)
     }
 
     private fun initList() {
@@ -98,6 +106,11 @@ class ActivityListFragment : Fragment(R.layout.fragment_activities) {
                 LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
             scrollToPosition(0)
         }
+    }
+
+    private fun updateLoadingState(isLoading: Boolean) {
+        binding.activitiesList.isVisible = isLoading.not()
+        binding.progressBar.isVisible = isLoading
     }
 
     override fun onDestroyView() {

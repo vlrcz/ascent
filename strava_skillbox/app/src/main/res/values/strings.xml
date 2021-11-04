@@ -52,4 +52,7 @@
     <string name="no_connection_add_to_db">Подключение к сети отсутствует, активность добавлена в базу данных</string>
     <string name="failed_to_add_activity">Не удалось добавить активность</string>
     <string name="download_error">Ошибка загрузки</string>
+    <string name="error_ascent_does_not_have_access_to_your_contacts">Error: Ascent does not have access to your contacts</string>
+    <string name="empty_list_textview">Список контактов пуст</string>
+    <string name="activities_empty_list">Список активностей пуст</string>
 </resources>
