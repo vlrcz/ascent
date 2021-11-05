@@ -55,4 +55,6 @@
     <string name="error_ascent_does_not_have_access_to_your_contacts">Error: Ascent does not have access to your contacts</string>
     <string name="empty_list_textview">Список контактов пуст</string>
     <string name="activities_empty_list">Список активностей пуст</string>
+    <string name="no_btn_textview">Нет</string>
+    <string name="yes_btn_textview">Да</string>
 </resources>

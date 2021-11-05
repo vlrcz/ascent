@@ -66,6 +66,8 @@ class ActivityListAdapter(
 
             if (item.isPending) {
                 binding.pendingTextView.visibility = View.VISIBLE
+            } else {
+                binding.pendingTextView.visibility = View.GONE
             }
 
             Glide.with(itemView)

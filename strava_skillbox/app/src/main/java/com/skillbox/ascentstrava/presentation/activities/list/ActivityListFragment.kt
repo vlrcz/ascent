@@ -33,7 +33,9 @@ class ActivityListFragment : Fragment(R.layout.fragment_activities) {
 
     private val viewModel: ActivityListViewModel by viewModels { ViewModelFactory { viewModelProvider.get() } }
 
-    private var activityListAdapter: ActivityListAdapter? = null
+    private val activityListAdapter = ActivityListAdapter() { url ->
+        findNavController().navigate(ActivityListFragmentDirections.actionGlobalShareFragment(url))
+    }
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -68,7 +70,7 @@ class ActivityListFragment : Fragment(R.layout.fragment_activities) {
 
         viewModel.activitiesLiveData.observe(viewLifecycleOwner) {
             if (it.isNotEmpty()) {
-                activityListAdapter?.submitList(it)
+                activityListAdapter.submitList(it)
                 binding.emptyListTextView.visibility = View.GONE
             } else {
                 binding.emptyListTextView.visibility = View.VISIBLE
@@ -96,10 +98,6 @@ class ActivityListFragment : Fragment(R.layout.fragment_activities) {
 
     private fun initList() {
         with(binding.activitiesList) {
-            activityListAdapter = ActivityListAdapter() { url ->
-                val action = ActivityListFragmentDirections.actionGlobalShareFragment(url)
-                findNavController().navigate(action)
-            }
             adapter = activityListAdapter
             setHasFixedSize(true)
             layoutManager =
@@ -115,6 +113,6 @@ class ActivityListFragment : Fragment(R.layout.fragment_activities) {
 
     override fun onDestroyView() {
         super.onDestroyView()
-        activityListAdapter = null
+        binding.activitiesList.adapter = null
     }
 }

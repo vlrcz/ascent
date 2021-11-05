@@ -9,15 +9,22 @@ import com.skillbox.ascentstrava.network.ConnectionManager
 import com.skillbox.ascentstrava.presentation.activities.data.ActivitiesRepository
 import com.skillbox.ascentstrava.presentation.activities.data.ActivityItem
 import com.skillbox.ascentstrava.presentation.activities.data.ActivityMapper
-import com.skillbox.ascentstrava.presentation.athlete.Athlete
 import com.skillbox.ascentstrava.presentation.athlete.data.AthleteManager
 import com.skillbox.ascentstrava.utils.SingleLiveEvent
 import com.skillbox.ascentstrava.utils.isNetworkError
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.flatMapConcat
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.take
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.launch
 import timber.log.Timber
-import java.net.UnknownHostException
 import javax.inject.Inject
 
 class ActivityListViewModel @Inject constructor(

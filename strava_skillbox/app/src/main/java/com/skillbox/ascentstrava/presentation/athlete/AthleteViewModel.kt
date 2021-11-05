@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.skillbox.ascentstrava.data.AuthManager
+import com.skillbox.ascentstrava.data.AuthRepository
 import com.skillbox.ascentstrava.network.ConnectionManager
 import com.skillbox.ascentstrava.presentation.athlete.data.AthleteManager
 import com.skillbox.ascentstrava.presentation.athlete.data.AthleteRepository
@@ -20,7 +21,8 @@ class AthleteViewModel @Inject constructor(
     private val athleteRepository: AthleteRepository,
     private val athleteManager: AthleteManager,
     private val authManager: AuthManager,
-    private val connectionManager: ConnectionManager
+    private val connectionManager: ConnectionManager,
+    private val authRepository: AuthRepository
 ) : ViewModel() {
 
     private val athleteLiveData = MutableLiveData<Athlete>()
@@ -77,7 +79,7 @@ class AthleteViewModel @Inject constructor(
     fun logout() {
         viewModelScope.launch(Dispatchers.IO) {
             try {
-                athleteRepository.logout()
+                authRepository.logout()
                 authManager.logout()
                 clearLiveData.postValue(true)
             } catch (t: Throwable) {

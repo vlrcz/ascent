@@ -31,7 +31,7 @@ class ActivityMapper @Inject constructor() {
         return ActivityItem(
             uniqueId = null,
             stravaId = activityModel.id,
-            athleteName = athleteName(athlete),
+            athleteName = athlete?.fullName.orEmpty(),
             athleteImage = athlete?.photoUrl.orEmpty(),
             name = activityModel.name,
             type = activityModel.type,
@@ -47,7 +47,7 @@ class ActivityMapper @Inject constructor() {
         return ActivityItem(
             uniqueId = activityEntity.id,
             stravaId = if (activityEntity.isPending) null else activityEntity.id.toLongOrNull(),
-            athleteName = athleteName(athlete),
+            athleteName = athlete?.fullName.orEmpty(),
             athleteImage = athlete?.photoUrl.orEmpty(),
             name = activityEntity.name,
             type = activityEntity.type,
@@ -58,9 +58,6 @@ class ActivityMapper @Inject constructor() {
             isPending = activityEntity.isPending
         )
     }
-
-    private fun athleteName(athlete: Athlete?) =
-        "${athlete?.firstName} ${athlete?.lastName}"
 
     private fun bindDate(date: String): String {
         val currentFormat = SimpleDateFormat(

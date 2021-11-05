@@ -9,7 +9,10 @@ import net.openid.appauth.ClientAuthentication
 import net.openid.appauth.ClientSecretPost
 import net.openid.appauth.TokenRequest
 
-class AuthRepository @Inject constructor(private val authManager: AuthManager) {
+class AuthRepository @Inject constructor(
+    private val authManager: AuthManager,
+    private val api: StravaApi
+) {
 
     fun getAuthRequest(): AuthorizationRequest {
         val serviceConfiguration = AuthorizationServiceConfiguration(
@@ -50,5 +53,17 @@ class AuthRepository @Inject constructor(private val authManager: AuthManager) {
 
     private fun getClientAuthentication(): ClientAuthentication {
         return ClientSecretPost(AuthConfig.CLIENT_SECRET)
+    }
+
+    suspend fun logout() {
+        val accessToken = authManager.fetchAccessToken()
+        if (accessToken != null) {
+            val url = Uri.parse(AuthConfig.BASE_URL + AuthConfig.LOGOUT)
+                .buildUpon()
+                .appendQueryParameter(AuthConfig.ACCESS_TOKEN, accessToken)
+                .build()
+
+            api.logout(url.toString())
+        }
     }
 }

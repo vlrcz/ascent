@@ -31,16 +31,4 @@ class AthleteRepository @Inject constructor(
     suspend fun changeAthleteWeight(weight: UpdateRequestBody) {
         api.changeAthleteWeight(weight)
     }
-
-    suspend fun logout() {
-        val accessToken = authManager.fetchAccessToken()
-        if (accessToken != null) {
-            val url = Uri.parse(AuthConfig.BASE_URL + AuthConfig.LOGOUT)
-                .buildUpon()
-                .appendQueryParameter(AuthConfig.ACCESS_TOKEN, accessToken)
-                .build()
-
-            api.logout(url.toString())
-        }
-    }
 }

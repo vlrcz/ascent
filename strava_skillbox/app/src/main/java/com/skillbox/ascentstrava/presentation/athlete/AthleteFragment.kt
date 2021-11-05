@@ -3,8 +3,11 @@ package com.skillbox.ascentstrava.presentation.athlete
 import android.app.AlertDialog
 import android.content.Context
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
+import android.view.Window
 import android.widget.ArrayAdapter
+import android.widget.Button
 import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -17,6 +20,7 @@ import com.bumptech.glide.Glide
 import com.skillbox.ascentstrava.R
 import com.skillbox.ascentstrava.app.appComponent
 import com.skillbox.ascentstrava.data.AuthManager
+import com.skillbox.ascentstrava.databinding.DialogCustomViewBinding
 import com.skillbox.ascentstrava.databinding.FragmentProfileBinding
 import com.skillbox.ascentstrava.di.ViewModelFactory
 import com.skillbox.ascentstrava.presentation.athlete.data.UpdateRequestBody
@@ -35,6 +39,7 @@ class AthleteFragment : Fragment(R.layout.fragment_profile) {
         private const val FEMALE = "Female"
         private const val OTHER = "Other"
         private const val KG = "kg"
+        private const val LOGOUT_DIALOG = "logout_dialog"
     }
 
     @Inject
@@ -44,8 +49,6 @@ class AthleteFragment : Fragment(R.layout.fragment_profile) {
     lateinit var authManager: AuthManager // todo удалить
 
     private val viewModel: AthleteViewModel by viewModels { ViewModelFactory { viewModelProvider.get() } }
-
-    private var logoutDialog: AlertDialog? = null
 
     private var navController: NavController? = null
 
@@ -57,12 +60,6 @@ class AthleteFragment : Fragment(R.layout.fragment_profile) {
             .factory()
             .create(context.appComponent)
             .inject(this)
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        logoutDialog?.dismiss()
-        logoutDialog = null
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -100,13 +97,8 @@ class AthleteFragment : Fragment(R.layout.fragment_profile) {
     }
 
     private fun showLogoutDialog() {
-        logoutDialog = AlertDialog.Builder(requireContext())
-            .setMessage(getString(R.string.logout_message))
-            .setPositiveButton(getString(R.string.positiveBtn)) { _, _ ->
-                viewModel.logout()
-            }
-            .setNegativeButton(getString(R.string.negativeBtn), null)
-            .show()
+        LogoutDialogFragment(viewModel)
+            .show(childFragmentManager, LOGOUT_DIALOG)
     }
 
     private fun bindViewModel() {
