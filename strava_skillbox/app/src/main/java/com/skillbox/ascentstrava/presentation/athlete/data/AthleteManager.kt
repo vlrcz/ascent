@@ -50,7 +50,7 @@ class AthleteManager @Inject constructor(
             .flowOn(Dispatchers.IO)
     }
 
-    fun observeAthlete() = athleteListener
+    fun observeAthlete(): Flow<Athlete?> = athleteListener
 
     fun getProfileUrl(): String? {
         return athleteListener.value?.shareLink
