@@ -97,7 +97,7 @@ class AthleteFragment : Fragment(R.layout.fragment_profile) {
     }
 
     private fun showLogoutDialog() {
-        LogoutDialogFragment(viewModel)
+        LogoutDialogFragment()
             .show(childFragmentManager, LOGOUT_DIALOG)
     }
 

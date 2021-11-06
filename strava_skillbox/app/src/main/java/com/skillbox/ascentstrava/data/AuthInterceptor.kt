@@ -47,7 +47,7 @@ class AuthInterceptor @Inject constructor(
             val tokenResponse = moshi.adapter(TokenResponse::class.java)
                 .fromJson(response.body?.string().orEmpty()) ?: return response
             Timber.d("save response with new token $tokenResponse")
-            authManager.login(tokenResponse)
+            authManager.login(tokenResponse.accessToken, tokenResponse.refreshToken)
 
             response.close()
         }

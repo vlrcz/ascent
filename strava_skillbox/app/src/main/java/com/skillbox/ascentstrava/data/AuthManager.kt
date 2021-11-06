@@ -22,10 +22,10 @@ class AuthManager @Inject constructor(private val sharedPrefs: SharedPreferences
 
     fun observerAuth(): Flow<Boolean> = authListener
 
-    fun login(tokenResponse: TokenResponse) {
+    fun login(accessToken: String, refreshToken: String) {
         sharedPrefs.edit()
-            .putString(ACCESS_TOKEN, tokenResponse.accessToken)
-            .putString(REFRESH_TOKEN, tokenResponse.refreshToken)
+            .putString(ACCESS_TOKEN, accessToken)
+            .putString(REFRESH_TOKEN, refreshToken)
             .apply()
 
         authListener.value = true

@@ -5,11 +5,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.ViewModelProvider
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.skillbox.ascentstrava.R
 import com.skillbox.ascentstrava.databinding.DialogCustomViewBinding
+import timber.log.Timber
 
-class LogoutDialogFragment(private val viewModel: AthleteViewModel) : DialogFragment() {
+class LogoutDialogFragment() : DialogFragment() {
 
     private val binding: DialogCustomViewBinding by viewBinding(DialogCustomViewBinding::bind)
 
@@ -19,6 +22,10 @@ class LogoutDialogFragment(private val viewModel: AthleteViewModel) : DialogFrag
         savedInstanceState: Bundle?
     ): View? {
         return inflater.inflate(R.layout.dialog_custom_view, container)
+    }
+
+    init {
+        Timber.d("$viewModel")
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
