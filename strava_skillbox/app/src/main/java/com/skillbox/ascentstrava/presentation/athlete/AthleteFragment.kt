@@ -50,8 +50,6 @@ class AthleteFragment : Fragment(R.layout.fragment_profile) {
 
     private val viewModel: AthleteViewModel by viewModels { ViewModelFactory { viewModelProvider.get() } }
 
-    private var navController: NavController? = null
-
     private val binding: FragmentProfileBinding by viewBinding(FragmentProfileBinding::bind)
 
     override fun onAttach(context: Context) {
@@ -110,14 +108,6 @@ class AthleteFragment : Fragment(R.layout.fragment_profile) {
 
         viewModel.error.observe(viewLifecycleOwner) { t ->
             t.message?.let { toast(it) }
-        }
-
-        viewModel.clearData.observe(viewLifecycleOwner) {
-            navController = activity?.findNavController(R.id.fragment)
-            navController?.apply {
-                this.navigate(R.id.authFragment)
-                this.popBackStack(R.id.containerFragment, true)
-            }
         }
 
         viewModel.isNetworkAvailable.observe(viewLifecycleOwner) {

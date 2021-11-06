@@ -43,6 +43,7 @@ class ActivityListViewModel @Inject constructor(
     private val errorLiveEvent = SingleLiveEvent<Int>()
     private val networkLiveData = MutableLiveData<Boolean>()
     private val isLoadingLiveData = MutableLiveData<Boolean>()
+    private val loadFlow = MutableSharedFlow<Boolean>(replay = 1)
 
     val isLoading: LiveData<Boolean>
         get() = isLoadingLiveData
@@ -55,8 +56,6 @@ class ActivityListViewModel @Inject constructor(
 
     val errorLiveData: LiveData<Int>
         get() = errorLiveEvent
-
-    private val loadFlow = MutableSharedFlow<Boolean>(replay = 1)
 
     init {
         viewModelScope.launch(Dispatchers.Default) {
