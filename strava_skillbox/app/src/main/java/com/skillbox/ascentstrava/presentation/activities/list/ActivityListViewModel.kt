@@ -9,16 +9,21 @@ import com.skillbox.ascentstrava.network.ConnectionManager
 import com.skillbox.ascentstrava.presentation.activities.data.ActivitiesRepository
 import com.skillbox.ascentstrava.presentation.activities.data.ActivityItem
 import com.skillbox.ascentstrava.presentation.activities.data.ActivityMapper
+import com.skillbox.ascentstrava.presentation.athlete.Athlete
 import com.skillbox.ascentstrava.presentation.athlete.data.AthleteManager
 import com.skillbox.ascentstrava.utils.SingleLiveEvent
 import com.skillbox.ascentstrava.utils.isNetworkError
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.flatMapConcat
+import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.take
@@ -51,6 +56,8 @@ class ActivityListViewModel @Inject constructor(
     val errorLiveData: LiveData<Int>
         get() = errorLiveEvent
 
+    private val loadFlow = MutableSharedFlow<Boolean>(replay = 1)
+
     init {
         viewModelScope.launch(Dispatchers.Default) {
             connectionManager
@@ -62,56 +69,60 @@ class ActivityListViewModel @Inject constructor(
                     networkLiveData.postValue(it)
                 }
         }
-    }
 
-    fun loadList() {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.Default) {
             athleteManager
                 .observeAthlete()
                 .filterNotNull()
-                .take(1)
-                .onEach {
-                    isLoadingLiveData.postValue(true)
+                .combine(loadFlow) { athlete, _ ->
+                    athlete
                 }
-                .flatMapConcat { athlete ->
-                    flow { emit(activitiesRepository.getActivities()) }
-                        .map { models ->
-                            activitiesRepository.insertListOfActivityToDb(
-                                models.map { model ->
-                                    activityMapper.mapModelToEntity(model)
-                                }
-                            )
-                            models
-                                .map { model ->
-                                    activityMapper.mapModelToItem(model, athlete)
-                                }
-                                .sortedByDescending { it.date?.time }
-                        }
-                        .catch { throwable ->
-                            if (throwable.isNetworkError()) {
-                                try {
-                                    val listFromDb = activitiesRepository.getActivitiesFromDb()
-                                        .map { entity ->
-                                            activityMapper.mapEntityToItem(entity, athlete)
-                                        }
-                                        .sortedByDescending { it.date?.time }
-                                    emit(listFromDb)
-                                } catch (t: Throwable) {
-                                    errorLiveEvent.postValue(R.string.download_error)
-                                }
-                            } else {
-                                errorLiveEvent.postValue(R.string.download_error)
-                            }
-                        }
-                        .flowOn(Dispatchers.IO)
+                .flatMapLatest { athlete ->
+                    fetchActivitiesFlow(athlete)
                 }
-                .flowOn(Dispatchers.IO)
                 .collect {
                     isLoadingLiveData.postValue(false)
                     activitiesMutableLiveData.postValue(it)
                 }
-
         }
+    }
+
+    fun loadList() {
+        isLoadingLiveData.postValue(true)
+        loadFlow.tryEmit(true)
+    }
+
+    private fun fetchActivitiesFlow(athlete: Athlete): Flow<List<ActivityItem>> {
+        return flow { emit(activitiesRepository.getActivities()) }
+            .map { models ->
+                activitiesRepository.insertListOfActivityToDb(
+                    models.map { model ->
+                        activityMapper.mapModelToEntity(model)
+                    }
+                )
+                models
+                    .map { model ->
+                        activityMapper.mapModelToItem(model, athlete)
+                    }
+                    .sortedByDescending { it.date?.time }
+            }
+            .catch { throwable ->
+                if (throwable.isNetworkError()) {
+                    try {
+                        val listFromDb = activitiesRepository.getActivitiesFromDb()
+                            .map { entity ->
+                                activityMapper.mapEntityToItem(entity, athlete)
+                            }
+                            .sortedByDescending { it.date?.time }
+                        emit(listFromDb)
+                    } catch (t: Throwable) {
+                        errorLiveEvent.postValue(R.string.download_error)
+                    }
+                } else {
+                    errorLiveEvent.postValue(R.string.download_error)
+                }
+            }
+            .flowOn(Dispatchers.IO)
     }
 
     private suspend fun sentPendingActivities() {
