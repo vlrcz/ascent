@@ -37,7 +37,6 @@ class ActivityListViewModel @Inject constructor(
     private val activitiesMutableLiveData = MutableLiveData<List<ActivityItem>>()
     private val errorLiveEvent = SingleLiveEvent<Int>()
     private val networkLiveData = MutableLiveData<Boolean>()
-    private val sentSuccessLiveEvent = SingleLiveEvent<Unit>()
     private val isLoadingLiveData = MutableLiveData<Boolean>()
 
     val isLoading: LiveData<Boolean>
@@ -52,11 +51,8 @@ class ActivityListViewModel @Inject constructor(
     val errorLiveData: LiveData<Int>
         get() = errorLiveEvent
 
-    val sentSuccessLiveData: LiveData<Unit>
-        get() = sentSuccessLiveEvent
-
     init {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.Default) {
             connectionManager
                 .observeNetworkState()
                 .collect {
@@ -118,30 +114,26 @@ class ActivityListViewModel @Inject constructor(
         }
     }
 
-    private fun sentPendingActivities() {
-        viewModelScope.launch {
-            flow {
-                emit(activitiesRepository.getListOfPendingActivities())
-            }
-                .filter { it.isNotEmpty() }
-                .catch { Timber.e("Get list of pending activities error") }
-                .onEach {
-                    it.map { entity ->
-                        val model = activitiesRepository.createActivity(
-                            activityMapper.mapEntityToModel(entity)
-                        )
-                        try {
-                            activitiesRepository.updateEntityByUniqueId(model, entity.id)
-                        } catch (t: Throwable) {
-                            Timber.e("Update entity by uniqueid error")
-                        }
+    private suspend fun sentPendingActivities() {
+        flow { emit(activitiesRepository.getListOfPendingActivities()) }
+            .filter { it.isNotEmpty() }
+            .catch { Timber.e("Get list of pending activities error") }
+            .onEach {
+                it.map { entity ->
+                    val model = activitiesRepository.createActivity(
+                        activityMapper.mapEntityToModel(entity)
+                    )
+                    try {
+                        activitiesRepository.updateEntityByUniqueId(model, entity.id)
+                    } catch (t: Throwable) {
+                        Timber.e("Update entity by uniqueid error")
                     }
                 }
-                .flowOn(Dispatchers.IO)
-                .catch { Timber.e("Create pending activities error") }
-                .collect {
-                    sentSuccessLiveEvent.postValue(Unit)
-                }
-        }
+            }
+            .flowOn(Dispatchers.IO)
+            .catch { Timber.e("Create pending activities error") }
+            .collect {
+                loadList()
+            }
     }
 }

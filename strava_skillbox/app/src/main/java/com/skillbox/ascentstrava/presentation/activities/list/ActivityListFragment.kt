@@ -89,10 +89,6 @@ class ActivityListFragment : Fragment(R.layout.fragment_activities) {
             }
         }
 
-        viewModel.sentSuccessLiveData.observe(viewLifecycleOwner) {
-            viewModel.loadList()
-        }
-
         viewModel.isLoading.observe(viewLifecycleOwner, ::updateLoadingState)
     }
 
