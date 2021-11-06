@@ -7,7 +7,6 @@ import java.util.*
 import javax.inject.Inject
 import javax.inject.Singleton
 
-@Singleton
 class ActivityMapper @Inject constructor() {
 
     companion object {

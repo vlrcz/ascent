@@ -24,7 +24,7 @@ import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Provider
 
-class фActivityListFragment : Fragment(R.layout.fragment_activities) {
+class ActivityListFragment : Fragment(R.layout.fragment_activities) {
 
     private val binding: FragmentActivitiesBinding by viewBinding(FragmentActivitiesBinding::bind)
 
