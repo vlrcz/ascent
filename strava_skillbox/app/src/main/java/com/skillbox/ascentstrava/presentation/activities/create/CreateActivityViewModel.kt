@@ -50,13 +50,13 @@ class CreateActivityViewModel @Inject constructor(
             val uniqueId = UUID.randomUUID().toString()
             val activityEntity = ActivityEntity(
                 id = uniqueId,
-                name,
-                type,
-                startedAt,
-                elapsedTime,
-                distance,
-                description,
-                true
+                name = name,
+                type = type,
+                startedAt = startedAt,
+                elapsedTime = elapsedTime,
+                distance = distance,
+                description = description,
+                isPending = true
             )
 
             flow {
