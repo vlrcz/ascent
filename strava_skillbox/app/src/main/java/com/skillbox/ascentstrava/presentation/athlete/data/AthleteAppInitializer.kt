@@ -6,8 +6,12 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.flatMapConcat
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.onStart
+import kotlinx.coroutines.flow.onSubscription
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -21,15 +25,18 @@ class AthleteAppInitializer @Inject constructor(
     fun init() {
         GlobalScope.launch(Dispatchers.Default) {
             authManager
-                .observerAuth()
+                .observeAuth()
+                .onSubscription {
+                    athleteManager.fetchLocalAthlete()
+                }
                 .combine(connectionManager.observeNetworkState()) { isLoggedIn, _ ->
                     isLoggedIn
                 }
-                .onEach { isLoggedIn ->
+                .flatMapConcat { isLoggedIn ->
                     if (isLoggedIn) {
                         athleteManager.fetchAthlete()
                     } else {
-                        athleteManager.clear()
+                        flowOf(athleteManager.clear())
                     }
                 }
                 .flowOn(Dispatchers.IO)

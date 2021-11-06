@@ -9,7 +9,6 @@ import javax.inject.Inject
 
 class AthleteRepository @Inject constructor(
     private val api: StravaApi,
-    private val authManager: AuthManager,
     private val dao: AthleteDao
 ) {
     suspend fun fetchAthlete(): Athlete {

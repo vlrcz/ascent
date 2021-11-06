@@ -3,6 +3,8 @@ package com.skillbox.ascentstrava.data
 import android.content.SharedPreferences
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -20,7 +22,7 @@ class AuthManager @Inject constructor(private val sharedPrefs: SharedPreferences
         }
     }
 
-    fun observerAuth(): Flow<Boolean> = authListener
+    fun observeAuth(): StateFlow<Boolean> = authListener.asStateFlow()
 
     fun login(accessToken: String, refreshToken: String) {
         sharedPrefs.edit()

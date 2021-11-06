@@ -78,17 +78,17 @@ class ActivityListViewModel @Inject constructor(
                     isLoadingLiveData.postValue(true)
                 }
                 .flatMapConcat { athlete ->
-                    flow {
-                        emit(activitiesRepository.getActivities())
-                    }
+                    flow { emit(activitiesRepository.getActivities()) }
                         .map { models ->
                             activitiesRepository.insertListOfActivityToDb(
                                 models.map { model ->
                                     activityMapper.mapModelToEntity(model)
-                                })
-                            models.map { model ->
-                                activityMapper.mapModelToItem(model, athlete)
-                            }
+                                }
+                            )
+                            models
+                                .map { model ->
+                                    activityMapper.mapModelToItem(model, athlete)
+                                }
                                 .sortedByDescending { it.date?.time }
                         }
                         .catch { throwable ->
