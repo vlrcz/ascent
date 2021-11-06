@@ -24,14 +24,10 @@ class LogoutDialogFragment() : DialogFragment() {
         return inflater.inflate(R.layout.dialog_custom_view, container)
     }
 
-    init {
-        Timber.d("$viewModel")
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.yesBtn.setOnClickListener {
-            viewModel.logout()
+            //viewModel.logout()
         }
         binding.noBtn.setOnClickListener {
             dialog?.dismiss()
