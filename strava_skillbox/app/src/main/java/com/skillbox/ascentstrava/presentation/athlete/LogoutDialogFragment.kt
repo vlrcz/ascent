@@ -53,7 +53,7 @@ class LogoutDialogFragment : DialogFragment() {
             viewModel.logout()
         }
         binding.noBtn.setOnClickListener {
-            dialog?.dismiss()
+            dismiss()
         }
 
         viewModel.clearData.observe(viewLifecycleOwner) {
@@ -63,7 +63,7 @@ class LogoutDialogFragment : DialogFragment() {
                 this.popBackStack(R.id.containerFragment, true)
             }
 
-            dialog?.dismiss()
+            dismiss()
         }
     }
 }
