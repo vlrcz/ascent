@@ -12,6 +12,7 @@ import com.skillbox.ascentstrava.di.module.DatabaseModule
 import com.skillbox.ascentstrava.di.module.NetworkModule
 import com.skillbox.ascentstrava.di.module.StorageModule
 import com.skillbox.ascentstrava.network.ConnectionManager
+import com.skillbox.ascentstrava.presentation.activities.data.ActivityAppInitializer
 import com.skillbox.ascentstrava.presentation.activities.data.ActivityMapper
 import com.skillbox.ascentstrava.presentation.athlete.data.AthleteAppInitializer
 import com.skillbox.ascentstrava.presentation.athlete.data.AthleteDao
@@ -37,6 +38,7 @@ interface AppComponent {
     fun connectionManager(): ConnectionManager
     fun activityMapper(): ActivityMapper
     fun athleteAppInitializer(): AthleteAppInitializer
+    fun activityAppInitializer(): ActivityAppInitializer
     fun inject(app: App)
 
     @Component.Factory

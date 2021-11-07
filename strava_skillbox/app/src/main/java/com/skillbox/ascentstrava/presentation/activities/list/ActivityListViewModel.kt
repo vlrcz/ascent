@@ -9,6 +9,7 @@ import com.skillbox.ascentstrava.network.ConnectionManager
 import com.skillbox.ascentstrava.presentation.activities.data.ActivitiesRepository
 import com.skillbox.ascentstrava.presentation.activities.data.ActivityItem
 import com.skillbox.ascentstrava.presentation.activities.data.ActivityMapper
+import com.skillbox.ascentstrava.presentation.activities.data.PendingActivitiesManager
 import com.skillbox.ascentstrava.presentation.athlete.Athlete
 import com.skillbox.ascentstrava.presentation.athlete.data.AthleteManager
 import com.skillbox.ascentstrava.utils.SingleLiveEvent
@@ -19,22 +20,20 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
-import timber.log.Timber
 import javax.inject.Inject
 
 class ActivityListViewModel @Inject constructor(
     private val activitiesRepository: ActivitiesRepository,
     private val athleteManager: AthleteManager,
     private val connectionManager: ConnectionManager,
-    private val activityMapper: ActivityMapper
+    private val activityMapper: ActivityMapper,
+    private val pendingActivitiesManager: PendingActivitiesManager
 ) : ViewModel() {
 
     private val activitiesMutableLiveData = MutableLiveData<List<ActivityItem>>()
@@ -60,10 +59,17 @@ class ActivityListViewModel @Inject constructor(
             connectionManager
                 .observeNetworkState()
                 .collect {
-                    if (it) {
-                        sentPendingActivities()
-                    }
                     networkLiveData.postValue(it)
+                }
+        }
+
+        viewModelScope.launch(Dispatchers.Default) {
+            pendingActivitiesManager
+                .observeSentPending()
+                .collect {
+                    if (it) {
+                        loadList()
+                    }
                 }
         }
 
@@ -120,28 +126,5 @@ class ActivityListViewModel @Inject constructor(
                 }
             }
             .flowOn(Dispatchers.IO)
-    }
-
-    private suspend fun sentPendingActivities() {
-        flow { emit(activitiesRepository.getListOfPendingActivities()) }
-            .filter { it.isNotEmpty() }
-            .catch { Timber.e("Get list of pending activities error") }
-            .onEach {
-                it.map { entity ->
-                    val model = activitiesRepository.createActivity(
-                        activityMapper.mapEntityToModel(entity)
-                    )
-                    try {
-                        activitiesRepository.updateEntityByUniqueId(model, entity.id)
-                    } catch (t: Throwable) {
-                        Timber.e("Update entity by uniqueid error")
-                    }
-                }
-            }
-            .flowOn(Dispatchers.IO)
-            .catch { Timber.e("Create pending activities error") }
-            .collect {
-                loadList()
-            }
     }
 }
