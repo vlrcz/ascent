@@ -8,20 +8,19 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import timber.log.Timber
 import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
 class PendingActivitiesManager @Inject constructor(
     private val activitiesRepository: ActivitiesRepository,
     private val activityMapper: ActivityMapper
 ) {
     private val pendingActivityListener = MutableStateFlow(false)
 
-    suspend fun sentPendingActivities() {
-        flow { emit(activitiesRepository.getListOfPendingActivities()) }
+    suspend fun sendPendingActivities(): Flow<Unit> {
+        return flow { emit(activitiesRepository.getListOfPendingActivities()) }
             .filter { it.isNotEmpty() }
             .catch { Timber.e("Get list of pending activities error") }
             .onEach {
@@ -38,10 +37,8 @@ class PendingActivitiesManager @Inject constructor(
             }
             .flowOn(Dispatchers.IO)
             .catch { Timber.e("Create pending activities error") }
-            .collect {
-                if (it.isNotEmpty()) {
-                    pendingActivityListener.value = true
-                }
+            .map {
+                pendingActivityListener.value = true
             }
     }
 

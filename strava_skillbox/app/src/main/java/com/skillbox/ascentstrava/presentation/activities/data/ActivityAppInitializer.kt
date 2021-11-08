@@ -4,6 +4,9 @@ import com.skillbox.ascentstrava.network.ConnectionManager
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.flatMapConcat
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
@@ -19,9 +22,11 @@ class ActivityAppInitializer @Inject constructor(
         GlobalScope.launch(Dispatchers.Default) {
             connectionManager
                 .observeNetworkState()
-                .onEach {
+                .flatMapConcat {
                     if (it) {
-                        pendingActivitiesManager.sentPendingActivities()
+                        pendingActivitiesManager.sendPendingActivities()
+                    } else {
+                        flowOf()
                     }
                 }
                 .flowOn(Dispatchers.IO)

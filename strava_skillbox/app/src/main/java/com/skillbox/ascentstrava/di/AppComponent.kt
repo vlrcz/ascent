@@ -37,8 +37,6 @@ interface AppComponent {
     fun athleteDao(): AthleteDao
     fun connectionManager(): ConnectionManager
     fun activityMapper(): ActivityMapper
-    fun athleteAppInitializer(): AthleteAppInitializer
-    fun activityAppInitializer(): ActivityAppInitializer
     fun inject(app: App)
 
     @Component.Factory
