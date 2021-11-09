@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.skillbox.ascentstrava.R
 import com.skillbox.ascentstrava.data.db.ActivityEntity
+import com.skillbox.ascentstrava.notification.NotificationRepository
 import com.skillbox.ascentstrava.presentation.activities.data.ActivitiesRepository
 import com.skillbox.ascentstrava.presentation.activities.data.ActivityMapper
 import com.skillbox.ascentstrava.utils.SingleLiveEvent
@@ -26,7 +27,8 @@ import javax.inject.Inject
 
 class CreateActivityViewModel @Inject constructor(
     private val activitiesRepository: ActivitiesRepository,
-    private val activityMapper: ActivityMapper
+    private val activityMapper: ActivityMapper,
+    private val notificationRepository: NotificationRepository
 ) : ViewModel() {
 
     private val successLiveEvent = SingleLiveEvent<Unit>()
@@ -89,7 +91,7 @@ class CreateActivityViewModel @Inject constructor(
                 }
                 .collect {
                     successLiveEvent.postValue(Unit)
-                    activitiesRepository.createDelayNotification()
+                    notificationRepository.createDelayNotification()
                 }
         }
     }

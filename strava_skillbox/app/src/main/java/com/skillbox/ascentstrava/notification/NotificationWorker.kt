@@ -9,7 +9,7 @@ import androidx.work.WorkerParameters
 import com.skillbox.ascentstrava.R
 
 class NotificationWorker(
-    private val context: Context,
+    context: Context,
     params: WorkerParameters
 ) : CoroutineWorker(
     context, params
@@ -28,13 +28,13 @@ class NotificationWorker(
     }
 
     private fun showTrainNotification() {
-        val pendingIntent = NavDeepLinkBuilder(context)
+        val pendingIntent = NavDeepLinkBuilder(applicationContext)
             .setGraph(R.navigation.nav_graph_nested)
             .setDestination(R.id.activitiesFragment)
             .createPendingIntent()
 
         val notification =
-            NotificationCompat.Builder(context, NotificationChannels.TRAIN_CHANNEL_ID)
+            NotificationCompat.Builder(applicationContext, NotificationChannels.TRAIN_CHANNEL_ID)
                 .setContentTitle(TRAIN_NOTIFICATION_TITLE)
                 .setContentText(TRAIN_NOTIFICATION_TEXT)
                 .setSmallIcon(R.drawable.ic_activities)
@@ -42,7 +42,7 @@ class NotificationWorker(
                 .setContentIntent(pendingIntent)
                 .build()
 
-        NotificationManagerCompat.from(context)
+        NotificationManagerCompat.from(applicationContext)
             .notify(NOTIFICATION_ID, notification)
     }
 }

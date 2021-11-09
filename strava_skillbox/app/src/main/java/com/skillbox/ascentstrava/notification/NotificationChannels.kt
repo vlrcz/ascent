@@ -17,12 +17,12 @@ object NotificationChannels {
 
     fun create(context: Context) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            createTrainChannel(context)
+            createTrainingChannel(context)
         }
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    private fun createTrainChannel(context: Context) {
+    private fun createTrainingChannel(context: Context) {
         val name = TRAIN_CHANNEL_NAME
         val channelDescription = TRAIN_CHANNEL_DESCRIPTION
         val priority = NotificationManager.IMPORTANCE_HIGH
