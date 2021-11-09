@@ -89,6 +89,7 @@ class CreateActivityViewModel @Inject constructor(
                 }
                 .collect {
                     successLiveEvent.postValue(Unit)
+                    activitiesRepository.createDelayNotification()
                 }
         }
     }

@@ -6,6 +6,7 @@ import android.os.StrictMode
 import com.skillbox.ascentstrava.BuildConfig
 import com.skillbox.ascentstrava.di.AppComponent
 import com.skillbox.ascentstrava.di.DaggerAppComponent
+import com.skillbox.ascentstrava.notification.NotificationChannels
 import com.skillbox.ascentstrava.presentation.athlete.data.AthleteAppInitializer
 import timber.log.Timber
 import javax.inject.Inject
@@ -20,6 +21,7 @@ class App : Application() {
     override fun onCreate() {
         super.onCreate()
         Timber.plant(Timber.DebugTree())
+        NotificationChannels.create(this)
         if (BuildConfig.DEBUG) {
             StrictMode.setThreadPolicy(
                 StrictMode.ThreadPolicy.Builder()
