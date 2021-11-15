@@ -138,6 +138,7 @@
                 android:textColor="@color/gray"
                 android:textSize="14sp"
                 app:layout_constraintEnd_toStartOf="@id/guideline2"
+                app:layout_constraintStart_toEndOf="@+id/followingTextView"
                 app:layout_constraintTop_toTopOf="@id/guideline" />
 
             <androidx.constraintlayout.widget.Guideline

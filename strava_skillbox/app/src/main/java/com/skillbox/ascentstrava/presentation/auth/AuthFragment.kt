@@ -17,12 +17,18 @@ import com.skillbox.ascentstrava.databinding.FragmentAuthBinding
 import com.skillbox.ascentstrava.di.ViewModelFactory
 import com.skillbox.ascentstrava.presentation.auth.di.DaggerAuthComponent
 import com.skillbox.ascentstrava.utils.toast
-import javax.inject.Inject
-import javax.inject.Provider
 import net.openid.appauth.AuthorizationException
 import net.openid.appauth.AuthorizationResponse
+import java.util.*
+import javax.inject.Inject
+import javax.inject.Provider
 
 class AuthFragment : Fragment(R.layout.fragment_auth) {
+
+    companion object {
+        private const val ENGLISH = "en"
+        private const val RUSSIAN = "ru"
+    }
 
     @Inject
     lateinit var viewModelProvider: Provider<AuthViewModel>
@@ -59,6 +65,28 @@ class AuthFragment : Fragment(R.layout.fragment_auth) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         bindViewModel()
+        bindLocalizationBtn()
+    }
+
+    private fun bindLocalizationBtn() {
+        binding.enButton.setOnClickListener {
+            changeLocale(ENGLISH)
+            viewModel.saveLocale(ENGLISH)
+        }
+        binding.ruButton.setOnClickListener {
+            changeLocale(RUSSIAN)
+            viewModel.saveLocale(RUSSIAN)
+        }
+    }
+
+    private fun changeLocale(language: String) {
+        val locale = Locale(language)
+        Locale.setDefault(locale)
+        val config = resources.configuration
+        config.setLocale(locale)
+        requireActivity().createConfigurationContext(config)
+        resources.updateConfiguration(config, resources.displayMetrics)
+        requireActivity().recreate()
     }
 
     private fun bindViewModel() {

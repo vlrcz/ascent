@@ -5,6 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.skillbox.ascentstrava.R
+import com.skillbox.ascentstrava.data.AuthManager
 import com.skillbox.ascentstrava.data.AuthRepository
 import com.skillbox.ascentstrava.utils.SingleLiveEvent
 import javax.inject.Inject
@@ -14,7 +15,8 @@ import net.openid.appauth.TokenRequest
 
 class AuthViewModel @Inject constructor(
     private val authRepository: AuthRepository,
-    private val authService: AuthorizationService
+    private val authService: AuthorizationService,
+    private val authManager: AuthManager
 ) : ViewModel() {
 
     private val openAuthPageLiveEvent = SingleLiveEvent<Intent>()
@@ -59,6 +61,10 @@ class AuthViewModel @Inject constructor(
             authRepository.getAuthRequest()
         )
         openAuthPageLiveEvent.postValue(openAuthPageIntent)
+    }
+
+    fun saveLocale(language: String) {
+        authManager.saveLocale(language)
     }
 
     override fun onCleared() {

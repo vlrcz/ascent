@@ -9,12 +9,12 @@
     <string name="activities_text">Convenient weight and activity tracking system-fill out your profile and start living brightly</string>
     <string name="profile_page">Profile</string>
     <string name="share">Share</string>
-    <string name="okay_btn">Okay</string>
+    <string name="okay_btn" translatable="false">Okay</string>
     <string name="skip_btn">Skip</string>
     <string name="continue_with_strava">Continue with Strava</string>
     <string name="already_a_member">already a member</string>
-    <string name="auth_canceled">Аутентификация не выполнена</string>
-    <string name="call_canceled">Запрос не выполнен</string>
+    <string name="auth_canceled">Authentication failed</string>
+    <string name="call_canceled">Request failed</string>
     <string name="profile">Profile</string>
     <string name="profile_disabled">Profile_disabled</string>
     <string name="activities_menu">Activities</string>
@@ -25,14 +25,14 @@
     <string name="genderTextView">Gender</string>
     <string name="countryTextView">Country</string>
     <string name="weightTextView">Weight (edit)</string>
-    <string name="negativeBtn">Отмена</string>
-    <string name="positiveBtn">OK</string>
-    <string name="need_contacts_read_permission">Необходимо одобрение разрешения для доступа к контактам</string>
-    <string name="profile_url">https://www.strava.com/athletes/</string>
-    <string name="no_contact_selected">Не выбран контакт</string>
-    <string name="already_in_strava">Я уже в Strava: </string>
-    <string name="rate_my_activity">Оцените мою активность: </string>
-    <string name="weight_not_selected">Вес не выбран</string>
+    <string name="negativeBtn">Cancel</string>
+    <string name="positiveBtn">Ok</string>
+    <string name="need_contacts_read_permission">Requires permission approval to access contacts</string>
+    <string name="profile_url" translatable="false">https://www.strava.com/athletes/</string>
+    <string name="no_contact_selected">No contact selected</string>
+    <string name="already_in_strava">"Already in Strava: "</string>
+    <string name="rate_my_activity">Rate my activity:</string>
+    <string name="weight_not_selected">Weight not selected</string>
     <string name="nameEditText">Name</string>
     <string name="typeEditText">Type</string>
     <string name="descriptionEditText">Description</string>
@@ -40,21 +40,23 @@
     <string name="timeEditText">Time, in seconds</string>
     <string name="dateEditText">Date</string>
     <string name="addBtn">Add</string>
-    <string name="logout_message">Вы уверены, что хотите выйти? Все локальные данные будут удалены.</string>
     <string name="create_a_new_activity">Create a new activity</string>
     <string name="distanceTextView">Distance</string>
     <string name="timeTextView">Time</string>
     <string name="elevationTextView">Elevation</string>
     <string name="typeTextView">Type</string>
     <string name="incorrect_form">Incorrect form</string>
-    <string name="activity_add_to_db">Активность добавлена только в базу данных</string>
-    <string name="activities_from_db">Активности из базы данных</string>
-    <string name="no_connection_add_to_db">Подключение к сети отсутствует, активность добавлена в базу данных</string>
-    <string name="failed_to_add_activity">Не удалось добавить активность</string>
-    <string name="download_error">Ошибка загрузки</string>
+    <string name="activity_add_to_db">Activity added to database only</string>
+    <string name="activities_from_db">Database activities</string>
+    <string name="no_connection_add_to_db">No network connection, activity added to the database</string>
+    <string name="download_error">Loading error</string>
     <string name="error_ascent_does_not_have_access_to_your_contacts">Error: Ascent does not have access to your contacts</string>
-    <string name="empty_list_textview">Список контактов пуст</string>
-    <string name="activities_empty_list">Список активностей пуст</string>
-    <string name="no_btn_textview">Нет</string>
-    <string name="yes_btn_textview">Да</string>
+    <string name="empty_list_textview">Contact list is empty</string>
+    <string name="activities_empty_list">Activity list is empty</string>
+    <string name="no_btn_textview">No</string>
+    <string name="yes_btn_textview">Yes</string>
+    <string name="logout_message">Are you sure you want to log out? All local data will be deleted.</string>
+    <string name="failed_to_add_activity">Failed to add activity</string>
+    <string name="en" translatable="false">EN</string>
+    <string name="ru" translatable="false">RU</string>
 </resources>
