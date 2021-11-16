@@ -57,6 +57,4 @@
     <string name="yes_btn_textview">Yes</string>
     <string name="logout_message">Are you sure you want to log out? All local data will be deleted.</string>
     <string name="failed_to_add_activity">Failed to add activity</string>
-    <string name="en" translatable="false">EN</string>
-    <string name="ru" translatable="false">RU</string>
 </resources>

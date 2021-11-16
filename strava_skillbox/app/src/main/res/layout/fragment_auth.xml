@@ -76,30 +76,4 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <Button
-        android:id="@+id/enButton"
-        android:layout_width="wrap_content"
-        android:backgroundTint="@color/light_gray"
-        android:layout_height="wrap_content"
-        android:text="@string/en"
-        android:textColor="@color/dark_gray"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/ruButton"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/authBtn" />
-
-    <Button
-        android:id="@+id/ruButton"
-        android:textColor="@color/dark_gray"
-        android:backgroundTint="@color/light_gray"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/ru"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/enButton"
-        app:layout_constraintTop_toBottomOf="@+id/authBtn" />
-
 </androidx.constraintlayout.widget.ConstraintLayout>

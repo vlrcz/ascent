@@ -63,10 +63,6 @@ class AuthViewModel @Inject constructor(
         openAuthPageLiveEvent.postValue(openAuthPageIntent)
     }
 
-    fun saveLocale(language: String) {
-        authManager.saveLocale(language)
-    }
-
     override fun onCleared() {
         super.onCleared()
         authService.dispose()

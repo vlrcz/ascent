@@ -20,16 +20,4 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
             }
         }
     }
-
-    override fun attachBaseContext(newBase: Context?) {
-        val sharedPreferences =
-            newBase?.getSharedPreferences(SHARED_PREFS_NAME, Context.MODE_PRIVATE)
-        val language = sharedPreferences?.getString(LOCALE, null)
-        super.attachBaseContext(ContextWrapper(language?.let { newBase.setAppLocale(it) }))
-    }
-
-    companion object {
-        private const val SHARED_PREFS_NAME = "shared_prefs"
-        private const val LOCALE = "Locale"
-    }
 }

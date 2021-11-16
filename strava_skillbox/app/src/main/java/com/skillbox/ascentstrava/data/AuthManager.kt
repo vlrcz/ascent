@@ -49,15 +49,8 @@ class AuthManager @Inject constructor(private val sharedPrefs: SharedPreferences
         return sharedPrefs.getString(REFRESH_TOKEN, null)
     }
 
-    fun saveLocale(language: String) {
-        sharedPrefs.edit()
-            .putString(LOCALE, language)
-            .apply()
-    }
-
     companion object {
         private const val ACCESS_TOKEN = "Access Token"
         private const val REFRESH_TOKEN = "Refresh Token"
-        private const val LOCALE = "Locale"
     }
 }
