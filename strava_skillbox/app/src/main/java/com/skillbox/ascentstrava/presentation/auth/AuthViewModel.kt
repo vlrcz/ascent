@@ -15,8 +15,7 @@ import net.openid.appauth.TokenRequest
 
 class AuthViewModel @Inject constructor(
     private val authRepository: AuthRepository,
-    private val authService: AuthorizationService,
-    private val authManager: AuthManager
+    private val authService: AuthorizationService
 ) : ViewModel() {
 
     private val openAuthPageLiveEvent = SingleLiveEvent<Intent>()

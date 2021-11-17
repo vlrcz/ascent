@@ -25,12 +25,3 @@ fun Fragment.toast(@StringRes stringRes: Int) {
 fun Fragment.toast(text: String) {
     Toast.makeText(requireContext(), text, Toast.LENGTH_SHORT).show()
 }
-
-fun Context.setAppLocale(language: String): Context {
-    val locale = Locale(language)
-    Locale.setDefault(locale)
-    val config = resources.configuration
-    config.setLocale(locale)
-    config.setLayoutDirection(locale)
-    return createConfigurationContext(config)
-}
