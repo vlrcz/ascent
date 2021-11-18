@@ -25,6 +25,7 @@ import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -86,17 +87,28 @@ class ActivityListViewModel @Inject constructor(
                 .collect {
                     isLoadingLiveData.postValue(false)
                     activitiesMutableLiveData.postValue(it)
+                    loading = false
                 }
         }
     }
 
     fun loadList() {
-        isLoadingLiveData.postValue(true)
-        loadFlow.tryEmit(true)
+        if (!loading) {
+            isLoadingLiveData.postValue(true)
+            loadFlow.tryEmit(true)
+        }
     }
 
+    var page = 1
+    private val items = 5
+    private var loading = false
+
     private fun fetchActivitiesFlow(athlete: Athlete): Flow<List<ActivityItem>> {
-        return flow { emit(activitiesRepository.getActivities()) }
+        return flow {
+            loading = true
+            emit(activitiesRepository.getActivities(page, items))
+            page++
+        }
             .map { models ->
                 activitiesRepository.insertListOfActivityToDb(
                     models.map { model ->
@@ -124,13 +136,6 @@ class ActivityListViewModel @Inject constructor(
                 } else {
                     errorLiveEvent.postValue(R.string.download_error)
                 }
-            }
-            .map {
-                activitiesRepository.getActivitiesFromDb()
-                    .map { entity ->
-                        activityMapper.mapEntityToItem(entity, athlete)
-                    }
-                    .sortedByDescending { it.date?.time }
             }
             .flowOn(Dispatchers.IO)
     }

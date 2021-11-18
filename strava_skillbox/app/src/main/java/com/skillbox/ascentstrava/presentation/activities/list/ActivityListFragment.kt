@@ -43,8 +43,6 @@ class ActivityListFragment : Fragment(R.layout.fragment_activities) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        getActivities()
-
         initList()
         bindViewModel()
 
@@ -62,31 +60,6 @@ class ActivityListFragment : Fragment(R.layout.fragment_activities) {
         }
     }
 
-    private fun getActivities() {
-        val items = 5
-        var page = 1
-        var scrollPosition = 0
-
-        binding.activitiesList.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                if (dy > 0) {
-                    if ((scrollPosition + 1) >= (page * items)) {
-                        page++
-                        if (page > 1) {
-                            //получаем активности viewModel.loadList(page, items)
-                        }
-                    }
-                }
-                super.onScrolled(recyclerView, dx, dy)
-            }
-
-            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
-                super.onScrollStateChanged(recyclerView, newState)
-                scrollPosition = newState
-            }
-        })
-    }
-
     private fun bindViewModel() {
         viewModel.loadList()
 
@@ -94,7 +67,7 @@ class ActivityListFragment : Fragment(R.layout.fragment_activities) {
             if (it.isNotEmpty()) {
                 activityListAdapter.submitList(it)
                 binding.emptyListTextView.visibility = View.GONE
-            } else {
+            } else if (viewModel.page == 1) {
                 binding.emptyListTextView.visibility = View.VISIBLE
             }
         }
@@ -121,6 +94,21 @@ class ActivityListFragment : Fragment(R.layout.fragment_activities) {
             layoutManager =
                 LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
             scrollToPosition(0)
+
+            addOnScrollListener(object : RecyclerView.OnScrollListener() {
+                override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                    super.onScrolled(recyclerView, dx, dy)
+                    if (dy > 0) {
+                        val visibleItemCount = (layoutManager as LinearLayoutManager).childCount
+                        val totalItemCount = (layoutManager as LinearLayoutManager).itemCount
+                        val pastVisibleItems =
+                            (layoutManager as LinearLayoutManager).findFirstVisibleItemPosition()
+                        if ((visibleItemCount + pastVisibleItems) >= totalItemCount) {
+                            viewModel.loadList()
+                        }
+                    }
+                }
+            })
         }
     }
 
