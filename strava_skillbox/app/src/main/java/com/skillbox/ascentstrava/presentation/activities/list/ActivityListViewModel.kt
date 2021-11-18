@@ -25,8 +25,8 @@ import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import javax.inject.Inject
 
 class ActivityListViewModel @Inject constructor(
@@ -85,6 +85,7 @@ class ActivityListViewModel @Inject constructor(
                     fetchActivitiesFlow(athlete)
                 }
                 .collect {
+                    page++
                     isLoadingLiveData.postValue(false)
                     activitiesMutableLiveData.postValue(it)
                     loading = false
@@ -107,7 +108,6 @@ class ActivityListViewModel @Inject constructor(
         return flow {
             loading = true
             emit(activitiesRepository.getActivities(page, items))
-            page++
         }
             .map { models ->
                 activitiesRepository.insertListOfActivityToDb(
@@ -119,23 +119,20 @@ class ActivityListViewModel @Inject constructor(
                     .map { model ->
                         activityMapper.mapModelToItem(model, athlete)
                     }
-                    .sortedByDescending { it.date?.time }
             }
             .catch { throwable ->
                 if (throwable.isNetworkError()) {
-                    try {
-                        val listFromDb = activitiesRepository.getActivitiesFromDb()
-                            .map { entity ->
-                                activityMapper.mapEntityToItem(entity, athlete)
-                            }
-                            .sortedByDescending { it.date?.time }
-                        emit(listFromDb)
-                    } catch (t: Throwable) {
-                        errorLiveEvent.postValue(R.string.download_error)
-                    }
+                    Timber.e("No network")
+                    emit(emptyList())
                 } else {
                     errorLiveEvent.postValue(R.string.download_error)
                 }
+            }
+            .map {
+                activitiesRepository.getActivitiesFromDb(page - 1, items)
+                    .map { entity ->
+                        activityMapper.mapEntityToItem(entity, athlete)
+                    }
             }
             .flowOn(Dispatchers.IO)
     }

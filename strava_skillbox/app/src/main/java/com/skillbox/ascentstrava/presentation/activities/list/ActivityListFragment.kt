@@ -65,7 +65,7 @@ class ActivityListFragment : Fragment(R.layout.fragment_activities) {
 
         viewModel.activitiesLiveData.observe(viewLifecycleOwner) {
             if (it.isNotEmpty()) {
-                activityListAdapter.submitList(it)
+                activityListAdapter.submitList(activityListAdapter.currentList + it)
                 binding.emptyListTextView.visibility = View.GONE
             } else if (viewModel.page == 1) {
                 binding.emptyListTextView.visibility = View.VISIBLE
@@ -113,7 +113,7 @@ class ActivityListFragment : Fragment(R.layout.fragment_activities) {
     }
 
     private fun updateLoadingState(isLoading: Boolean) {
-        binding.activitiesList.isVisible = isLoading.not()
+        //binding.activitiesList.isVisible = isLoading.not()
         binding.progressBar.isVisible = isLoading
     }
 
