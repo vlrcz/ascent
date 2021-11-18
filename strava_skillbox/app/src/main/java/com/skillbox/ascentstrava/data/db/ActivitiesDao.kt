@@ -16,8 +16,8 @@ interface ActivitiesDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertListOfActivityToDb(list: List<ActivityEntity>)
 
-    @Query("SELECT * FROM ${ActivitiesContract.TABLE_NAME}")
-    suspend fun getActivities(): List<ActivityEntity>
+    @Query("SELECT * FROM ${ActivitiesContract.TABLE_NAME} LIMIT :items OFFSET :page ")
+    suspend fun getActivities(page: Int, items: Int): List<ActivityEntity>
 
     @Query("UPDATE ${ActivitiesContract.TABLE_NAME} SET id = :stravaId, is_pending = :isPending  WHERE ${ActivitiesContract.Columns.ID} = :uniqueId")
     suspend fun updateEntityByModel(stravaId: String, uniqueId: String, isPending: Boolean)

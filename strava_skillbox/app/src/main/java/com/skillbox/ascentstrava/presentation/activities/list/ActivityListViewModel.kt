@@ -125,6 +125,13 @@ class ActivityListViewModel @Inject constructor(
                     errorLiveEvent.postValue(R.string.download_error)
                 }
             }
+            .map {
+                activitiesRepository.getActivitiesFromDb()
+                    .map { entity ->
+                        activityMapper.mapEntityToItem(entity, athlete)
+                    }
+                    .sortedByDescending { it.date?.time }
+            }
             .flowOn(Dispatchers.IO)
     }
 }

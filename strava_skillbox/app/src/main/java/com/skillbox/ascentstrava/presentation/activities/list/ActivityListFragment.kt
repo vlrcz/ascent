@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.skillbox.ascentstrava.R
 import com.skillbox.ascentstrava.app.appComponent
@@ -42,6 +43,8 @@ class ActivityListFragment : Fragment(R.layout.fragment_activities) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        getActivities()
+
         initList()
         bindViewModel()
 
@@ -57,6 +60,31 @@ class ActivityListFragment : Fragment(R.layout.fragment_activities) {
         binding.closeInfoBtn.setOnClickListener {
             binding.infoCardView.visibility = View.GONE
         }
+    }
+
+    private fun getActivities() {
+        val items = 5
+        var page = 1
+        var scrollPosition = 0
+
+        binding.activitiesList.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                if (dy > 0) {
+                    if ((scrollPosition + 1) >= (page * items)) {
+                        page++
+                        if (page > 1) {
+                            //получаем активности viewModel.loadList(page, items)
+                        }
+                    }
+                }
+                super.onScrolled(recyclerView, dx, dy)
+            }
+
+            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                super.onScrollStateChanged(recyclerView, newState)
+                scrollPosition = newState
+            }
+        })
     }
 
     private fun bindViewModel() {

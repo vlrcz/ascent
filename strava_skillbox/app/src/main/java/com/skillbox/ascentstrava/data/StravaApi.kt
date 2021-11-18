@@ -9,6 +9,7 @@ import retrofit2.http.FormUrlEncoded
 import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.PUT
+import retrofit2.http.Query
 import retrofit2.http.Url
 
 interface StravaApi {
@@ -38,5 +39,8 @@ interface StravaApi {
     )
 
     @GET("athlete/activities")
-    suspend fun getActivities(): List<ActivityModel>
+    suspend fun getActivities(
+        @Query("page") page: Int,
+        @Query("per_page") items: Int
+    ): List<ActivityModel>
 }
