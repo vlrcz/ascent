@@ -37,11 +37,20 @@ class ActivityListViewModel @Inject constructor(
     private val pendingActivitiesManager: PendingActivitiesManager
 ) : ViewModel() {
 
+    companion object {
+        private const val ITEMS = 5
+    }
+
     private val activitiesMutableLiveData = MutableLiveData<List<ActivityItem>>()
     private val errorLiveEvent = SingleLiveEvent<Int>()
     private val networkLiveData = MutableLiveData<Boolean>()
     private val isLoadingLiveData = MutableLiveData<Boolean>()
     private val loadFlow = MutableSharedFlow<Boolean>(replay = 1)
+    private var loadingPage = false
+    private var pageCount = 1
+
+    val page: Int
+        get() = pageCount
 
     val isLoading: LiveData<Boolean>
         get() = isLoadingLiveData
@@ -85,29 +94,25 @@ class ActivityListViewModel @Inject constructor(
                     fetchActivitiesFlow(athlete)
                 }
                 .collect {
-                    page++
+                    pageCount++
                     isLoadingLiveData.postValue(false)
                     activitiesMutableLiveData.postValue(it)
-                    loading = false
+                    loadingPage = false
                 }
         }
     }
 
     fun loadList() {
-        if (!loading) {
+        if (!loadingPage) {
             isLoadingLiveData.postValue(true)
             loadFlow.tryEmit(true)
         }
     }
 
-    var page = 1
-    private val items = 5
-    private var loading = false
-
     private fun fetchActivitiesFlow(athlete: Athlete): Flow<List<ActivityItem>> {
         return flow {
-            loading = true
-            emit(activitiesRepository.getActivities(page, items))
+            loadingPage = true
+            emit(activitiesRepository.getActivities(pageCount, ITEMS))
         }
             .map { models ->
                 activitiesRepository.insertListOfActivityToDb(
@@ -129,7 +134,7 @@ class ActivityListViewModel @Inject constructor(
                 }
             }
             .map {
-                activitiesRepository.getActivitiesFromDb(page - 1, items)
+                activitiesRepository.getActivitiesFromDb(pageCount - 1, ITEMS)
                     .map { entity ->
                         activityMapper.mapEntityToItem(entity, athlete)
                     }
