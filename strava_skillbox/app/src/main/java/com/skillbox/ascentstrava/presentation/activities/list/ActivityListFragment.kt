@@ -51,7 +51,7 @@ class ActivityListFragment : Fragment(R.layout.fragment_activities) {
         }
 
         binding.pullToRefresh.setOnRefreshListener {
-            viewModel.loadList()
+            viewModel.refresh()
             binding.pullToRefresh.isRefreshing = false
         }
 
@@ -61,13 +61,13 @@ class ActivityListFragment : Fragment(R.layout.fragment_activities) {
     }
 
     private fun bindViewModel() {
-        viewModel.loadList()
+        viewModel.firstLoad()
 
         viewModel.activitiesLiveData.observe(viewLifecycleOwner) {
-            if (it.isNotEmpty()) {
-                activityListAdapter.submitList(activityListAdapter.currentList + it)
+            if (it.itemsList.isNotEmpty()) {
+                activityListAdapter.submitList(it.itemsList)
                 binding.emptyListTextView.visibility = View.GONE
-            } else if (viewModel.page == 1) {
+            } else if (it.pageCount == 1) {
                 binding.emptyListTextView.visibility = View.VISIBLE
             }
         }
@@ -99,12 +99,12 @@ class ActivityListFragment : Fragment(R.layout.fragment_activities) {
                 override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                     super.onScrolled(recyclerView, dx, dy)
                     if (dy > 0) {
-                        val visibleItemCount = (layoutManager as LinearLayoutManager).childCount
-                        val totalItemCount = (layoutManager as LinearLayoutManager).itemCount
-                        val pastVisibleItems =
-                            (layoutManager as LinearLayoutManager).findFirstVisibleItemPosition()
+                        val layoutManager = layoutManager as LinearLayoutManager
+                        val visibleItemCount = layoutManager.childCount
+                        val totalItemCount = layoutManager.itemCount
+                        val pastVisibleItems = layoutManager.findFirstVisibleItemPosition()
                         if ((visibleItemCount + pastVisibleItems) >= totalItemCount) {
-                            viewModel.loadList()
+                            viewModel.loadMore()
                         }
                     }
                 }
@@ -113,7 +113,6 @@ class ActivityListFragment : Fragment(R.layout.fragment_activities) {
     }
 
     private fun updateLoadingState(isLoading: Boolean) {
-        //binding.activitiesList.isVisible = isLoading.not()
         binding.progressBar.isVisible = isLoading
     }
 

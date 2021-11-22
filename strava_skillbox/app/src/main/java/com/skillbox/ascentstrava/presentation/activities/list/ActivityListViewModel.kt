@@ -25,8 +25,8 @@ import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
-import timber.log.Timber
 import javax.inject.Inject
 
 class ActivityListViewModel @Inject constructor(
@@ -37,20 +37,20 @@ class ActivityListViewModel @Inject constructor(
     private val pendingActivitiesManager: PendingActivitiesManager
 ) : ViewModel() {
 
-    companion object {
-        private const val ITEMS = 5
-    }
+    private var state = PagingState(
+        limit = 5,
+        loadingPage = false,
+        pageCount = 1,
+        itemsList = emptyList(),
+        hasMore = true,
+        isFirstLoad = false
+    )
 
-    private val activitiesMutableLiveData = MutableLiveData<List<ActivityItem>>()
+    private val activitiesMutableLiveData = MutableLiveData<PagingState>()
     private val errorLiveEvent = SingleLiveEvent<Int>()
     private val networkLiveData = MutableLiveData<Boolean>()
     private val isLoadingLiveData = MutableLiveData<Boolean>()
     private val loadFlow = MutableSharedFlow<Boolean>(replay = 1)
-    private var loadingPage = false
-    private var pageCount = 1
-
-    val page: Int
-        get() = pageCount
 
     val isLoading: LiveData<Boolean>
         get() = isLoadingLiveData
@@ -58,7 +58,7 @@ class ActivityListViewModel @Inject constructor(
     val isNetworkAvailable: LiveData<Boolean>
         get() = networkLiveData
 
-    val activitiesLiveData: LiveData<List<ActivityItem>>
+    val activitiesLiveData: LiveData<PagingState>
         get() = activitiesMutableLiveData
 
     val errorLiveData: LiveData<Int>
@@ -78,7 +78,7 @@ class ActivityListViewModel @Inject constructor(
                 .observeSentPending()
                 .collect {
                     if (it) {
-                        loadList()
+                        loadMore()
                     }
                 }
         }
@@ -94,47 +94,60 @@ class ActivityListViewModel @Inject constructor(
                     fetchActivitiesFlow(athlete)
                 }
                 .collect {
-                    pageCount++
+                    state.pageCount++
                     isLoadingLiveData.postValue(false)
-                    activitiesMutableLiveData.postValue(it)
-                    loadingPage = false
+                    state = state.copy(itemsList = state.itemsList + it)
+                    activitiesMutableLiveData.postValue(state)
+                    state.loadingPage = false
                 }
         }
     }
 
-    fun loadList() {
-        if (!loadingPage) {
+    fun loadMore() {
+        if (!state.loadingPage && state.hasMore) {
             isLoadingLiveData.postValue(true)
             loadFlow.tryEmit(true)
+            state.loadingPage = true
         }
+    }
+
+    fun firstLoad() {
+        if (!state.isFirstLoad) {
+            isLoadingLiveData.postValue(true)
+            loadFlow.tryEmit(true)
+            state.isFirstLoad = true
+        }
+    }
+
+    fun refresh() {
+        state = state.copy(pageCount = 1, hasMore = true)
+        isLoadingLiveData.postValue(true)
+        loadFlow.tryEmit(true)
+        state.loadingPage = true
     }
 
     private fun fetchActivitiesFlow(athlete: Athlete): Flow<List<ActivityItem>> {
         return flow {
-            loadingPage = true
-            emit(activitiesRepository.getActivities(pageCount, ITEMS))
+            emit(activitiesRepository.getActivities(state.pageCount, state.limit))
         }
-            .map { models ->
+            .onEach { models ->
+                state.hasMore = models.size >= 5
+
                 activitiesRepository.insertListOfActivityToDb(
                     models.map { model ->
                         activityMapper.mapModelToEntity(model)
                     }
                 )
-                models
-                    .map { model ->
-                        activityMapper.mapModelToItem(model, athlete)
-                    }
             }
             .catch { throwable ->
                 if (throwable.isNetworkError()) {
-                    Timber.e("No network")
                     emit(emptyList())
                 } else {
                     errorLiveEvent.postValue(R.string.download_error)
                 }
             }
             .map {
-                activitiesRepository.getActivitiesFromDb(pageCount - 1, ITEMS)
+                activitiesRepository.getActivitiesFromDb(state.limit, state.offset)
                     .map { entity ->
                         activityMapper.mapEntityToItem(entity, athlete)
                     }

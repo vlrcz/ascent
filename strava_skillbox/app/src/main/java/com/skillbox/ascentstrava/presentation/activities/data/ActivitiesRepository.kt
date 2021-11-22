@@ -42,9 +42,9 @@ class ActivitiesRepository @Inject constructor(
         }
     }
 
-    suspend fun getActivitiesFromDb(page: Int, items: Int): List<ActivityEntity> {
+    suspend fun getActivitiesFromDb(limit: Int, offset: Int): List<ActivityEntity> {
         return withContext(Dispatchers.IO) {
-            activitiesDao.getActivities(page, items)
+            activitiesDao.getActivities(limit, offset)
         }
     }
 
