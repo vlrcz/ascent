@@ -9,7 +9,6 @@ import androidx.navigation.fragment.findNavController
 import com.skillbox.ascentstrava.R
 import com.skillbox.ascentstrava.app.appComponent
 import com.skillbox.ascentstrava.di.ViewModelFactory
-import com.skillbox.ascentstrava.presentation.auth.di.DaggerAuthComponent
 import com.skillbox.ascentstrava.presentation.main.di.DaggerMainComponent
 import javax.inject.Inject
 import javax.inject.Provider

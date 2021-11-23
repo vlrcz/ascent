@@ -56,4 +56,5 @@
     <string name="activities_empty_list">Список активностей пуст</string>
     <string name="no_btn_textview">Нет</string>
     <string name="yes_btn_textview">Да</string>
+    <string name="loaded_feed_from_cache">Показаны закешированные данные</string>
 </resources>

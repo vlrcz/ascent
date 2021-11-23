@@ -19,7 +19,6 @@ import com.skillbox.ascentstrava.presentation.auth.di.DaggerAuthComponent
 import com.skillbox.ascentstrava.utils.toast
 import net.openid.appauth.AuthorizationException
 import net.openid.appauth.AuthorizationResponse
-import java.util.*
 import javax.inject.Inject
 import javax.inject.Provider
 

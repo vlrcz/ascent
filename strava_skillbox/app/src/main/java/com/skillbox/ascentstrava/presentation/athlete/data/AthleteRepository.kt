@@ -1,8 +1,5 @@
 package com.skillbox.ascentstrava.presentation.athlete.data
 
-import android.net.Uri
-import com.skillbox.ascentstrava.data.AuthConfig
-import com.skillbox.ascentstrava.data.AuthManager
 import com.skillbox.ascentstrava.data.StravaApi
 import com.skillbox.ascentstrava.presentation.athlete.Athlete
 import javax.inject.Inject

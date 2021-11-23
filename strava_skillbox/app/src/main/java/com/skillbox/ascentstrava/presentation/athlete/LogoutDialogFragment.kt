@@ -7,7 +7,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import by.kirich1409.viewbindingdelegate.viewBinding
@@ -16,7 +15,6 @@ import com.skillbox.ascentstrava.app.appComponent
 import com.skillbox.ascentstrava.databinding.DialogCustomViewBinding
 import com.skillbox.ascentstrava.di.ViewModelFactory
 import com.skillbox.ascentstrava.presentation.athlete.di.DaggerProfileComponent
-import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Provider
 

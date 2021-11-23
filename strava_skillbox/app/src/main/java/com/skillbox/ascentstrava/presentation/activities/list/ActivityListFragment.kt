@@ -77,11 +77,7 @@ class ActivityListFragment : Fragment(R.layout.fragment_activities) {
         }
 
         viewModel.isNetworkAvailable.observe(viewLifecycleOwner) {
-            if (it) {
-                binding.infoCardView.visibility = View.GONE
-            } else {
-                binding.infoCardView.visibility = View.VISIBLE
-            }
+            binding.infoCardView.isVisible = !it
         }
 
         viewModel.isLoading.observe(viewLifecycleOwner, ::updateLoadingState)

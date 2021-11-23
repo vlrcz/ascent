@@ -2,7 +2,6 @@ package com.skillbox.ascentstrava.presentation.container.di
 
 import com.skillbox.ascentstrava.di.AppComponent
 import com.skillbox.ascentstrava.presentation.container.ContainerFragment
-import com.skillbox.ascentstrava.presentation.main.di.MainScope
 import dagger.Component
 
 @ContainerScope

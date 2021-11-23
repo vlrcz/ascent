@@ -1,33 +1,24 @@
 package com.skillbox.ascentstrava.presentation.athlete
 
-import android.app.AlertDialog
 import android.content.Context
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.Window
 import android.widget.ArrayAdapter
-import android.widget.Button
 import androidx.activity.OnBackPressedCallback
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.lifecycleScope
-import androidx.navigation.NavController
-import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.bumptech.glide.Glide
 import com.skillbox.ascentstrava.R
 import com.skillbox.ascentstrava.app.appComponent
 import com.skillbox.ascentstrava.data.AuthManager
-import com.skillbox.ascentstrava.databinding.DialogCustomViewBinding
 import com.skillbox.ascentstrava.databinding.FragmentProfileBinding
 import com.skillbox.ascentstrava.di.ViewModelFactory
 import com.skillbox.ascentstrava.presentation.athlete.data.UpdateRequestBody
 import com.skillbox.ascentstrava.presentation.athlete.di.DaggerProfileComponent
 import com.skillbox.ascentstrava.utils.toast
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
 import javax.inject.Inject
 import javax.inject.Provider
 
@@ -111,19 +102,18 @@ class AthleteFragment : Fragment(R.layout.fragment_profile) {
         }
 
         viewModel.isNetworkAvailable.observe(viewLifecycleOwner) {
-            if (!it) {
-                binding.infoCardView.visibility = View.VISIBLE
-                binding.logoutBtn.visibility = View.GONE
-            } else {
-                binding.infoCardView.visibility = View.GONE
-                binding.logoutBtn.visibility = View.VISIBLE
-            }
+            showInfoFromCache(it)
         }
+    }
+
+    private fun showInfoFromCache(visible: Boolean) {
+        binding.infoCardView.isVisible = !visible
+        binding.logoutBtn.isVisible = visible
     }
 
     private fun bindProfileInfo(athlete: Athlete) {
         binding.nameTextView.text = athlete.fullName
-        binding.usernameTextView.text = "@ ${athlete.userName}"
+        binding.usernameTextView.text = athlete.userNameView
         binding.followersCountTextView.text = athlete.followers?.toString() ?: "0"
         binding.followingCountTextView.text = athlete.friends?.toString() ?: "0"
         when (athlete.gender) {
@@ -152,7 +142,7 @@ class AthleteFragment : Fragment(R.layout.fragment_profile) {
 
         if (athlete.weight != null) {
             binding.autoCompleteTextView.setText(
-                "${athlete.weight.toInt()} $KG", false
+                athlete.weightWithKg, false
             )
         } else {
             binding.autoCompleteTextView.setText(getString(R.string.weight_not_selected), false)

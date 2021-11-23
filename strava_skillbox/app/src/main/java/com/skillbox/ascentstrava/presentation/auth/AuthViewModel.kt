@@ -5,13 +5,12 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.skillbox.ascentstrava.R
-import com.skillbox.ascentstrava.data.AuthManager
 import com.skillbox.ascentstrava.data.AuthRepository
 import com.skillbox.ascentstrava.utils.SingleLiveEvent
-import javax.inject.Inject
 import net.openid.appauth.AuthorizationException
 import net.openid.appauth.AuthorizationService
 import net.openid.appauth.TokenRequest
+import javax.inject.Inject
 
 class AuthViewModel @Inject constructor(
     private val authRepository: AuthRepository,

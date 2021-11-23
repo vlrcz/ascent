@@ -3,8 +3,8 @@ package com.skillbox.ascentstrava.di.module
 import android.app.Application
 import dagger.Module
 import dagger.Provides
-import javax.inject.Singleton
 import net.openid.appauth.AuthorizationService
+import javax.inject.Singleton
 
 @Module
 class AuthModule {

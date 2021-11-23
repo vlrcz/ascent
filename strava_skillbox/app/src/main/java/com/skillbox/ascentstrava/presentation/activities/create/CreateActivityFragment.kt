@@ -70,7 +70,7 @@ class CreateActivityFragment : Fragment(R.layout.fragment_create_activity) {
         val distance = binding.distanceEditText.text?.toString()
         val description = binding.descriptionEditText.text?.toString().orEmpty()
         if (name.isNullOrBlank() || type.isNullOrBlank() || date.isNullOrBlank() || elapsedTime.isNullOrBlank() || distance.isNullOrBlank()) {
-            toast(getString(R.string.incorrect_form)) //todo добавить обводку форм красным цветом
+            toast(getString(R.string.incorrect_form))
         } else {
             viewModel.createActivity(
                 name,

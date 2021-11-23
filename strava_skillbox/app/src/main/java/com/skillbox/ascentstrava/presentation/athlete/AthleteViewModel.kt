@@ -11,11 +11,9 @@ import com.skillbox.ascentstrava.presentation.athlete.data.AthleteManager
 import com.skillbox.ascentstrava.presentation.athlete.data.AthleteRepository
 import com.skillbox.ascentstrava.presentation.athlete.data.UpdateRequestBody
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.onEach
-import javax.inject.Inject
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 class AthleteViewModel @Inject constructor(
     private val athleteRepository: AthleteRepository,

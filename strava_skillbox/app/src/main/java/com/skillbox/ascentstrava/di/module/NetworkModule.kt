@@ -1,24 +1,21 @@
 package com.skillbox.ascentstrava.di.module
 
-import android.content.Context
 import com.skillbox.ascentstrava.data.AuthConfig
 import com.skillbox.ascentstrava.data.AuthInterceptor
 import com.skillbox.ascentstrava.data.StravaApi
-import com.skillbox.ascentstrava.network.ConnectionManager
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import dagger.multibindings.IntoSet
-import javax.inject.Singleton
-import okhttp3.Authenticator
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import retrofit2.create
+import javax.inject.Singleton
 
 @Module
 abstract class NetworkModule {

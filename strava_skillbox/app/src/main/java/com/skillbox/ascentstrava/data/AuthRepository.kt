@@ -1,13 +1,13 @@
 package com.skillbox.ascentstrava.data
 
 import android.net.Uri
-import javax.inject.Inject
 import net.openid.appauth.AuthorizationRequest
 import net.openid.appauth.AuthorizationService
 import net.openid.appauth.AuthorizationServiceConfiguration
 import net.openid.appauth.ClientAuthentication
 import net.openid.appauth.ClientSecretPost
 import net.openid.appauth.TokenRequest
+import javax.inject.Inject
 
 class AuthRepository @Inject constructor(
     private val authManager: AuthManager,

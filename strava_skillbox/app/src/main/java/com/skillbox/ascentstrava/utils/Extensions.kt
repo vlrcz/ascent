@@ -1,6 +1,5 @@
 package com.skillbox.ascentstrava.utils
 
-import android.content.Context
 import android.widget.Toast
 import androidx.annotation.StringRes
 import androidx.fragment.app.Fragment
@@ -8,7 +7,6 @@ import retrofit2.HttpException
 import java.net.ConnectException
 import java.net.SocketTimeoutException
 import java.net.UnknownHostException
-import java.util.*
 
 fun Throwable.isServerError(): Boolean {
     return this is HttpException && this.code() >= 500

@@ -46,10 +46,18 @@ data class Athlete(
 ) {
     companion object {
         private const val ATHLETE_API_URL = "https://www.strava.com/athletes/"
+        private const val KG = "kg"
     }
 
     @Transient
     val shareLink: String = "$ATHLETE_API_URL$userName"
+
     @Transient
     val fullName = "$firstName $lastName"
+
+    @Transient
+    val userNameView = "@$userName"
+
+    @Transient
+    val weightWithKg = "${weight?.toInt()} $KG"
 }

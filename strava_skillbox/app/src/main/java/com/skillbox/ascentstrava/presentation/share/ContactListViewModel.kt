@@ -6,7 +6,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.skillbox.ascentstrava.presentation.share.data.Contact
 import com.skillbox.ascentstrava.presentation.share.data.ContactsRepository
-import com.skillbox.ascentstrava.utils.SingleLiveEvent
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 

@@ -12,9 +12,7 @@ import com.skillbox.ascentstrava.di.module.DatabaseModule
 import com.skillbox.ascentstrava.di.module.NetworkModule
 import com.skillbox.ascentstrava.di.module.StorageModule
 import com.skillbox.ascentstrava.network.ConnectionManager
-import com.skillbox.ascentstrava.presentation.activities.data.ActivityAppInitializer
 import com.skillbox.ascentstrava.presentation.activities.data.ActivityMapper
-import com.skillbox.ascentstrava.presentation.athlete.data.AthleteAppInitializer
 import com.skillbox.ascentstrava.presentation.athlete.data.AthleteDao
 import com.skillbox.ascentstrava.presentation.athlete.data.AthleteManager
 import dagger.BindsInstance
