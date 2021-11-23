@@ -37,8 +37,12 @@ class ActivityListViewModel @Inject constructor(
     private val pendingActivitiesManager: PendingActivitiesManager
 ) : ViewModel() {
 
+    companion object {
+        private const val LIMIT_PER_PAGE = 5
+    }
+
     private var state = PagingState(
-        limit = 5,
+        limit = LIMIT_PER_PAGE,
         loadingPage = false,
         pageCount = 1,
         itemsList = emptyList(),
@@ -105,25 +109,27 @@ class ActivityListViewModel @Inject constructor(
 
     fun loadMore() {
         if (!state.loadingPage && state.hasMore) {
-            isLoadingLiveData.postValue(true)
-            loadFlow.tryEmit(true)
+            load()
             state.loadingPage = true
         }
     }
 
     fun firstLoad() {
         if (!state.isFirstLoad) {
-            isLoadingLiveData.postValue(true)
-            loadFlow.tryEmit(true)
+            load()
             state.isFirstLoad = true
         }
     }
 
     fun refresh() {
         state = state.copy(pageCount = 1, hasMore = true)
+        load()
+        state.loadingPage = true
+    }
+
+    private fun load() {
         isLoadingLiveData.postValue(true)
         loadFlow.tryEmit(true)
-        state.loadingPage = true
     }
 
     private fun fetchActivitiesFlow(athlete: Athlete): Flow<List<ActivityItem>> {
