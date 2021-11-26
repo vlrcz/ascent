@@ -5,8 +5,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.flatMapConcat
 import kotlinx.coroutines.flow.flowOn
-import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -21,7 +21,7 @@ class ActivityAppInitializer @Inject constructor(
             connectionManager
                 .observeNetworkState()
                 .filter { it }
-                .onEach {
+                .flatMapConcat {
                     pendingActivitiesManager.sendPendingActivities()
                 }
                 .flowOn(Dispatchers.IO)

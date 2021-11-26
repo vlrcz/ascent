@@ -13,7 +13,6 @@ import by.kirich1409.viewbindingdelegate.viewBinding
 import com.bumptech.glide.Glide
 import com.skillbox.ascentstrava.R
 import com.skillbox.ascentstrava.app.appComponent
-import com.skillbox.ascentstrava.data.AuthManager
 import com.skillbox.ascentstrava.databinding.FragmentProfileBinding
 import com.skillbox.ascentstrava.di.ViewModelFactory
 import com.skillbox.ascentstrava.presentation.athlete.data.UpdateRequestBody
@@ -35,9 +34,6 @@ class AthleteFragment : Fragment(R.layout.fragment_profile) {
 
     @Inject
     lateinit var viewModelProvider: Provider<AthleteViewModel>
-
-    @Inject
-    lateinit var authManager: AuthManager // todo удалить
 
     private val viewModel: AthleteViewModel by viewModels { ViewModelFactory { viewModelProvider.get() } }
 

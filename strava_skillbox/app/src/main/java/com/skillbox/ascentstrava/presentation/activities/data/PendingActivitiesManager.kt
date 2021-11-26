@@ -2,7 +2,7 @@ package com.skillbox.ascentstrava.presentation.activities.data
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.flow
@@ -16,7 +16,7 @@ class PendingActivitiesManager @Inject constructor(
     private val activitiesRepository: ActivitiesRepository,
     private val activityMapper: ActivityMapper
 ) {
-    private val pendingActivityListener = MutableStateFlow(false)
+    private val pendingActivityListener = MutableSharedFlow<Boolean>(replay = 1)
 
     suspend fun sendPendingActivities(): Flow<Unit> {
         return flow { emit(activitiesRepository.getListOfPendingActivities()) }
@@ -37,7 +37,7 @@ class PendingActivitiesManager @Inject constructor(
             .flowOn(Dispatchers.IO)
             .catch { Timber.e("Create pending activities error") }
             .map {
-                pendingActivityListener.value = true
+                pendingActivityListener.tryEmit(true)
             }
     }
 
