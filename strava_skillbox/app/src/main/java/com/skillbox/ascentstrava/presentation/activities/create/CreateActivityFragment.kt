@@ -25,6 +25,10 @@ import javax.inject.Provider
 
 class CreateActivityFragment : Fragment(R.layout.fragment_create_activity) {
 
+    companion object {
+        private const val REFRESH = "refresh_after_create"
+    }
+
     private val binding: FragmentCreateActivityBinding by viewBinding(FragmentCreateActivityBinding::bind)
 
     @Inject
@@ -55,6 +59,7 @@ class CreateActivityFragment : Fragment(R.layout.fragment_create_activity) {
 
     private fun bindViewModel() {
         viewModel.successLiveData.observe(viewLifecycleOwner) {
+            findNavController().previousBackStackEntry?.savedStateHandle?.set(REFRESH, true)
             findNavController().popBackStack()
         }
         viewModel.errorLiveData.observe(viewLifecycleOwner) {

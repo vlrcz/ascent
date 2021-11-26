@@ -21,6 +21,10 @@ import javax.inject.Provider
 
 class ActivityListFragment : Fragment(R.layout.fragment_activities) {
 
+    companion object {
+        private const val REFRESH = "refresh_after_create"
+    }
+
     private val binding: FragmentActivitiesBinding by viewBinding(FragmentActivitiesBinding::bind)
 
     @Inject
@@ -45,6 +49,7 @@ class ActivityListFragment : Fragment(R.layout.fragment_activities) {
 
         initList()
         bindViewModel()
+        refreshAfterCreate()
 
         binding.fab.setOnClickListener {
             findNavController().navigate(R.id.action_activitiesFragment_to_createActivityFragment)
@@ -58,6 +63,13 @@ class ActivityListFragment : Fragment(R.layout.fragment_activities) {
         binding.closeInfoBtn.setOnClickListener {
             binding.infoCardView.visibility = View.GONE
         }
+    }
+
+    private fun refreshAfterCreate() {
+        findNavController().currentBackStackEntry?.savedStateHandle?.getLiveData<Boolean>(REFRESH)
+            ?.observe(viewLifecycleOwner) {
+                viewModel.refresh()
+            }
     }
 
     private fun bindViewModel() {
