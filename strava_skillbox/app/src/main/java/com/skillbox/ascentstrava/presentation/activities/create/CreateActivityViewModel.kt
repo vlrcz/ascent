@@ -52,7 +52,7 @@ class CreateActivityViewModel @Inject constructor(
                 id = uniqueId,
                 name = name,
                 type = type,
-                startedAt = startedAt,
+                startedAt = startedAt?.let { activityMapper.dateStringToMillis(it) },
                 elapsedTime = elapsedTime,
                 distance = distance,
                 description = description,

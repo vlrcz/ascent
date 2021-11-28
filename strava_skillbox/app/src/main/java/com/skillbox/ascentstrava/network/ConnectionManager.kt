@@ -25,17 +25,12 @@ class ConnectionManager @Inject constructor(
                 object : ConnectivityManager.NetworkCallback() {
                     override fun onAvailable(network: Network) {
                         super.onAvailable(network)
-                        networkListener.value = checkNetworkConnection(connectivityManager, network)
-                    }
-
-                    override fun onUnavailable() {
-                        super.onUnavailable()
-                        networkListener.value = checkNetworkConnection(connectivityManager, null)
+                        networkListener.value = true
                     }
 
                     override fun onLost(network: Network) {
                         super.onLost(network)
-                        networkListener.value = checkNetworkConnection(connectivityManager, network)
+                        networkListener.value = false
                     }
                 }
             )

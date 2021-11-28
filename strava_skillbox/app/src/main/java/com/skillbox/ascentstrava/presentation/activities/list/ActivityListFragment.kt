@@ -69,6 +69,7 @@ class ActivityListFragment : Fragment(R.layout.fragment_activities) {
         findNavController().currentBackStackEntry?.savedStateHandle?.getLiveData<Boolean>(REFRESH)
             ?.observe(viewLifecycleOwner) {
                 viewModel.refresh()
+                binding.activitiesList.scrollToPosition(0)
             }
     }
 
@@ -79,7 +80,7 @@ class ActivityListFragment : Fragment(R.layout.fragment_activities) {
             if (it.itemsList.isNotEmpty()) {
                 activityListAdapter.submitList(it.itemsList)
                 binding.emptyListTextView.visibility = View.GONE
-            } else if (it.pageCount == 1) {
+            } else if (it.pageCount == 2) {
                 binding.emptyListTextView.visibility = View.VISIBLE
             }
         }

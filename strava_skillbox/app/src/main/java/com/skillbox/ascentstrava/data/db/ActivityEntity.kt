@@ -16,7 +16,7 @@ data class ActivityEntity(
     @ColumnInfo(name = ActivitiesContract.Columns.TYPE)
     val type: String?,
     @ColumnInfo(name = ActivitiesContract.Columns.STARTED_AT)
-    val startedAt: String?,
+    val startedAt: Long?,
     @ColumnInfo(name = ActivitiesContract.Columns.ELAPSED_TIME)
     val elapsedTime: Int?,
     @ColumnInfo(name = ActivitiesContract.Columns.DISTANCE)

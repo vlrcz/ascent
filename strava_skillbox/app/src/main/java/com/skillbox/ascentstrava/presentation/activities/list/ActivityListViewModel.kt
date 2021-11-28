@@ -81,9 +81,7 @@ class ActivityListViewModel @Inject constructor(
             pendingActivitiesManager
                 .observeSentPending()
                 .collect {
-                    if (it) {
-                        loadMore()
-                    }
+                    refresh()
                 }
         }
 
@@ -110,7 +108,6 @@ class ActivityListViewModel @Inject constructor(
     fun loadMore() {
         if (!state.loadingPage && state.hasMore) {
             load()
-            state.loadingPage = true
         }
     }
 
@@ -122,12 +119,12 @@ class ActivityListViewModel @Inject constructor(
     }
 
     fun refresh() {
-        state = state.copy(pageCount = 1, hasMore = true)
+        state = state.copy(pageCount = 1, hasMore = true, itemsList = emptyList())
         load()
-        state.loadingPage = true
     }
 
     private fun load() {
+        state.loadingPage = true
         isLoadingLiveData.postValue(true)
         loadFlow.tryEmit(true)
     }

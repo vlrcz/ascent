@@ -11,7 +11,9 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import timber.log.Timber
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 class PendingActivitiesManager @Inject constructor(
     private val activitiesRepository: ActivitiesRepository,
     private val activityMapper: ActivityMapper

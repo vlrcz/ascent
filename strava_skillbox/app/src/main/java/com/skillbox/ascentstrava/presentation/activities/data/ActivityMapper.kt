@@ -18,26 +18,10 @@ class ActivityMapper @Inject constructor() {
             id = null,
             name = activityEntity.name,
             type = activityEntity.type,
-            startedAt = activityEntity.startedAt,
+            startedAt = activityEntity.startedAt?.let { millisToModelDate(it) },
             elapsedTime = activityEntity.elapsedTime,
             distance = activityEntity.distance,
             description = activityEntity.description
-        )
-    }
-
-    fun mapModelToItem(activityModel: ActivityModel, athlete: Athlete?): ActivityItem {
-        return ActivityItem(
-            uniqueId = null,
-            stravaId = activityModel.id,
-            athleteName = athlete?.fullName.orEmpty(),
-            athleteImage = athlete?.photoUrl.orEmpty(),
-            name = activityModel.name,
-            type = activityModel.type,
-            startedAt = activityModel.startedAt?.let { bindDate(it) },
-            elapsedTime = "${activityModel.elapsedTime?.div(60)}$MIN",
-            distance = "${activityModel.distance?.toInt()?.div(1000)} $KM" ,
-            description = activityModel.description,
-            isPending = false
         )
     }
 
@@ -49,7 +33,7 @@ class ActivityMapper @Inject constructor() {
             athleteImage = athlete?.photoUrl.orEmpty(),
             name = activityEntity.name,
             type = activityEntity.type,
-            startedAt = activityEntity.startedAt?.let { bindDate(it) },
+            startedAt = activityEntity.startedAt?.let { millisToItemDate(it) },
             elapsedTime = "${activityEntity.elapsedTime?.div(60)}$MIN",
             distance = "${activityEntity.distance?.toInt()?.div(1000)} $KM",
             description = activityEntity.description,
@@ -57,25 +41,31 @@ class ActivityMapper @Inject constructor() {
         )
     }
 
-    private fun bindDate(date: String): String {
-        val currentFormat = SimpleDateFormat(
-            "yyyy-MM-dd'T'HH:mm:ss",
-            Locale.ROOT
-        )
-        val targetFormat = SimpleDateFormat("MMM dd,yyyy hh:mm a", Locale.ROOT)
-        return targetFormat.format(currentFormat.parse(date))
-    }
-
     fun mapModelToEntity(activityModel: ActivityModel): ActivityEntity {
         return ActivityEntity(
             id = activityModel.id.toString(),
             name = activityModel.name,
             type = activityModel.type,
-            startedAt = activityModel.startedAt,
+            startedAt = activityModel.startedAt?.let { dateStringToMillis(it) },
             elapsedTime = activityModel.elapsedTime,
             distance = activityModel.distance,
             description = activityModel.description,
             false
         )
+    }
+
+    fun dateStringToMillis(date: String): Long {
+        val currentFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.ROOT)
+        return currentFormat.parse(date).time
+    }
+
+    private fun millisToItemDate(millis: Long): String {
+        val targetFormat = SimpleDateFormat("MMM dd,yyyy hh:mm a", Locale.ROOT)
+        return targetFormat.format(millis)
+    }
+
+    private fun millisToModelDate(millis: Long): String {
+        val targetFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.ROOT)
+        return targetFormat.format(millis)
     }
 }

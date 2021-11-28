@@ -13,6 +13,7 @@ import com.skillbox.ascentstrava.di.module.NetworkModule
 import com.skillbox.ascentstrava.di.module.StorageModule
 import com.skillbox.ascentstrava.network.ConnectionManager
 import com.skillbox.ascentstrava.presentation.activities.data.ActivityMapper
+import com.skillbox.ascentstrava.presentation.activities.data.PendingActivitiesManager
 import com.skillbox.ascentstrava.presentation.athlete.data.AthleteDao
 import com.skillbox.ascentstrava.presentation.athlete.data.AthleteManager
 import dagger.BindsInstance
@@ -35,6 +36,7 @@ interface AppComponent {
     fun athleteDao(): AthleteDao
     fun connectionManager(): ConnectionManager
     fun activityMapper(): ActivityMapper
+    fun pendingActivitiesManager(): PendingActivitiesManager
     fun inject(app: App)
 
     @Component.Factory
