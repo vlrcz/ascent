@@ -18,7 +18,7 @@ data class Athlete(
     val id: Long,
     @ColumnInfo(name = AthleteContract.Columns.USERNAME)
     @Json(name = "username")
-    val userName: String,
+    val userName: String?,
     @ColumnInfo(name = AthleteContract.Columns.FIRST_NAME)
     @Json(name = "firstname")
     val firstName: String,
@@ -56,8 +56,16 @@ data class Athlete(
     val fullName = "$firstName $lastName"
 
     @Transient
-    val userNameView = "@$userName"
+    val userNameView = showUserName(userName)
 
     @Transient
     val weightWithKg = "${weight?.toInt()} $KG"
+
+    private fun showUserName(userName: String?): String {
+        return if (userName != null) {
+            "@${userName}"
+        } else {
+            ""
+        }
+    }
 }
