@@ -1,1 +1,1 @@
-skillbox thesis project
+Дипломный проект skillbox
